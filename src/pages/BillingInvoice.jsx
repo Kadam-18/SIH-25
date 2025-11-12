@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { FaSearch, FaFilePdf } from "react-icons/fa";
-import "./BillingInvoices.css";
+import "./BillingInvoice.css";
 
 /**
  * Billing & Invoices page for a single logged-in user.
