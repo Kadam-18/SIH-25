@@ -9,6 +9,8 @@
   left: -250px;
   transition: left 0.3s ease;
   z-index: 1000;
+  transition: left 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 2px 0 20px rgba(0, 0, 0, 0.4);
 }
 
 /* Sidebar open state */
@@ -33,6 +35,7 @@
 .sidebar-overlay.visible {
   opacity: 1;
   visibility: visible;
+  backdrop-filter: blur(4px);
 }
 
 /* Sidebar header */
@@ -100,4 +103,9 @@
   font-size: 0.8rem;
   color: #888;
   text-align: center;
+}
+
+
+body.sidebar-open {
+  overflow: hidden; /* disables scrolling when sidebar open */
 }

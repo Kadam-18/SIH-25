@@ -6,6 +6,8 @@ import CardsSection from "../components/CardsSection";
 import CentresCarousel from "../components/CentresCarousel";
 import ContactSection from "../components/ContactSection";
 
+
+
 /**
  * Home page: holds the state for sidebar open/close and passes props down
  */
@@ -27,7 +29,8 @@ export default function Home() {
   ];
 
   return (
-    <div className={`home-root ${sidebarOpen ? "no-scroll" : ""}`}>
+    <div className="home-root" style={{ position: "relative" }}>
+    {/* <div className={`home-root ${sidebarOpen ? "no-scroll" : ""}`}> */}
       <Navbar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
       <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 

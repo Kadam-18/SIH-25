@@ -1,12 +1,20 @@
 import React from "react";
 import { FaTimes, FaTachometerAlt, FaCalendarAlt, FaChartLine, FaBell, FaFileInvoiceDollar, FaHistory, FaClinicMedical, FaCommentDots } from "react-icons/fa";
 import "./Sidebar.css"
+import { useEffect } from "react";
 
 /**
  * Sidebar slides in from the left. Uses CSS transitions for smooth animation.
  * The sidebarOpen prop controls visibility.
  */
 export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
+  useEffect(() => {
+    if (sidebarOpen) {
+      document.body.classList.add("sidebar-open");
+    } else {
+      document.body.classList.remove("sidebar-open");
+    }
+  }, [sidebarOpen]);
   // menu items array to keep code simple and editable
   const items = [
     { icon: <FaTachometerAlt />, text: "Dashboard" },

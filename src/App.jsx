@@ -6,6 +6,7 @@ import Home from "./pages/Home.jsx";
 
 import { ToastContainer, toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css";
+import BillingInvoices from "./pages/BillingInvoice.jsx";
 const App = () => {
   return (
     <Router>
@@ -15,7 +16,8 @@ const App = () => {
         <Route path="/" element={<Navigate to="/signup" />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/Home"element={<Home/>}/>
+        <Route path="/Home"element={<Home />}/>
+        <Route path="/Billing"element={<BillingInvoices />}/>
       </Routes>
       <ToastContainer />
       </div>

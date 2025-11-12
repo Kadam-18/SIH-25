@@ -1,16 +1,14 @@
 import React from "react";
 import { FaBars, FaHome, FaSearch, FaUserCircle } from "react-icons/fa";
+import { useNavigate } from "react-router-dom"; // ✅ Import navigation hook
 
-/**
- * Navbar component:
- * - shows hamburger when sidebar is closed (left side)
- * - when closed it shows Home icon and centered search bar and Login/Signup on right
- */
 export default function Navbar({ sidebarOpen, setSidebarOpen }) {
+  const navigate = useNavigate(); // ✅ Initialize navigate()
+
   return (
     <header className="navbar">
       <div className="navbar-left">
-        {/* If sidebar is closed show hamburger to open it */}
+        {/* Hamburger or Home icon depending on sidebar state */}
         {!sidebarOpen ? (
           <button
             className="icon-btn"
@@ -20,7 +18,6 @@ export default function Navbar({ sidebarOpen, setSidebarOpen }) {
             <FaBars size={20} />
           </button>
         ) : (
-          /* when sidebarOpen is true, show a Home icon (as requested) */
           <div className="home-icon">
             <FaHome size={20} />
             <span className="home-text">Home</span>
@@ -28,7 +25,7 @@ export default function Navbar({ sidebarOpen, setSidebarOpen }) {
         )}
       </div>
 
-      {/* Search bar centered and takes 60% width */}
+      {/* Search bar centered */}
       <div className="navbar-center">
         <div className="search-wrapper">
           <FaSearch className="search-icon" />
@@ -39,9 +36,12 @@ export default function Navbar({ sidebarOpen, setSidebarOpen }) {
         </div>
       </div>
 
-      {/* Right: Login / Signup (simple button) */}
+      {/* Login / Signup Button */}
       <div className="navbar-right">
-        <button className="btn-outline">
+        <button
+          className="btn-outline"
+          onClick={() => navigate("/login")} // ✅ Navigation handled here
+        >
           <FaUserCircle style={{ marginRight: 8 }} />
           Login / Signup
         </button>
