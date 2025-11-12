@@ -1,5 +1,6 @@
 import React from "react";
 import { FaTimes, FaTachometerAlt, FaCalendarAlt, FaChartLine, FaBell, FaFileInvoiceDollar, FaHistory, FaClinicMedical, FaCommentDots } from "react-icons/fa";
+import "./Sidebar.css"
 
 /**
  * Sidebar slides in from the left. Uses CSS transitions for smooth animation.
