@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 import React, { useEffect } from "react";
 import {
   FaTimes,
@@ -14,14 +13,6 @@ import {
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom"; // ✅ Import navigation
 import "./Sidebar.css";
-=======
-import React from "react";
-import { FaTimes, FaTachometerAlt, FaCalendarAlt, FaChartLine, FaBell, FaFileInvoiceDollar, FaHistory, FaClinicMedical, FaCommentDots } from "react-icons/fa";
-import "./Sidebar.css"
-import { useEffect } from "react";
-import { Link } from "react-router-dom";
-
->>>>>>> Stashed changes
 
 export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
   const navigate = useNavigate(); // ✅ initialize navigation
@@ -33,7 +24,6 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
       document.body.classList.remove("sidebar-open");
     }
   }, [sidebarOpen]);
-<<<<<<< Updated upstream
 
   // ✅ Menu items with routes
   const items = [
@@ -46,20 +36,6 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
     { icon: <FaClinicMedical />, text: "Panchakarma Centres", path: "/centres" },
     { icon: <FaCommentDots />, text: "Feedback", path: "/feedback" },
   ];
-=======
-  // menu items array to keep code simple and editable
- const items = [
-  { icon: <FaTachometerAlt />, text: "Home", path: "/" },
-  { icon: <FaCalendarAlt />, text: "Schedule", path: "/schedule" },
-  { icon: <FaChartLine />, text: "Progress Tracking", path: "/progress" },
-  { icon: <FaBell />, text: "Notifications", path: "/notifications" },
-  { icon: <FaFileInvoiceDollar />, text: "Billing & Invoices", path: "/billing" },
-  { icon: <FaHistory />, text: "Patient History", path: "/history" },
-  { icon: <FaClinicMedical />, text: "Panchakarma Centres", path: "/centres" },
-  { icon: <FaCommentDots />, text: "Feedback", path: "/feedback" },
-];
-
->>>>>>> Stashed changes
 
   return (
     <div>
@@ -85,7 +61,6 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
         {/* ✅ Navigation with router */}
         <nav className="sidebar-nav">
           {items.map((it, i) => (
-<<<<<<< Updated upstream
             <div
               key={i}
               className="sidebar-item"
@@ -98,19 +73,6 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
               <span className="sidebar-text">{it.text}</span>
             </div>
           ))}
-=======
-        <Link
-          key={i}
-          to={it.path}
-          className="sidebar-item"
-          onClick={() => setSidebarOpen(false)}
-        >
-          <span className="sidebar-icon">{it.icon}</span>
-          <span className="sidebar-text">{it.text}</span>
-        </Link>
-      ))}
-
->>>>>>> Stashed changes
         </nav>
 
         <footer
