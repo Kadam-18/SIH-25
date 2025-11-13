@@ -1,10 +1,15 @@
 import React, { useState } from "react";
-import Navbar from "../components/Navbar";
-import Sidebar from "../components/Sidebar";
+// import Navbar from "../components/Navbar";
+// import Sidebar from "../components/Sidebar";
 import Carousel from "../components/Carousel";
 import CardsSection from "../components/CardsSection";
 import CentresCarousel from "../components/CentresCarousel";
 import ContactSection from "../components/ContactSection";
+
+import hero1 from "../assets/hero1.jpg";
+import hero2 from "../assets/hero2.jpg";
+import hero3 from "../assets/hero3.jpg";
+import hero4 from "../assets/hero4.jpg";
 
 
 
@@ -16,11 +21,7 @@ export default function Home() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // sample images (replace with real Panchakarma photos later)
-  const heroImages = [
-    "https://images.unsplash.com/photo-1505751172876-fa1923c5c528?q=80&w=1600&auto=format&fit=crop&ixlib=rb-4.0.3&s=1b6338c5b9a0d8f6b9edc8c6d84b5b24",
-    "https://images.unsplash.com/photo-1576765607923-7b9f8a928a06?q=80&w=1600&auto=format&fit=crop&ixlib=rb-4.0.3&s=5c6f6fba3fa4eef8a3c9f2c0a3c5d6b8",
-    "https://images.unsplash.com/photo-1504198453319-5ce911bafcde?q=80&w=1600&auto=format&fit=crop&ixlib=rb-4.0.3&s=2f3df4d0f8e2e0e1e3b9f6b1f6e4c8a9"
-  ];
+  const heroImages = [ hero1, hero2, hero3, hero4];
 
   const centresImages = [
     "https://images.unsplash.com/photo-1543352634-7f0e965e3a57?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=4ad1932f9d6c93f7a3f3db7a2db7b4c3",
@@ -30,9 +31,9 @@ export default function Home() {
 
   return (
     <div className="home-root" style={{ position: "relative" }}>
-    {/* <div className={`home-root ${sidebarOpen ? "no-scroll" : ""}`}> */}
+    {/* <div className={`home-root ${sidebarOpen ? "no-scroll" : ""}`}>
       <Navbar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-      <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+      <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} /> */}
 
       <main className="container">
         {/* Hero carousel */}

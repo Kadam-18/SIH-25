@@ -103,7 +103,44 @@
   font-size: 0.8rem;
   color: #888;
   text-align: center;
+  background: rgba(0, 255, 179, 0.05);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
 }
+
+/* ---- Account Details Footer ---- */
+
+.sidebar-footer:hover {
+  background: rgba(0, 255, 179, 0.12);
+  transform: translateY(-2px);
+}
+
+.account-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.account-icon {
+  font-size: 1.8rem;
+  color: #00ffb3;
+}
+
+.account-text h4 {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.account-text p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #a3a3a3;
+  letter-spacing: 0.3px;
+}
+
 
 
 body.sidebar-open {
