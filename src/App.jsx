@@ -7,6 +7,8 @@ import BillingInvoices from "./pages/BillingInvoice.jsx";
 import PatientHistory from "./pages/PatientHistory.jsx";
 import UserProfile from "./pages/Userprofile.jsx";
 import Layout from "./components/Layout.jsx";
+import Schedulepage from "./pages/Schedulepage.jsx";
+// import ProgressTracking from "./pages/Progresstracking.jsx"
 
 import { ToastContainer, toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css";
@@ -30,6 +32,8 @@ const App = () => {
             <Route path="/patienthistory" element={<PatientHistory  />} />
             <Route path="/userprofile" element={<UserProfile />} />
             <Route path="/notifications" element={<Notifications />} />
+            <Route path="/schedule" element={<Schedulepage />} />
+            {/* <Route path="/progress" element={<ProgressTracking />} /> */}
              {/* Add other sidebar pages here later */}
         </Route>
       </Routes>
