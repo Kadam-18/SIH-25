@@ -1,0 +1,148 @@
+/* Main sidebar container */
+.sidebar {
+  background-color: #0b0c10; /* dark background */
+  color: #ffffff; /* default text color */
+  width: 250px;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: -250px;
+  transition: left 0.3s ease;
+  z-index: 1000;
+  transition: left 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 2px 0 20px rgba(0, 0, 0, 0.4);
+}
+
+/* Sidebar open state */
+.sidebar.open {
+  left: 0;
+}
+
+/* Overlay (background blur when sidebar is open) */
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease;
+  z-index: 999;
+}
+
+.sidebar-overlay.visible {
+  opacity: 1;
+  visibility: visible;
+  backdrop-filter: blur(4px);
+}
+
+/* Sidebar header */
+.sidebar-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-top h3 {
+  color: #00ffb3; /* 🌿 Panchakarma green */
+  margin: 0;
+}
+
+/* Sidebar items */
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease, color 0.3s ease;
+  color: #d1d1d1; /* text color */
+}
+
+/* Sidebar icons */
+.sidebar-icon {
+  font-size: 1.2rem;
+  color: #00ffb3; /* green icons */
+  margin-right: 10px;
+}
+
+/* Sidebar text */
+.sidebar-text {
+  color: #ffffff; /* make text white */
+  font-weight: 500;
+}
+
+/* Hover effect */
+.sidebar-item:hover {
+  background-color: rgba(0, 255, 179, 0.1);
+  color: #00ffb3;
+}
+
+.sidebar-item:hover .sidebar-text {
+  color: #00ffb3;
+}
+
+.sidebar-item:hover .sidebar-icon {
+  color: #00ffb3;
+}
+
+/* Footer */
+.sidebar-footer {
+  margin-top: auto;
+  padding: 1rem;
+  font-size: 0.8rem;
+  color: #888;
+  text-align: center;
+  background: rgba(0, 255, 179, 0.05);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+/* ---- Account Details Footer ---- */
+
+.sidebar-footer:hover {
+  background: rgba(0, 255, 179, 0.12);
+  transform: translateY(-2px);
+}
+
+.account-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.account-icon {
+  font-size: 1.8rem;
+  color: #00ffb3;
+}
+
+.account-text h4 {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.account-text p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #a3a3a3;
+  letter-spacing: 0.3px;
+}
+
+
+
+body.sidebar-open {
+  overflow: hidden; /* disables scrolling when sidebar open */
+}
