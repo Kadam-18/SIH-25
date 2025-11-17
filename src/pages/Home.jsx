@@ -11,6 +11,7 @@ import hero2 from "../assets/hero2.jpg";
 import hero3 from "../assets/hero3.jpg";
 import hero4 from "../assets/hero4.jpg";
 
+import "./Home.css";
 
 
 /**
@@ -60,8 +61,55 @@ export default function Home() {
           <CentresCarousel images={centresImages} />
         </section>
 
-        {/* Contact */}
+   
+        
+         {/*new section (edited on :-14th nov midnight 1:08) */}
+        
+        {/* Why Panchakarma Section */}
+        <div className="whybox">
+    <section className="why-section">
+      <h2>Why Choose Panchakarma?</h2>
+      <p>Rooted in ancient Ayurvedic wisdom, Panchakarma restores balance, detoxifies the body, 
+        and enhances emotional & physical wellbeing.</p>
+
+      <div className="why-grid">
+        <div className="why-card">
+          <h3>🌿 Natural Detox</h3>
+          <p>Flushes deep-rooted toxins and rejuvenates your body.</p>
+        </div>
+        <div className="why-card">
+          <h3>🧘 Mind-Body Balance</h3>
+          <p>Helps stabilize doshas for emotional clarity and peace.</p>
+        </div>
+        <div className="why-card">
+          <h3>💆 Holistic Healing</h3>
+          <p>Combines therapies, diet, yoga, and lifestyle treatments.</p>
+        </div>
+      </div>
+    </section>
+
+    {/* Stats Section */}
+    <section className="stats-section">
+      <div className="stats-box">
+        <h3>5000+</h3>
+        <p>Successful Therapies</p>
+      </div>
+      <div className="stats-box">
+        <h3>50+</h3>
+        <p>Panchakarma Centres</p>
+      </div>
+      <div className="stats-box">
+        <h3>20 Years</h3>
+        <p>Ayurveda Experience</p>
+      </div>
+    </section>
+    </div>
+
+   {/* Contact */}
+      <section className="contact-wrapper">
         <ContactSection />
+      </section>
+
       </main>
     </div>
   );

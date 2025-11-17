@@ -8,6 +8,8 @@ export default function ContactSection() {
   return (
     <section className="contact-section">
       <h2 className="section-title">Get in Touch With Us</h2>
+      
+      <div className="contact-wrapper"></div>
 
       <div className="contact-grid">
         <div className="contact-card">

@@ -10,6 +10,8 @@ import {
   FaClinicMedical,
   FaCommentDots,
   FaUserCircle,
+  FaHome,
+  FaFileInvoice,
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom"; // ✅ Import navigation
 import "./Sidebar.css";
@@ -27,11 +29,11 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
 
   // ✅ Menu items with routes
   const items = [
-    { icon: <FaTachometerAlt />, text: "Dashboard", path: "/home" },
+    { icon: <FaHome />, text: "Home", path: "/home" },
     { icon: <FaCalendarAlt />, text: "Schedule", path: "/schedule" },
     { icon: <FaChartLine />, text: "Progress Tracking", path: "/progress" },
     { icon: <FaBell />, text: "Notifications", path: "/notifications" },
-    { icon: <FaFileInvoiceDollar />, text: "Billing & Invoices", path: "/billing" },
+    { icon: <FaFileInvoice />, text: "Billing & Invoices", path: "/billing" },
     { icon: <FaHistory />, text: "Patient History", path: "/patienthistory" },
     { icon: <FaClinicMedical />, text: "Panchakarma Centres", path: "/centres" },
     { icon: <FaCommentDots />, text: "Feedback", path: "/feedback" },

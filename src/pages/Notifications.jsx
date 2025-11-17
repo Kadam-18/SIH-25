@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "./Notifications.css";
+import { FiBell } from "react-icons/fi";
 
 const Notifications = () => {
-  // sample mock notifications (you can fetch real data later)
   const [notifications, setNotifications] = useState([
     {
       id: 1,
@@ -26,13 +26,14 @@ const Notifications = () => {
     },
   ]);
 
-  // optional: future dynamic fetching from backend
-  useEffect(() => {
-    // fetch("/api/notifications").then(res => res.json()).then(setNotifications);
-  }, []);
-
   return (
-    <div className="notifications-container">
+    <div className="notifications-page">
+
+      {/* Background Icon */}
+      <div className="bell-background">
+        <FiBell />
+      </div>
+
       <h2 className="notifications-title">Notifications</h2>
 
       {notifications.length > 0 ? (
@@ -48,10 +49,17 @@ const Notifications = () => {
           ))}
         </ul>
       ) : (
-        <p className="no-notifications">No notifications available.</p>
+        <div className="empty-container">
+          <FiBell className="empty-bell" />
+          <h3>No Notices Right Now!</h3>
+          <p>You’re all caught up 😊</p>
+
+          <button className="back-btn">View Dashboard</button>
+        </div>
       )}
     </div>
   );
 };
 
 export default Notifications;
+

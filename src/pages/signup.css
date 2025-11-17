@@ -1,0 +1,96 @@
+.signup-root {
+  height: 100vh;
+  width: 100%;
+  background: url("/signup-bg.jpg") center/cover no-repeat; /* Add your image */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(2px);
+  padding: 20px;
+}
+
+.signup-box {
+  background: rgba(255,255,255,0.88);
+  padding: 35px 40px;
+  width: 450px;
+  border-radius: 18px;
+  box-shadow: 0px 4px 18px rgba(0,0,0,0.2);
+  text-align: center;
+}
+
+.signup-box h2 {
+  margin-bottom: 15px;
+  font-size: 28px;
+  font-weight: 700;
+  color: #225b39;
+}
+
+/* Role selection */
+.role-select {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.role-select button {
+  padding: 10px 18px;
+  border-radius: 22px;
+  border: 2px solid #3c7f50;
+  background: transparent;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.role-select button.active {
+  background: #3c7f50;
+  color: white;
+}
+
+form input {
+  width: 100%;
+  padding: 12px;
+  margin-top: 12px;
+  border: 1px solid #bcd8c4;
+  border-radius: 10px;
+  font-size: 15px;
+}
+
+.otp-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.otp-btn {
+  padding: 12px 14px;
+  background: #3c7f50;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.otp-btn:disabled {
+  background: #92b59d;
+  cursor: not-allowed;
+}
+
+.signup-submit {
+  margin-top: 20px;
+  width: 100%;
+  padding: 14px;
+  background: #225b39;
+  color: white;
+  font-size: 18px;
+  font-weight: 600;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+}
+
+.login-link {
+  margin-top: 15px;
+  font-size: 14px;
+}

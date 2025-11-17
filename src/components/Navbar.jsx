@@ -1,6 +1,7 @@
 import React from "react";
 import { FaBars, FaHome, FaSearch, FaUserCircle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom"; // ✅ Import navigation hook
+import "./Navbar.css";
 
 export default function Navbar({ sidebarOpen, setSidebarOpen }) {
   const navigate = useNavigate(); // ✅ Initialize navigate()
