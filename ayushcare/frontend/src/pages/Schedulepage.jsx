@@ -249,8 +249,4 @@ export default function SchedulePage() {
       </div>
     </div>
   );
-<<<<<<< HEAD:src/pages/Schedulepage.jsx
 }
-=======
-}
->>>>>>> 495191d6de198a8b6bfcba1f3d1aff8b3281a045:ayushcare/frontend/src/pages/Schedulepage.jsx
