@@ -1,20 +1,31 @@
-import React, {useState} from "react";
-import { useNavigate } from "react-router-dom"; // <-- import navigation hook :)
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Auth.css";
-// import React from "react";
+import { apiPost } from "../api";
 
 export default function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const [email,setEmail] = useState("");
-  const [password,setPassword] = useState("");
-  const navigate = useNavigate(); // <-- initialize navigate function
+  const navigate = useNavigate();
 
-  // Handle form submission
-  const handleSubmit = (e) => {
-    e.preventDefault(); // prevent page refresh
-    // Later you can add actual login validation here
-    navigate("/home"); // <-- redirect to Home page
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const res = await apiPost("/api/auth/login/", {
+      email,
+      password,
+    });
+
+    if (res.access) {
+      localStorage.setItem("token", res.access);
+      alert("Login Successful!");
+      navigate("/home");
+    } else {
+      alert("Invalid Login Details");
+    }
   };
+
   return (
     <div className="auth-container">
       <div className="auth-box">
@@ -22,8 +33,20 @@ export default function Login() {
         <p>Login to continue your journey</p>
 
         <form onSubmit={handleSubmit}>
-          <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-          <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+          <input
+            type="email"
+            placeholder="Email"
+            required
+            onChange={(e) => setEmail(e.target.value)}
+          />
+
+          <input
+            type="password"
+            placeholder="Password"
+            required
+            onChange={(e) => setPassword(e.target.value)}
+          />
+
           <button type="submit">Login</button>
         </form>
 

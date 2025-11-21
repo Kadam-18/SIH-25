@@ -1,0 +1,60 @@
+import React, { useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { apiPost } from "../api";
+import "./Auth.css";
+
+export default function VerifyOTP() {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Email passed from Signup
+  const email = location.state?.email;
+
+  const [otp, setOtp] = useState("");
+
+  const verifyOtp = async (e) => {
+    e.preventDefault();
+
+    if (!email) {
+      alert("Missing email. Please signup again.");
+      navigate("/signup");
+      return;
+    }
+
+    const res = await apiPost("/api/auth/verify-otp/", {
+      email,
+      otp,
+    });
+
+    if (res.success) {
+      alert("OTP Verified! Account Created.");
+      navigate("/login");
+    } else {
+      alert(res.message || "Invalid OTP");
+    }
+  };
+
+  return (
+    <div className="auth-container">
+      <div className="auth-box">
+        <h2>Verify OTP</h2>
+        <p>Enter the OTP sent to <strong>{email}</strong></p>
+
+        <form onSubmit={verifyOtp}>
+          <input
+            type="text"
+            placeholder="Enter OTP"
+            required
+            onChange={(e) => setOtp(e.target.value)}
+          />
+
+          <button type="submit">Verify OTP</button>
+        </form>
+
+        <p style={{ marginTop: "20px" }}>
+          Wrong email? <a href="/signup">Signup again</a>
+        </p>
+      </div>
+    </div>
+  );
+}
