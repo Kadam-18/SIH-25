@@ -1,35 +1,64 @@
-import React, { useState, useEffect } from "react";
+// src/pages/Userprofile.jsx
+import React, { useEffect, useState } from "react";
 import { FaUserCircle, FaEdit, FaSave } from "react-icons/fa";
 import "./UserProfile.css";
+import { apiGet } from "../api";
 
 export default function UserProfile() {
-  // ---------- Personal Info ----------
+  const token = localStorage.getItem("token");
+
   const [personalInfo, setPersonalInfo] = useState({
-    fullName: "Anirudh Yadav",
-    gender: "Male",
-    dob: "1998-10-12",
-    email: "anirudh@example.com",
-    phone: "+91 98765 43210",
-    address: "Bhopal, Madhya Pradesh, India",
+    full_name: "",
+    gender: "",
+    dob: "",
+    email: "",
+    phone: "",
+    address: "",
+  });
+
+  const [medicalInfo, setMedicalInfo] = useState({
+    blood_group: "",
+    height: "",
+    weight: "",
+    allergies: "",
+    current_health_condition: "",
+    current_medication: "",
   });
 
   const [editingPersonal, setEditingPersonal] = useState(false);
-
-  // ---------- Medical Info ----------
-  const [medicalInfo, setMedicalInfo] = useState({
-    bloodGroup: "B+",
-    height: 175,
-    weight: 68,
-    allergy: "None",
-    condition: "Healthy",
-    medication: "Ayurvedic",
-  });
-
   const [editingMedical, setEditingMedical] = useState(false);
+
   const [bmi, setBmi] = useState(0);
   const [age, setAge] = useState(0);
 
-  // Calculate BMI dynamically
+  useEffect(() => {
+    const load = async () => {
+      if (!token) return;
+      const res = await apiGet("/api/patient/profile/", token);
+      if (res && res.success && res.data) {
+        const d = res.data;
+        setPersonalInfo({
+          full_name: d.full_name || "",
+          gender: d.gender || "",
+          dob: d.dob || "",
+          email: d.user_email || d.email || "",
+          phone: d.phone || "",
+          address: d.address || "",
+        });
+
+        setMedicalInfo({
+          blood_group: d.blood_group || d.blood_group || "",
+          height: d.height || "",
+          weight: d.weight || "",
+          allergies: d.allergies || "",
+          current_health_condition: d.current_health_condition || "",
+          current_medication: d.current_medication || "",
+        });
+      }
+    };
+    load();
+  }, [token]);
+
   useEffect(() => {
     if (medicalInfo.height && medicalInfo.weight) {
       const h = medicalInfo.height / 100;
@@ -38,7 +67,6 @@ export default function UserProfile() {
     }
   }, [medicalInfo.height, medicalInfo.weight]);
 
-  // Calculate age from DOB
   useEffect(() => {
     if (personalInfo.dob) {
       const birth = new Date(personalInfo.dob);
@@ -52,7 +80,6 @@ export default function UserProfile() {
     }
   }, [personalInfo.dob]);
 
-  // Handle changes
   const handlePersonalChange = (e) => {
     const { name, value } = e.target;
     setPersonalInfo((prev) => ({ ...prev, [name]: value }));
@@ -65,7 +92,6 @@ export default function UserProfile() {
 
   return (
     <div className="profile-root">
-      {/* Profile Header */}
       <div className="profile-header">
         <FaUserCircle className="avatar" />
         <div>
@@ -74,22 +100,15 @@ export default function UserProfile() {
         </div>
       </div>
 
-      {/* Personal Info Card */}
       <div className="profile-card">
         <div className="card-header">
           <h2>🧍 Personal Information</h2>
           {!editingPersonal ? (
-            <button
-              className="edit-btn"
-              onClick={() => setEditingPersonal(true)}
-            >
+            <button className="edit-btn" onClick={() => setEditingPersonal(true)}>
               <FaEdit /> Edit
             </button>
           ) : (
-            <button
-              className="save-btn"
-              onClick={() => setEditingPersonal(false)}
-            >
+            <button className="save-btn" onClick={() => setEditingPersonal(false)}>
               <FaSave /> Save Changes
             </button>
           )}
@@ -98,23 +117,12 @@ export default function UserProfile() {
         <div className="form-grid">
           <div>
             <label>Full Name</label>
-            <input
-              type="text"
-              name="fullName"
-              value={personalInfo.fullName}
-              onChange={handlePersonalChange}
-              readOnly={!editingPersonal}
-            />
+            <input type="text" name="full_name" value={personalInfo.full_name} onChange={handlePersonalChange} readOnly={!editingPersonal} />
           </div>
 
           <div>
             <label>Gender</label>
-            <select
-              name="gender"
-              value={personalInfo.gender}
-              onChange={handlePersonalChange}
-              disabled={!editingPersonal}
-            >
+            <select name="gender" value={personalInfo.gender} onChange={handlePersonalChange} disabled={!editingPersonal}>
               <option>Male</option>
               <option>Female</option>
               <option>Other</option>
@@ -123,65 +131,35 @@ export default function UserProfile() {
 
           <div>
             <label>Date of Birth</label>
-            <input
-              type="date"
-              name="dob"
-              value={personalInfo.dob}
-              onChange={handlePersonalChange}
-              readOnly={!editingPersonal}
-            />
+            <input type="date" name="dob" value={personalInfo.dob} onChange={handlePersonalChange} readOnly={!editingPersonal} />
           </div>
 
           <div>
             <label>Email</label>
-            <input
-              type="email"
-              name="email"
-              value={personalInfo.email}
-              onChange={handlePersonalChange}
-              readOnly={!editingPersonal}
-            />
+            <input type="email" name="email" value={personalInfo.email} readOnly />
           </div>
 
           <div>
             <label>Phone Number</label>
-            <input
-              type="text"
-              name="phone"
-              value={personalInfo.phone}
-              onChange={handlePersonalChange}
-              readOnly={!editingPersonal}
-            />
+            <input type="text" name="phone" value={personalInfo.phone} onChange={handlePersonalChange} readOnly={!editingPersonal} />
           </div>
 
           <div className="full-width">
             <label>Address</label>
-            <textarea
-              name="address"
-              value={personalInfo.address}
-              onChange={handlePersonalChange}
-              readOnly={!editingPersonal}
-            />
+            <textarea name="address" value={personalInfo.address} onChange={handlePersonalChange} readOnly={!editingPersonal} />
           </div>
         </div>
       </div>
 
-      {/* Medical Info Card */}
       <div className="profile-card">
         <div className="card-header">
           <h2>🧬 Medical Information</h2>
           {!editingMedical ? (
-            <button
-              className="edit-btn"
-              onClick={() => setEditingMedical(true)}
-            >
+            <button className="edit-btn" onClick={() => setEditingMedical(true)}>
               <FaEdit /> Edit
             </button>
           ) : (
-            <button
-              className="save-btn"
-              onClick={() => setEditingMedical(false)}
-            >
+            <button className="save-btn" onClick={() => setEditingMedical(false)}>
               <FaSave /> Save Changes
             </button>
           )}
@@ -195,12 +173,7 @@ export default function UserProfile() {
 
           <div>
             <label>Blood Group</label>
-            <select
-              name="bloodGroup"
-              value={medicalInfo.bloodGroup}
-              onChange={handleMedicalChange}
-              disabled={!editingMedical}
-            >
+            <select name="blood_group" value={medicalInfo.blood_group} onChange={handleMedicalChange} disabled={!editingMedical}>
               <option>A+</option>
               <option>A-</option>
               <option>B+</option>
@@ -214,24 +187,12 @@ export default function UserProfile() {
 
           <div>
             <label>Height (cm)</label>
-            <input
-              type="number"
-              name="height"
-              value={medicalInfo.height}
-              onChange={handleMedicalChange}
-              readOnly={!editingMedical}
-            />
+            <input type="number" name="height" value={medicalInfo.height} onChange={handleMedicalChange} readOnly={!editingMedical} />
           </div>
 
           <div>
             <label>Weight (kg)</label>
-            <input
-              type="number"
-              name="weight"
-              value={medicalInfo.weight}
-              onChange={handleMedicalChange}
-              readOnly={!editingMedical}
-            />
+            <input type="number" name="weight" value={medicalInfo.weight} onChange={handleMedicalChange} readOnly={!editingMedical} />
           </div>
 
           <div>
@@ -240,40 +201,18 @@ export default function UserProfile() {
           </div>
 
           <div>
-            <label>Allergy</label>
-            <input
-              type="text"
-              name="allergy"
-              value={medicalInfo.allergy}
-              onChange={handleMedicalChange}
-              readOnly={!editingMedical}
-            />
+            <label>Allergies</label>
+            <input type="text" name="allergies" value={medicalInfo.allergies} onChange={handleMedicalChange} readOnly={!editingMedical} />
           </div>
 
           <div>
             <label>Current Condition</label>
-            <input
-              type="text"
-              name="condition"
-              value={medicalInfo.condition}
-              onChange={handleMedicalChange}
-              readOnly={!editingMedical}
-            />
+            <input type="text" name="current_health_condition" value={medicalInfo.current_health_condition} onChange={handleMedicalChange} readOnly={!editingMedical} />
           </div>
 
           <div>
             <label>Current Medication</label>
-            <select
-              name="medication"
-              value={medicalInfo.medication}
-              onChange={handleMedicalChange}
-              disabled={!editingMedical}
-            >
-              <option>Ayurvedic</option>
-              <option>Allopathic</option>
-              <option>Both</option>
-              <option>None</option>
-            </select>
+            <input type="text" name="current_medication" value={medicalInfo.current_medication} onChange={handleMedicalChange} readOnly={!editingMedical} />
           </div>
         </div>
       </div>

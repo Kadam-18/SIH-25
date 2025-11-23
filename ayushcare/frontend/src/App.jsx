@@ -1,6 +1,6 @@
 import React from "react";
-import LandingPage from "./pages/Landing.jsx";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+
 import Login from "./pages/Login.jsx";
 import Signup from "./pages/Signup.jsx";
 import Home from "./pages/Home.jsx";
@@ -9,37 +9,49 @@ import PatientHistory from "./pages/PatientHistory.jsx";
 import UserProfile from "./pages/Userprofile.jsx";
 import Layout from "./components/Layout.jsx";
 import Schedulepage from "./pages/Schedulepage.jsx";
-import FeedbackPage from "./pages/feed.jsx"
-// import ProgressTracking from "./pages/Progresstracking.jsx"
+import Notifications from "./pages/Notifications.jsx";
+import LandingPage from "./pages/Landing.jsx";
+import CompleteProfile from "./pages/CompleteProfile.jsx";
+
+import VerifyOTP from "./pages/VerifyOTP.jsx";
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
+
+import Feedback from "./pages/feed.jsx";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Notifications from "./pages/Notifications.jsx";
 
 const App = () => {
-  console.log("PatientHistory page loaded ✅");
   return (
     <Router>
       <div className="app-root">
         <Routes>
-          {/* 🔹 Default route → Landing page */}
           <Route path="/" element={<Navigate to="/landing" />} />
 
-          {/* 🔹 Public pages (NO layout) */}
-          <Route path="/landing" element={<LandingPage />} />
+          {/* Public routes */}
           <Route path="/signup" element={<Signup />} />
+          <Route path="/verify-otp" element={<VerifyOTP />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/landing" element={<LandingPage />} />
+          <Route path="/feedback" element={<Feedback />} />
 
-          {/* 🔹 Private pages WITH layout (navbar + sidebar) */}
-          <Route element={<Layout />}>
+          {/* Must be PUBLIC */}
+          <Route path="/complete-profile" element={<CompleteProfile />} />
+
+          {/* Protected dashboard */}
+          <Route
+            element={
+              <ProtectedRoute>
+                <Layout />
+              </ProtectedRoute>
+            }
+          >
             <Route path="/home" element={<Home />} />
             <Route path="/billing" element={<BillingInvoices />} />
             <Route path="/patienthistory" element={<PatientHistory />} />
             <Route path="/userprofile" element={<UserProfile />} />
             <Route path="/notifications" element={<Notifications />} />
             <Route path="/schedule" element={<Schedulepage />} />
-            <Route path="/feedback" element={<FeedbackPage />} />
-            {/* other sidebar pages later */}
           </Route>
         </Routes>
 
