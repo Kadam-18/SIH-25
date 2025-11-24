@@ -1,11 +1,9 @@
 import React, { useEffect } from "react";
 import {
   FaTimes,
-  FaTachometerAlt,
   FaCalendarAlt,
   FaChartLine,
   FaBell,
-  FaFileInvoiceDollar,
   FaHistory,
   FaClinicMedical,
   FaCommentDots,
@@ -13,11 +11,11 @@ import {
   FaHome,
   FaFileInvoice,
 } from "react-icons/fa";
-import { useNavigate } from "react-router-dom"; // ✅ Import navigation
+import { useNavigate } from "react-router-dom";
 import "./Sidebar.css";
 
 export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
-  const navigate = useNavigate(); // ✅ initialize navigation
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (sidebarOpen) {
@@ -27,7 +25,6 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
     }
   }, [sidebarOpen]);
 
-  // ✅ Menu items with routes
   const items = [
     { icon: <FaHome />, text: "Home", path: "/home" },
     { icon: <FaCalendarAlt />, text: "Schedule", path: "/schedule" },
@@ -45,30 +42,41 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
         className={`sidebar-overlay ${sidebarOpen ? "visible" : ""}`}
         onClick={() => setSidebarOpen(false)}
       />
-      <aside
-        className={`sidebar ${sidebarOpen ? "open" : ""}`}
-        aria-hidden={!sidebarOpen}
-      >
-        <div className="sidebar-top">
-          <h3>Panchakarma</h3>
+
+      <aside className={`sidebar ${sidebarOpen ? "open" : ""}`}>
+        <div
+          className="sidebar-top profile-header"
+          onClick={() => {
+            navigate("/userprofile");
+            setSidebarOpen(false);
+          }}
+          style={{ cursor: "pointer" }}
+        >
+          <FaUserCircle className="profile-icon" />
+          <div>
+            <h3 className="profile-name">MY PROFILE</h3>
+            <p className="profile-sub">View / Edit</p>
+          </div>
+
           <button
             className="icon-btn close-btn"
-            onClick={() => setSidebarOpen(false)}
-            aria-label="Close menu"
+            onClick={(e) => {
+              e.stopPropagation();
+              setSidebarOpen(false);
+            }}
           >
             <FaTimes />
           </button>
         </div>
 
-        {/* ✅ Navigation with router */}
         <nav className="sidebar-nav">
           {items.map((it, i) => (
             <div
               key={i}
               className="sidebar-item"
               onClick={() => {
-                navigate(it.path); // 🧭 Go to route
-                setSidebarOpen(false); // close sidebar
+                navigate(it.path);
+                setSidebarOpen(false);
               }}
             >
               <span className="sidebar-icon">{it.icon}</span>
@@ -76,21 +84,6 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
             </div>
           ))}
         </nav>
-
-        <footer
-          className="sidebar-footer"
-          onClick={() => {
-          navigate("/userprofile"); // ✅ navigate to User Profile page
-          setSidebarOpen(false);
-        }}>
-          <div className="account-box">
-          <FaUserCircle className="account-icon" />
-            <div className="account-text">
-              <h4>Account Details</h4>
-              <p>View & Edit Profile</p>
-            </div>
-          </div>
-        </footer>
       </aside>
     </div>
   );

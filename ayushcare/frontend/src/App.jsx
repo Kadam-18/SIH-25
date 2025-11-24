@@ -36,6 +36,7 @@ const App = () => {
             <Route path="/patienthistory" element={<PatientHistory />} />
             <Route path="/userprofile" element={<UserProfile />} />
             <Route path="/notifications" element={<Notifications />} />
+            <Route path="/schedule" element={<Schedulepage />} />
             {/* other sidebar pages later */}
           </Route>
         </Routes>
