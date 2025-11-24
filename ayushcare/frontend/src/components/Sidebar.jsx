@@ -4,12 +4,12 @@ import {
   FaCalendarAlt,
   FaChartLine,
   FaBell,
+  FaFileInvoiceDollar,
   FaHistory,
   FaClinicMedical,
   FaCommentDots,
   FaUserCircle,
   FaHome,
-  FaFileInvoice,
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import "./Sidebar.css";
@@ -18,11 +18,8 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (sidebarOpen) {
-      document.body.classList.add("sidebar-open");
-    } else {
-      document.body.classList.remove("sidebar-open");
-    }
+    if (sidebarOpen) document.body.classList.add("sidebar-open");
+    else document.body.classList.remove("sidebar-open");
   }, [sidebarOpen]);
 
   const items = [
@@ -30,7 +27,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
     { icon: <FaCalendarAlt />, text: "Schedule", path: "/schedule" },
     { icon: <FaChartLine />, text: "Progress Tracking", path: "/progress" },
     { icon: <FaBell />, text: "Notifications", path: "/notifications" },
-    { icon: <FaFileInvoice />, text: "Billing & Invoices", path: "/billing" },
+    { icon: <FaFileInvoiceDollar />, text: "Billing & Invoices", path: "/billing" },
     { icon: <FaHistory />, text: "Patient History", path: "/patienthistory" },
     { icon: <FaClinicMedical />, text: "Panchakarma Centres", path: "/centres" },
     { icon: <FaCommentDots />, text: "Feedback", path: "/feedback" },
@@ -38,28 +35,29 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
 
   return (
     <div>
+      {/* Overlay */}
       <div
-        className={`sidebar-overlay ${sidebarOpen ? "visible" : ""}`}
+        className={`sidebar-overlay ${sidebarOpen ? "show" : ""}`}
         onClick={() => setSidebarOpen(false)}
       />
 
+      {/* Sidebar Container */}
       <aside className={`sidebar ${sidebarOpen ? "open" : ""}`}>
+        
+        {/* Profile Header */}
         <div
-          className="sidebar-top profile-header"
+          className="profile-header"
           onClick={() => {
             navigate("/userprofile");
             setSidebarOpen(false);
           }}
-          style={{ cursor: "pointer" }}
         >
           <FaUserCircle className="profile-icon" />
-          <div>
-            <h3 className="profile-name">MY PROFILE</h3>
-            <p className="profile-sub">View / Edit</p>
-          </div>
+          <h3 className="profile-title">MY PROFILE</h3>
+          <p className="profile-sub">View / Edit</p>
 
           <button
-            className="icon-btn close-btn"
+            className="close-btn"
             onClick={(e) => {
               e.stopPropagation();
               setSidebarOpen(false);
@@ -69,6 +67,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
           </button>
         </div>
 
+        {/* Menu Items */}
         <nav className="sidebar-nav">
           {items.map((it, i) => (
             <div
@@ -84,6 +83,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
             </div>
           ))}
         </nav>
+
       </aside>
     </div>
   );
