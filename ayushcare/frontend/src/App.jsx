@@ -16,6 +16,9 @@ import CompleteProfile from "./pages/CompleteProfile.jsx";
 import VerifyOTP from "./pages/VerifyOTP.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
+import Centers from "./pages/Centers";
+import CenterDetail from "./pages/CenterDetail";
+
 import Feedback from "./pages/feed.jsx";
 
 import { ToastContainer } from "react-toastify";
@@ -37,6 +40,9 @@ const App = () => {
 
           {/* Must be PUBLIC */}
           <Route path="/complete-profile" element={<CompleteProfile />} />
+
+          <Route path="/centers" element={<Centers/>} />
+          <Route path="/centers/:id" element={<CenterDetail/>} />
 
           {/* Protected dashboard */}
           <Route

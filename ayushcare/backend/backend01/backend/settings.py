@@ -11,6 +11,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 ENV_PATH = BASE_DIR.parent / ".env"
 load_dotenv(ENV_PATH)
 
+GOOGLE_MAPS_API_KEY = os.getenv("GOOGLE_MAPS_API_KEY", "")
+
 # SECURITY
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "dev-secret")
 DEBUG = os.getenv("DEBUG", "True") == "True"
@@ -41,6 +43,7 @@ INSTALLED_APPS = [
     "channels",
 
     # Local apps
+    "centers",
     "accounts",
     "patients",
     "appointments",

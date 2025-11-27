@@ -20,22 +20,18 @@ export async function apiPost(url, body, token = null) {
 
     const text = await res.text();
     try {
-      const json = JSON.parse(text);
-      console.log("[apiPost] response json:", json);
-      return json;
-    } catch (e) {
-      console.error("[apiPost] non-json response:", text);
-      return { success: false, message: "Non-JSON response", raw: text, status: res.status };
+      return JSON.parse(text);
+    } catch {
+      return { success: false, message: "Invalid JSON", raw: text };
     }
   } catch (err) {
-    console.error("[apiPost] fetch error:", err);
     return { success: false, message: "Network error", error: String(err) };
   }
 }
 
 export async function apiGet(url, token = null) {
   const full = BASE_URL + url;
-  console.log("[apiGet] ->", full, "token?", !!token);
+  console.log("[apiGet] ->", full);
 
   try {
     const res = await fetch(full, {
@@ -45,22 +41,17 @@ export async function apiGet(url, token = null) {
 
     const text = await res.text();
     try {
-      const json = JSON.parse(text);
-      console.log("[apiGet] response json:", json, "status:", res.status);
-      return json;
-    } catch (e) {
-      console.error("[apiGet] non-json response:", text);
-      return { success: false, message: "Non-JSON response", raw: text, status: res.status };
+      return JSON.parse(text);
+    } catch {
+      return { success: false, message: "Invalid JSON", raw: text };
     }
   } catch (err) {
-    console.error("[apiGet] fetch error:", err);
     return { success: false, message: "Network error", error: String(err) };
   }
 }
 
 export async function apiPut(url, body, token = null) {
   const full = BASE_URL + url;
-  console.log("[apiPut] ->", full, "token?", !!token, "body:", body);
 
   try {
     const res = await fetch(full, {
@@ -71,15 +62,30 @@ export async function apiPut(url, body, token = null) {
 
     const text = await res.text();
     try {
-      const json = JSON.parse(text);
-      console.log("[apiPut] response json:", json);
-      return json;
-    } catch (e) {
-      console.error("[apiPut] non-json response:", text);
-      return { success: false, message: "Non-JSON response", raw: text, status: res.status };
+      return JSON.parse(text);
+    } catch {
+      return { success: false, message: "Invalid JSON", raw: text };
     }
   } catch (err) {
-    console.error("[apiPut] fetch error:", err);
     return { success: false, message: "Network error", error: String(err) };
   }
+}
+
+/* --------------------------
+   NEW ENDPOINT HELPERS
+--------------------------- */
+
+// Get all centers
+export function getCenters(token) {
+  return apiGet("/api/centers/", token);
+}
+
+// Get doctors belonging to a center
+export function getDoctorsByCenter(center_id, token) {
+  return apiGet(`/api/appointments/center/${center_id}/doctors/`, token);
+}
+
+// Create appointment
+export function createAppointment(body, token) {
+  return apiPost("/api/appointments/create/", body, token);
 }

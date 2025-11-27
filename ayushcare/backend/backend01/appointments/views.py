@@ -1,75 +1,80 @@
-from django.shortcuts import render
-
-# Create your views here.
-
-from rest_framework import generics, permissions, status
+# appointments/views.py
+from rest_framework import generics, permissions, serializers
 from rest_framework.response import Response
 from .models import Appointment, Doctor
+from centers.models import Center
 from .serializers import AppointmentSerializer, DoctorSerializer
-from django.shortcuts import get_object_or_404
 
-from datetime import datetime, timedelta
-from .tasks import (
-    send_pre_procedure_reminder,
-    send_post_procedure_reminder
-)
-
-# permission: only authenticated users
-class IsOwnerOrReadOnly(permissions.BasePermission):
-    """
-    Custom permission: only owners (patient) or staff can modify an appointment.
-    """
-
-    def has_object_permission(self, request, view, obj):
-        # safe methods allowed
-        if request.method in permissions.SAFE_METHODS:
-            return True
-        # staff (clinic admins) can edit
-        if request.user.is_staff:
-            return True
-        # owner can edit
-        return obj.patient == request.user
+# If you use Notification model uncomment this:
+# from notifications.models import Notification
 
 
-# Create appointment
+# -----------------------------
+# Appointment Create
+# -----------------------------
 class AppointmentCreateView(generics.CreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = AppointmentSerializer
+    queryset = Appointment.objects.all()
 
     def perform_create(self, serializer):
-        # serializer.create will set patient from request context
-        serializer.save(patient=self.request.user)
+        center = serializer.validated_data["center"]
+        doctor = serializer.validated_data["doctor"]
+
+        if doctor.center != center:
+            raise serializers.ValidationError("Selected doctor does not belong to this center.")
+
+        appointment = serializer.save(patient=self.request.user)
+
+        # OPTIONAL: If you don't have Notification model, comment this block
+        # Notification.objects.create(
+        #     patient=appointment.patient,
+        #     message=f"Your appointment with {doctor.name} at {center.name} on {appointment.date} is confirmed."
+        # )
 
 
-# List appointments for the logged-in user
+# -----------------------------
+# User Appointments
+# -----------------------------
 class UserAppointmentsListView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = AppointmentSerializer
 
     def get_queryset(self):
-        user = self.request.user
-        return Appointment.objects.filter(patient=user).order_by("-date", "-time")
+        return Appointment.objects.filter(patient=self.request.user)
 
 
-# Retrieve / Update / Delete single appointment
+# -----------------------------
+# Single Appointment Actions
+# -----------------------------
 class AppointmentDetailView(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
+    permission_classes = [permissions.IsAuthenticated]
     serializer_class = AppointmentSerializer
     queryset = Appointment.objects.all()
     lookup_field = "id"
 
-    def perform_update(self, serializer):
-        # if status is changed to cancelled or rescheduled, you may trigger notifications here
-        instance = serializer.save()
-        # e.g. call a helper: notify_appointment_update(instance)
 
-
+# -----------------------------
+# Doctors List
+# -----------------------------
 class DoctorListCreateView(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = DoctorSerializer
     queryset = Doctor.objects.all()
 
+
 class DoctorDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = DoctorSerializer
     queryset = Doctor.objects.all()
+
+
+# -----------------------------
+# Doctors filtered by Center
+# -----------------------------
+class DoctorsByCenterView(generics.ListAPIView):
+    serializer_class = DoctorSerializer
+
+    def get_queryset(self):
+        center_id = self.kwargs["center_id"]
+        return Doctor.objects.filter(center_id=center_id)

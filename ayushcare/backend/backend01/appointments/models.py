@@ -1,15 +1,10 @@
-from django.db import models
-
-# Create your models here.
-
-
+# appointments/models.py
 from django.db import models
 from django.contrib.auth.models import User
 
 class Doctor(models.Model):
     """
-    Optional: a simple Doctor/Provider model.
-    You can extend this later (specialty, contact, photo, etc).
+    Doctor belongs to a Center (optional).
     """
     user = models.OneToOneField(User, null=True, blank=True, on_delete=models.SET_NULL)
     name = models.CharField(max_length=150)
@@ -17,26 +12,28 @@ class Doctor(models.Model):
     phone = models.CharField(max_length=32, blank=True)
     clinic = models.CharField(max_length=200, blank=True)
 
+    # link to center (string reference to avoid circular imports)
+    center = models.ForeignKey("centers.Center", null=True, blank=True, on_delete=models.SET_NULL, related_name="doctors")
+
+    # timing slots (4-hour gaps)
+    DOCTOR_TIMINGS = [
+        ("10am-2pm", "10:00 AM - 2:00 PM"),
+        ("2pm-6pm", "02:00 PM - 06:00 PM"),
+        ("6pm-10pm", "06:00 PM - 10:00 PM"),
+    ]
+    timing = models.CharField(max_length=20, choices=DOCTOR_TIMINGS, blank=True)
+
     def __str__(self):
         return self.name
 
+
 class Appointment(models.Model):
-    """
-    Appointment model for scheduling therapies / consultations.
-    - patient: user who booked (required)
-    - doctor: optional provider
-    - date: date of appointment
-    - time: time of appointment (as timefield)
-    - appointment_type: therapy / consultation / follow-up
-    - location_name / building / room: details of location
-    - notes: optional
-    - status: scheduled/completed/cancelled/checked-in
-    """
     STATUS_CHOICES = [
         ("scheduled", "Scheduled"),
         ("completed", "Completed"),
         ("cancelled", "Cancelled"),
         ("checked_in", "Checked-in"),
+        ("rescheduled", "Rescheduled"),
     ]
 
     APPT_TYPE_CHOICES = [

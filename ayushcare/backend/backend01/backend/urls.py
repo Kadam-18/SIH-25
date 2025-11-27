@@ -1,3 +1,4 @@
+# backend/urls.py
 from django.urls import path, include
 from django.contrib import admin
 from django.http import JsonResponse
@@ -7,7 +8,18 @@ def home(request):
 
 urlpatterns = [
     path('', home),
+
     path('admin/', admin.site.urls),
-    path('api/', include('accounts.urls')),        # accounts endpoints (signup, login, otp)
-    path('api/patient/', include('patients.urls')), # patient profile endpoints
+
+    # Accounts (signup, login, OTP)
+    path('api/', include('accounts.urls')),
+
+    # Patient profile
+    path('api/patient/', include('patients.urls')),
+
+    # Appointments API
+    path('api/appointments/', include('appointments.urls')),
+
+    # Centers API
+    path('api/centers/', include('centers.urls')),
 ]
