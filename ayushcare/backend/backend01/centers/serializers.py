@@ -1,6 +1,6 @@
 # centers/serializers.py
 from rest_framework import serializers
-from .models import Center
+from clinic.models import Center
 
 class CenterSerializer(serializers.ModelSerializer):
     class Meta:

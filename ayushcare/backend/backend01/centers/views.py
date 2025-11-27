@@ -3,7 +3,7 @@ from django.shortcuts import render
 # Create your views here.
 # centers/views.py
 from rest_framework import generics, permissions
-from .models import Center
+from clinic.models import Center
 from .serializers import CenterSerializer
 
 class CenterListView(generics.ListAPIView):
