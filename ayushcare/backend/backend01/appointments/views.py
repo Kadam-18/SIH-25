@@ -1,8 +1,9 @@
 # appointments/views.py
 from rest_framework import generics, permissions, serializers
 from rest_framework.response import Response
-from .models import Appointment, Doctor
-from centers.models import Center
+from .models import Appointment
+from clinic.models import Doctor
+from clinic.models import Center
 from .serializers import AppointmentSerializer, DoctorSerializer
 
 # If you use Notification model uncomment this:

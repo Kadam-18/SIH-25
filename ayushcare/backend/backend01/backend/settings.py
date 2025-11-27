@@ -37,14 +37,18 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 
+    "accounts.apps.AccountsConfig",
+    "centers.apps.CenterConfig",
+
     # Third-party
     "rest_framework",
     "corsheaders",
     "channels",
 
     # Local apps
-    "centers",
-    "accounts",
+    # "centers",
+    # "accounts",
+    "clinic",
     "patients",
     "appointments",
     "notifications",

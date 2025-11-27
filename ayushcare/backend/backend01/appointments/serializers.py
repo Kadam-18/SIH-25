@@ -1,8 +1,9 @@
 # appointments/serializers.py
 from rest_framework import serializers
-from .models import Appointment, Doctor
+from .models import Appointment
+from clinic.models import Doctor
 from django.contrib.auth.models import User
-from centers.models import Center
+from clinic.models import Center
 
 
 class DoctorSerializer(serializers.ModelSerializer):
