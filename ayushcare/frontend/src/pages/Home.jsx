@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-// import Navbar from "../components/Navbar";
-// import Sidebar from "../components/Sidebar";
+import Navbar from "../components/Navbar";
+import Sidebar from "../components/Sidebar";
 import Carousel from "../components/Carousel";
 import CardsSection from "../components/CardsSection";
 import CentresCarousel from "../components/CentresCarousel";
@@ -32,9 +32,9 @@ export default function Home() {
 
   return (
     <div className="home-root" style={{ position: "relative" }}>
-    {/* <div className={`home-root ${sidebarOpen ? "no-scroll" : ""}`}>
+    {/* <div className={`home-root ${sidebarOpen ? "no-scroll" : ""}`}> */}
       <Navbar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-      <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} /> */}
+      <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
       <main className="container">
         {/* Hero carousel */}

@@ -1,111 +1,231 @@
-.feedback-page {
-  padding: 20px;
+/* ====== PAGE BACKGROUND ====== */
+.feedback-root {
   min-height: 100vh;
-  background: #f4fff4;
-}
-
-.feedback-container {
-  width: 80%;
-  max-width: 850px;
-  margin: auto;
-  padding: 20px;
-
-  /* ⭐ Light green background */
-  background: rgba(230, 247, 230, 0.85);
-
-  /* Optional soft glass + shadow */
-  backdrop-filter: blur(4px);
-  border-radius: 12px;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-}
-
-
-h1 {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-h2 {
-  margin-top: 20px;
-  color: #2e7d32;
-}
-
-.question-block {
-  margin: 12px 0;
-}
-
-.question-textarea {
-  width: 100%;
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-}
-
-.scale-options label,
-.yesno-options label {
-  margin-right: 12px;
-}
-
-.feedback-submit-btn {
-  width: 100%;
-  margin-top: 20px;
-  padding: 10px;
-  background: #2e7d32;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  font-size: 1rem;
-  cursor: pointer;
-}
-
-.feedback-submit-btn:hover {
-  background: #1e5523;
-}
-.feedback-page {
-  min-height: 100vh;
-  width: 100%;
-  background-image: url("/bg-feedback.jpg");
+  padding: 40px;
+  background-image: url("/home-bg.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
 
   display: flex;
-  align-items: center;
   justify-content: center;
-  padding: 20px;
-}
-/* SCALE (1–5) OPTIONS IN HORIZONTAL ROW */
-.scale-options {
-  display: flex;
-  gap: 12px;              /* space between numbers */
-  align-items: center;
-  justify-content: center;
-  margin-top: 6px;
+  align-items: flex-start;
+
+  animation: fadeInBg 0.6s ease-out;
 }
 
-/* YES/NO OPTIONS HORIZONTAL */
-.yesno-options {
-  display: flex;
-  gap: 20px;
-  justify-content: center;
-  margin-top: 6px;
+@keyframes fadeInBg {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
-/* Improve overall alignment */
-.question-block label {
+
+/* ====== GLASS CONTAINER ====== */
+.feedback-container {
+  width: 100%;
+  max-width: 900px;
+
+  background: rgba(200, 255, 200, 0.22);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+
+  border-radius: 22px;
+  padding: 35px;
+  margin-top: 25px;
+
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+
+  animation: fadeUp 0.7s ease-out;
+}
+
+@keyframes fadeUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+
+/* ====== MAIN TITLE ====== */
+.feedback-title {
   text-align: center;
-  display: block;
-  margin-bottom: 6px;
-}
-.question-label {
-  font-size: 1.15rem;   /* increase text size */
-  font-weight: 600;     /* make slightly bold */
-  margin-bottom: 8px;
-  display: block;
-  color: #043f1a;       /* optional dark green for clarity */
-}
-.scale-options label,
-.yesno-options label {
-  font-size: 1.05rem;
+  font-size: 32px;
+  font-weight: 800;
+  color: #145017;
+  margin-bottom: 25px;
+  letter-spacing: 1px;
 }
 
+
+/* ====== THERAPY SESSION TITLE ====== */
+.feedback-session-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #0f3d1a;
+  margin-bottom: 18px;
+  margin-top: 35px;
+  text-align: center;
+}
+
+
+/* ====== QUESTION BLOCK ====== */
+.feedback-question {
+  margin-bottom: 32px;
+  position: relative;
+  padding: 18px 12px;
+  border-radius: 14px;
+  transition: 0.3s ease;
+}
+
+
+/* ———— QUESTION FOCUS HIGHLIGHT ———— */
+.feedback-question.focused {
+  background: rgba(74, 111, 74, 0.26);
+  box-shadow: 0 0 18px rgba(76, 175, 80, 0.35);
+  transform: scale(1.02);
+}
+
+
+/* ====== QUESTION TEXT (with numbering) ====== */
+.question-label {
+  display: block;
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #1a471d;
+  text-align: center;
+
+  position: relative;
+  padding-bottom: 10px;
+}
+
+
+/* ====== ANIMATED UNDERLINE ====== */
+.question-label::after {
+  content: "";
+  width: 0%;
+  height: 3px;
+  background: #143e17;
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  border-radius: 10px;
+
+  transition: width 0.35s ease;
+  opacity: 0.6;
+}
+
+.feedback-question:hover .question-label::after {
+  width: 60%;
+}
+
+
+/* ====== RATING OPTIONS ====== */
+.rating-row {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  margin-top: 12px;
+}
+
+/* Rating button style */
+.rating-row label {
+  background: rgba(205, 220, 168, 0.65);
+  padding: 10px 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.25s ease;
+
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Hover animation for rating */
+.rating-row label:hover {
+  transform: scale(1.1);
+  background: #5d7658;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+}
+
+.rating-row input {
+  margin-right: 6px;
+}
+
+
+/* ====== TEXTAREA ====== */
+.feedback-textarea {
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid #c6dfc6;
+  margin-top: 10px;
+  font-size: 16px;
+  background: rgba(255, 255, 255, 0.75);
+  resize: none;
+  transition: 0.25s ease;
+}
+
+.feedback-textarea:focus {
+  background: #ffffff;
+  border-color: #3b6e46;
+  box-shadow: 0 0 8px rgba(85, 181, 106, 0.6);
+  transform: scale(1.02);
+}
+
+
+/* ====== SUBMIT BUTTON ====== */
+.feedback-submit {
+  width: 100%;
+  padding: 15px;
+  background: #1b5e20;
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  font-size: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 35px;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: 0.3s ease;
+}
+
+.feedback-submit:hover {
+  background: #145017;
+  transform: scale(1.04);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+
+/* ====== MOBILE ADJUSTMENTS ====== */
+@media (max-width: 600px) {
+  .feedback-container {
+    padding: 25px;
+  }
+
+  .feedback-title {
+    font-size: 26px;
+  }
+
+  .feedback-session-title {
+    font-size: 22px;
+  }
+
+  .question-label {
+    font-size: 18px;
+  }
+}
+/* MAIN WHITE CONTAINER */
+.feedback-container {
+  max-width: 900px;
+  margin: auto;
+  background: #d7e4c3;        /* PURE WHITE BACKGROUND */
+  padding: 30px;
+  border-radius: 14px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+.feedback-root {
+  padding: 30px;
+  background-image: url("/home-bg.jpg");
+  background-size: cover;
+  background-position: center;
+}

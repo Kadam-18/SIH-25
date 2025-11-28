@@ -1,4 +1,5 @@
-import React from 'react';
+import React from "react";
+import "./feed.css";
 
 const sessions = [
   {
@@ -53,74 +54,92 @@ const sessions = [
   }
 ];
 
-function renderQuestion(q, idx) {
-  switch (q.type) {
-    case "text":
-      return (
-        <div key={idx} style={{ marginBottom: "1.5rem" }}>
-          <label>{q.label}</label>
-          <textarea rows="2" style={{ width: "100%" }} />
-        </div>
-      );
-    case "scale":
-      return (
-        <div key={idx} style={{ marginBottom: "1.5rem" }}>
-          <label>{q.label} </label>
-          {[1, 2, 3, 4, 5].map(val => (
-            <label key={val} style={{ margin: "0 8px" }}>
-              <input type="radio" name={q.label} value={val} /> {val}
+/* RENDER QUESTION FUNCTION WITH FOCUS + UNDERLINE ANIMATION */
+function renderQuestion(q, idx, setFocus, focusedIndex) {
+  return (
+    <div
+      key={idx}
+      className={`feedback-question ${focusedIndex === idx ? "focused" : ""}`}
+    >
+      {/* Question Number + Label */}
+      <label className="question-label">
+        {idx + 1}. {q.label}
+      </label>
+
+      {q.type === "scale" && (
+        <div className="rating-row">
+          {[1, 2, 3, 4, 5].map((val) => (
+            <label key={val}>
+              <input
+                type="radio"
+                name={q.label}
+                value={val}
+                onFocus={() => setFocus(idx)}
+              />{" "}
+              {val}
             </label>
           ))}
         </div>
-      );
-    case "yesno":
-      return (
-        <div key={idx} style={{ marginBottom: "1.5rem" }}>
-          <label>{q.label} </label>
-          <label style={{ margin: "0 8px" }}>
-            <input type="radio" name={q.label} value="yes" /> Yes
+      )}
+
+      {q.type === "yesno" && (
+        <div className="rating-row">
+          <label>
+            <input
+              type="radio"
+              name={q.label}
+              value="yes"
+              onFocus={() => setFocus(idx)}
+            />{" "}
+            Yes
           </label>
-          <label style={{ margin: "0 8px" }}>
-            <input type="radio" name={q.label} value="no" /> No
+
+          <label>
+            <input
+              type="radio"
+              name={q.label}
+              value="no"
+              onFocus={() => setFocus(idx)}
+            />{" "}
+            No
           </label>
         </div>
-      );
-    default:
-      return null;
-  }
+      )}
+
+      {q.type === "text" && (
+        <textarea
+          className="feedback-textarea"
+          rows="2"
+          onFocus={() => setFocus(idx)}
+        ></textarea>
+      )}
+    </div>
+  );
 }
 
+
 export default function FeedbackPage() {
+  const [focusedIndex, setFocusedIndex] = React.useState(null);
+
   return (
-    <div style={{
-      maxWidth: 600,
-      margin: "0 auto",
-      padding: "2rem",
-      background: "#f9f9f9",
-      borderRadius: "12px",
-      boxShadow: "0 2px 10px #ddd",
-      overflowY: 'auto',
-      minHeight: "80vh"
-    }}>
-      <h1>Panchakarma Therapy Feedback</h1>
-      {sessions.map((session, i) => (
-        <div key={i} style={{ marginBottom: "2rem" }}>
-          <h2 style={{ color: "#1a202c" }}>{session.title}</h2>
-          {session.questions.map(renderQuestion)}
-        </div>
-      ))}
-      <button style={{
-        padding: "12px 32px",
-        background: "#3881c5",
-        color: "#fff",
-        border: "none",
-        borderRadius: "6px",
-        fontSize: "1.1rem",
-        marginTop: "1.5rem",
-        cursor: "pointer"
-      }}>
-        Submit Feedback
-      </button>
+    <div className="feedback-root">
+      <div className="feedback-container">
+
+        <h1 className="feedback-title">Panchakarma Therapy Feedback</h1>
+
+        {sessions.map((session, i) => (
+          <div key={i} className="feedback-session">
+            <h2 className="feedback-session-title">{session.title}</h2>
+
+            {/* Render each question with focus highlight */}
+            {session.questions.map((q, idx) =>
+              renderQuestion(q, idx, setFocusedIndex, focusedIndex)
+            )}
+          </div>
+        ))}
+
+        <button className="feedback-submit">Submit Feedback</button>
+      </div>
     </div>
   );
 }

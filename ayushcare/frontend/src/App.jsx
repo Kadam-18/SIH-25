@@ -15,6 +15,7 @@ import CompleteProfile from "./pages/CompleteProfile.jsx";
 
 import VerifyOTP from "./pages/VerifyOTP.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
+// import Layout from "./components/Layout.jsx";
 
 import Feedback from "./pages/feed.jsx";
 
@@ -34,6 +35,8 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/landing" element={<LandingPage />} />
           <Route path="/feedback" element={<Feedback />} />
+          <Route path="/home" element={<Home />} />
+          {/* <Route path="/layout" element={<Layout />} /> */}
 
           {/* Must be PUBLIC */}
           <Route path="/complete-profile" element={<CompleteProfile />} />
@@ -41,12 +44,12 @@ const App = () => {
           {/* Protected dashboard */}
           <Route
             element={
-              <ProtectedRoute>
+              // <ProtectedRoute>
                 <Layout />
-              </ProtectedRoute>
+              // </ProtectedRoute>
             }
           >
-            <Route path="/home" element={<Home />} />
+            {/* <Route path="/home" element={<Home />} /> */}
             <Route path="/billing" element={<BillingInvoices />} />
             <Route path="/patienthistory" element={<PatientHistory />} />
             <Route path="/userprofile" element={<UserProfile />} />

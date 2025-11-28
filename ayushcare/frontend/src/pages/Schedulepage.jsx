@@ -252,47 +252,47 @@
 // }
 
 
-import React, { useState, useEffect } from "react";
-import { apiGet, apiPost, apiPut } from "../api";
+ import React, { useState, useEffect } from "react";
+ import { apiGet, apiPost, apiPut } from "../api";
 
-export default function SchedulePage() {
-  const token = localStorage.getItem("token");
-  const [appointments, setAppointments] = useState([]);
+ export default function SchedulePage() {
+   const token = localStorage.getItem("token");
+   const [appointments, setAppointments] = useState([]);
 
-  useEffect(() => {
-    loadAppointments();
-  }, []);
+   useEffect(() => {
+     loadAppointments();
+   }, []);
 
-  const loadAppointments = async () => {
-    const res = await apiGet("/api/appointments/user/", token);
-    if (res.success) setAppointments(res.data);
-  };
+   const loadAppointments = async () => {
+     const res = await apiGet("/api/appointments/user/", token);
+     if (res.success) setAppointments(res.data);
+   };
 
-  const checkIn = async (id) => {
-    await apiPut(`/api/appointments/update/${id}/`, { status: "checked-in" }, token);
-    loadAppointments();
-  };
+   const checkIn = async (id) => {
+     await apiPut(`/api/appointments/update/${id}/`, { status: "checked-in" }, token);
+     loadAppointments();
+   };
 
-  const cancelAppointment = async (id) => {
-    await apiPut(`/api/appointments/update/${id}/`, { status: "cancelled" }, token);
-    loadAppointments();
-  };
+   const cancelAppointment = async (id) => {
+     await apiPut(`/api/appointments/update/${id}/`, { status: "cancelled" }, token);
+     loadAppointments();
+   };
 
-  return (
-    <div className="appointments-container">
-      <h2>Your Appointments</h2>
+   return (
+     <div className="appointments-container">
+       <h2>Your Appointments</h2>
 
-      {appointments.map((a) => (
-        <div key={a.id} className="appointment-card">
-          <p><strong>Date:</strong> {a.date}</p>
-          <p><strong>Time:</strong> {a.time}</p>
-          <p><strong>Doctor:</strong> {a.doctor}</p>
-          <p><strong>Status:</strong> {a.status}</p>
+       {appointments.map((a) => (
+         <div key={a.id} className="appointment-card">
+           <p><strong>Date:</strong> {a.date}</p>
+           <p><strong>Time:</strong> {a.time}</p>
+           <p><strong>Doctor:</strong> {a.doctor}</p>
+           <p><strong>Status:</strong> {a.status}</p>
 
-          <button onClick={() => checkIn(a.id)}>Check-In</button>
-          <button onClick={() => cancelAppointment(a.id)}>Cancel</button>
-        </div>
-      ))}
-    </div>
-  );
-}
+           <button onClick={() => checkIn(a.id)}>Check-In</button>
+           <button onClick={() => cancelAppointment(a.id)}>Cancel</button>
+      </div>
+     ))}
+     </div>
+ );
+ }
