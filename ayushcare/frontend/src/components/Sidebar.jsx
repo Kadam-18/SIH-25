@@ -4,12 +4,12 @@ import {
   FaCalendarAlt,
   FaChartLine,
   FaBell,
-  FaFileInvoiceDollar,
+  FaFileInvoice,
   FaHistory,
   FaClinicMedical,
   FaCommentDots,
-  FaUserCircle,
   FaHome,
+  FaUserCircle,
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import "./Sidebar.css";
@@ -27,64 +27,63 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
     { icon: <FaCalendarAlt />, text: "Schedule", path: "/schedule" },
     { icon: <FaChartLine />, text: "Progress Tracking", path: "/progress" },
     { icon: <FaBell />, text: "Notifications", path: "/notifications" },
-    { icon: <FaFileInvoiceDollar />, text: "Billing & Invoices", path: "/billing" },
+    { icon: <FaFileInvoice />, text: "Billing & Invoices", path: "/billing" },
     { icon: <FaHistory />, text: "Patient History", path: "/patienthistory" },
     { icon: <FaClinicMedical />, text: "Panchakarma Centres", path: "/centres" },
     { icon: <FaCommentDots />, text: "Feedback", path: "/feedback" },
   ];
 
   return (
-    <div>
-      {/* Overlay */}
+    <>
       <div
-        className={`sidebar-overlay ${sidebarOpen ? "show" : ""}`}
+        className={`sidebar-overlay ${sidebarOpen ? "visible" : ""}`}
         onClick={() => setSidebarOpen(false)}
       />
 
-      {/* Sidebar Container */}
       <aside className={`sidebar ${sidebarOpen ? "open" : ""}`}>
-        
-        {/* Profile Header */}
+        {/* == Profile Header Section == */}
         <div
-          className="profile-header"
+          className="profile-section"
           onClick={() => {
             navigate("/userprofile");
             setSidebarOpen(false);
           }}
         >
-          <FaUserCircle className="profile-icon" />
-          <h3 className="profile-title">MY PROFILE</h3>
-          <p className="profile-sub">View / Edit</p>
-
-          <button
-            className="close-btn"
-            onClick={(e) => {
-              e.stopPropagation();
-              setSidebarOpen(false);
-            }}
-          >
-            <FaTimes />
-          </button>
+          <FaUserCircle className="sidebar-profile-icon" />
+          <h2>MY PROFILE</h2>
+          <p>View/edit</p>
         </div>
 
-        {/* Menu Items */}
+        {/* Close Button */}
+        <button
+          className="close-btn"
+          onClick={(e) => {
+            e.stopPropagation();
+            setSidebarOpen(false);
+          }}
+        >
+          <FaTimes />
+        </button>
+
+        {/* Menu with bar containers */}
         <nav className="sidebar-nav">
           {items.map((it, i) => (
             <div
               key={i}
-              className="sidebar-item"
+              className="sidebar-item-container"
               onClick={() => {
                 navigate(it.path);
                 setSidebarOpen(false);
               }}
             >
-              <span className="sidebar-icon">{it.icon}</span>
-              <span className="sidebar-text">{it.text}</span>
+              <div className="menu-bar">
+                <span className="sidebar-icon">{it.icon}</span>
+                <span className="sidebar-text">{it.text}</span>
+              </div>
             </div>
           ))}
         </nav>
-
       </aside>
-    </div>
+    </>
   );
 }

@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-// import Navbar from "../components/Navbar";
-// import Sidebar from "../components/Sidebar";
 import Carousel from "../components/Carousel";
 import CardsSection from "../components/CardsSection";
 import CentresCarousel from "../components/CentresCarousel";
@@ -31,14 +29,13 @@ export default function Home() {
   ];
 
   return (
+    
     <div className="home-root" style={{ position: "relative" }}>
-    {/* <div className={`home-root ${sidebarOpen ? "no-scroll" : ""}`}>
-      <Navbar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-      <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} /> */}
 
       <main className="container">
         {/* Hero carousel */}
         <Carousel images={heroImages} />
+        </main>
 
         {/* Description */}
         <section className="description-section">
@@ -110,7 +107,7 @@ export default function Home() {
         <ContactSection />
       </section>
 
-      </main>
-    </div>
+      {/* </main> */}
+     </div>
   );
 }
