@@ -1,160 +1,144 @@
+/* ===== GLOBAL BACKGROUND ===== */
 .landing-root {
-  background: url("/bg-landing.jpg") center/cover no-repeat fixed;
   min-height: 100vh;
+  width: 100%;
+  background: url("/bglanding.jpg") center/cover no-repeat fixed;
+  overflow-x: hidden;
 }
 
-
+/* ===== NAVBAR ===== */
 .landing-navbar {
   position: fixed;
   top: 0;
   width: 100%;
-  height: 120px;
+  height: 110px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 40px;
-  z-index: 999;
-
-  /* Add navbar background image here */
-  background-color: #e9fae4;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  border-bottom: 1px solid rgba(0,0,0,0.12);
+  background: rgba(233, 250, 228, 0.95);
+  backdrop-filter: blur(4px);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  z-index: 1000;
 }
 
-
 .nav-logo img {
-  height: 100px;   /* Adjust size */
-  width: auto;
+  height: 165px;
   object-fit: contain;
-  margin-top: 10px; /* move slightly down */
   cursor: pointer;
 }
 
 .nav-links button {
-  background: none;
+  background: transparent;
   border: none;
-  margin: 0 20px;
+  margin: 0 18px;
   font-size: 20px;
-  cursor: pointer;
-  color: #2f4f29;
   font-weight: 700;
+  color: #1f4d2b;
+  cursor: pointer;
 }
 
 .nav-links button:hover {
   color: #4e8f52;
+  transform: translateY(-3px);
+  transition: 0.3s ease;
 }
 
-.nav-auth {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-/*signup btn*/
-.signup-btn {
-  background:#4e8f52 ;
+.nav-auth button {
+  padding: 10px 24px;
+  border-radius: 28px;
+  font-size: 18px;
+  font-weight: 600;
+  background: #4e8f52;
+  color: white;
   border: 2px solid #4e8f52;
-  color: #ffffff;
-  padding: 10px 20px;
-  border-radius: 25px;
-  font-size: 18px;
-  font-weight: 600;
-  cursor: pointer;
   transition: 0.3s ease;
-}
-
-.signup-btn:hover {
-  background: #4e8f52;
-  color: #fff;
-}
-
-.login-btn {
-  background: #4e8f52;
-  color: #fff;
-  padding: 10px 20px;
-  border-radius: 25px;
-  border: none;
-  font-size: 18px;
-  font-weight: 600;
   cursor: pointer;
-  transition: 0.3s ease;
-}
-.login-btn:hover {
-  background: #3d7544;
+  margin-left: 10px;
 }
 
-/* HERO SECTION */
+.nav-auth button:hover {
+  background: #3b6843;
+}
+
+/* ===== HERO SECTION ===== */
 .hero-section {
-  height: 100vh;
-  background: #e5f4df00 url('/leaves-bg.png') center/cover no-repeat; /* put your Ayurvedic leaves background */
+  height: 95vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
-  padding-top: 80px;
+  padding-top: 130px;
 }
 
-.hero-section h1 {
-  font-size: 42px;
-  color: #2f4f29;
+.landing-welcome {
+  font-size: 70px;
   font-weight: 800;
+  color: #f7c59c;
+  letter-spacing: 1px;
+  font-variant: small-caps;
 }
 
-.hero-section p {
-  font-size: 18px;
+.landing-title {
+  font-size: 45px;
+  font-weight: 700;
   margin-top: 10px;
-  color: #567d57;
+  color:#f7c59c;
+   font-variant: small-caps;
 }
 
-/* Gallery / About / Work Sections Common Styling */
-.gallery-section,
-.about-section,
-.work-section {
-  padding: 40px 40px;        /* reduced spacing */
-  text-align: center;
-  width: 80%;               /* full width */
-  max-width: none;           /* remove limit */
-  margin: 0 auto;            /* center container */
-  backdrop-filter: blur(6px);
-  background: rgba(255, 255, 255, 0);
-  border-radius: 18px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
-  margin-bottom: 70px;
-  margin-top: -50px; 
+.landing-sub {
+  font-size: 25px;
+  margin-top: 12px;
+  color: #f7c59c;
+  max-width: 900px;
+  line-height: 1.6;
+   font-variant: small-caps;
 }
 
-/* Section Headings */
-.gallery-section h2,
-.about-section h2,
-.work-section h2 {
-  font-size: 36px;
-  font-weight: 900;
-  color: #38613c;
-  margin-top: 0px;
-  text-transform:uppercase;
-  font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-  letter-spacing: 2px;
-}
-
-
-.gallery-grid {
-  margin-top: 20px;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 40px;
-  justify-items: center;       /* Center cards */
+/* ======================== GALLERY SECTION========================= */
+.gallery-section {
   width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;                  /* centers the whole section */
+  padding: 70px 20px;
+  background: #ffffff00;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
-/*-------new----------------*/
-.gallery-card {
-  background: rgba(255, 255, 255, 0.85);
-  padding: 14px;
-  border-radius: 16px;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+
+.gallery-title {
   text-align: center;
-  transition: transform 0.3s ease;
+  font-size: 70px;
+  font-weight: 900;
+  letter-spacing: 6px;
+  margin-bottom: 70px;
+  color: #f7c59c;
+  font-style: italic;
+   font-variant: small-caps;
+}
+
+/* GRID CENTERING */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  justify-items: center;           /* centers cards inside columns */
+  gap: 35px;
+  width: 100%;
+  max-width: 1200px;
+}
+
+
+.gallery-card {
+  width: 280px;
+  background: #ffdfba;
+  border-radius: 18px;
+  padding: 14px;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+  text-align: center;
+  transition: 0.3s ease;
 }
 
 .gallery-card:hover {
@@ -163,58 +147,68 @@
 
 .gallery-card img {
   width: 100%;
-  height: 250px;
+  height: 230px;
+  border-radius: 12px;
   object-fit: cover;
-  border-radius: 14px;
 }
 
 .gallery-card p {
-  margin-top: 10px;
+  margin-top: 12px;
   font-size: 18px;
   font-weight: 700;
-  color: #234b27;
-  text-transform: capitalize;
-}
-/*-----------------------------------*/
-.g-item {
-  height: auto;
-  background: rgba(255, 255, 255, 0.7);
-  border-radius: 14px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  color: #000000;
+  font-variant: small-caps;
 }
 
-.g-item img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover; /* crop nicely */
-  border-radius: 14px;
+/* ===== ABOUT / WORK ===== */
+.about-section,
+.work-section {
+  width: 85%;
+  margin: 60px auto;
+  background: rgba(255, 255, 255, 0);
+  padding: 40px 35px;
+  border-radius: 18px;
+  text-align: center;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+  backdrop-filter: blur(6px);
+}
+
+.about-section h2,
+.work-section h2 {
+  font-size: 55px;
+  font-weight: 900;
+  color: #f7c59c;
+ font-style: italic;
+  font-variant: small-caps;
+}
+
+.about-section p,
+.work-section p {
+  font-size: 19px;
+  line-height: 1.6;
+  max-width: 850px;
+  margin: 0 auto;
+  color:#f7c59c;
+  font-variant: small-caps;
+}
+
+/* Button */
+.join-btn {
+  margin-top: 24px;
+  padding: 14px 32px;
+  font-size: 18px;
+  font-weight: 700;
+ background: #bd986c;
+  color: rgb(0, 0, 0);
+  border-radius: 12px;
+  border: none;
   cursor: pointer;
-  transition: transform 0.5s ease;
+  transition: 0.3s ease;
+   font-variant: small-caps;
 }
 
-.g-item img:hover {
-  transform: scale(1.08);
-}
-
-
-
-/* Generic Text Styling */
-section h2 {
-  font-size: 32px;
-  margin-bottom: 20px;
-  color: #264a28;
-}
-/* logo setting */
-
-.nav-logo img, .nav-logo-img {
-  height: 200px;        /* Increased height */
-  width: auto;         /* Let width adjust proportionally */
-  object-fit:contain;
-  filter: drop-shadow(0 0 1px rgba(0,0,0,0.2));
-  cursor: pointer;
- 
+.join-btn:hover {
+  background: #6e4d2d; 
+  transform: translateY(-4px);
+   color: white;
 }

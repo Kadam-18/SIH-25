@@ -1,255 +1,234 @@
-.schedule-root {
-  padding: 28px;
-  background: #f6f8f9;
-  min-height: calc(100vh - 80px);
-  font-family: "Inter", "Segoe UI", sans-serif;
+.schedule-container {
+  display: flex;
+  gap: 24px;
+  padding: 32px;
+  min-height: 100vh;
+  background: #eef2f7;
+  font-family: "Inter", sans-serif;
 }
 
-/* Header */
-.schedule-header {
+/* LEFT Calendar Panel */
+.calendar-box {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 16px;
+  width: 260px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+
+.calendar-box h3 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: #1e293b;
+}
+
+.date-picker {
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid #cbd5e1;
+  font-size: 15px;
+}
+
+/* RIGHT SIDE */
+.slots-section {
+  flex: 1;
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 32px;
+  box-shadow: 0 6px 22px rgba(0,0,0,0.08);
+}
+
+.page-title {
+  font-size: 24px;
+  font-weight: 800;
+  color: #1e293b;
+  margin-bottom: 28px;
+}
+
+/* Session Cards */
+.session-card {
+  background: #f9fbfc;
+  border: 1px solid #e2e8f0;
+  padding: 22px;
+  border-radius: 16px;
+  margin-bottom: 26px;
+}
+
+.session-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
-.schedule-header h1 {
-  margin: 0;
-  font-size: 22px;
-  color: #111827;
+.session-header h3 {
+  color: #0f172a;
+  font-size: 18px;
+  font-weight: 700;
 }
 
-.muted {
-  color: #6b7280;
+.session-time {
   font-size: 14px;
+  color: #475569;
 }
 
-.search-filter {
+/* Slots Grid */
+.slots-grid {
   display: flex;
-  align-items: center;
+  flex-wrap: wrap;
   gap: 10px;
 }
 
-.search-box {
-  display: flex;
-  align-items: center;
+.slot-btn {
+  padding: 12px 18px;
+  border-radius: 12px;
   background: #ffffff;
-  border-radius: 10px;
-  padding: 8px 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-}
-
-.search-icon {
-  color: #6b7280;
-  margin-right: 8px;
-}
-
-.search-box input {
-  border: none;
-  outline: none;
+  border: 1px solid #cbd5e1;
+  cursor: pointer;
+  font-weight: 600;
   font-size: 14px;
-  background: transparent;
 }
 
-.filter-dropdown {
-  padding: 8px 12px;
-  border-radius: 10px;
-  border: 1px solid rgba(14, 20, 24, 0.08);
+.slot-btn:hover {
+  background: #eff6ff;
+  border-color: #3b82f6;
+}
+
+.slot-btn.active {
+  background: #3b82f6;
+  color: #fff;
+  border-color: #3b82f6;
+}
+
+/* Waiting List */
+.waiting {
+  margin-top: 18px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.wait-btn {
+  border: none;
+  background: none;
+  color: #2563eb;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.calendar-box {
+  width: 300px;
+  background: #ffffffcc;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+}
+
+.left-title {
+  font-size: 20px;
+  font-weight: 800;
+  margin-bottom: 12px;
+  color: #1b3a25;
+}
+
+.selected-date {
+  margin-top: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.react-calendar {
+  border: none;
+  font-family: inherit;
+  border-radius: 12px;
   background: #fff;
-  font-weight: 500;
-  color: #111827;
+  padding: 8px;
 }
 
-/* Appointments List */
-.appointments-list {
+.react-calendar__tile--active {
+  background: #4e8f52 !important;
+  color: white !important;
+  border-radius: 8px;
+}
+/* LEFT SIDE CALENDAR CARD */
+.calendar-container {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 22px;
+  width: 320px;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.12);
   display: flex;
   flex-direction: column;
-  gap: 18px;
-}
-
-.appointment-card {
-  background: #ffffff;
-  border-radius: 12px;
-  padding: 16px;
-  box-shadow: 0 6px 20px rgba(17, 24, 39, 0.08);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.appointment-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 26px rgba(17, 24, 39, 0.12);
-}
-
-.row {
-  display: flex;
   align-items: center;
-  justify-content: space-between;
-  color: #1f2937;
-  margin-bottom: 8px;
-  flex-wrap: wrap;
 }
 
-.icon {
-  margin-right: 8px;
-  color: #0ea5e9;
-}
-
-/* Status colors */
-.status {
-  font-weight: 700;
-  padding: 3px 8px;
-  border-radius: 6px;
-  font-size: 13px;
-}
-
-.status.scheduled {
-  background: rgba(14, 165, 233, 0.12);
-  color: #0ea5e9;
-}
-
-.status.completed {
-  background: rgba(34, 197, 94, 0.12);
-  color: #16a34a;
-}
-
-.status.cancelled {
-  background: rgba(239, 68, 68, 0.12);
-  color: #ef4444;
-}
-
-/* .status["checked-in"], */
-.status.checked-in {
-  background: rgba(20, 184, 166, 0.12);
-  color: #0d9488;
-}
-
-.status.rescheduled {
-  background: rgba(245, 158, 11, 0.12);
-  color: #d97706;
-}
-
-/* Buttons */
-.actions {
-  display: flex;
-  gap: 10px;
-  margin-top: 10px;
-  flex-wrap: wrap;
-}
-
-.btn {
-  border: none;
-  border-radius: 8px;
-  padding: 8px 12px;
-  font-weight: 600;
-  cursor: pointer;
-  color: white;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.btn.reschedule {
-  background: #f59e0b;
-}
-.btn.reschedule:hover {
-  background: #d97706;
-}
-
-.btn.cancel {
-  background: #ef4444;
-}
-.btn.cancel:hover {
-  background: #dc2626;
-}
-
-.btn.checkin {
-  background: #16a34a;
-}
-.btn.checkin:hover {
-  background: #15803d;
-}
-
-.no-data {
-  text-align: center;
-  color: #6b7280;
-  margin-top: 40px;
-}
-
-/* Modal */
-.reschedule-modal {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 50;
-}
-
-.modal-content {
-  background: #fff;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  width: 320px;
-}
-
-.modal-content h3 {
-  margin-top: 0;
+.calendar-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: #1b3a25;
   margin-bottom: 14px;
-  color: #111827;
 }
 
-.modal-content label {
-  font-weight: 600;
-  font-size: 14px;
-  display: block;
-  margin-top: 8px;
-  margin-bottom: 4px;
-}
-
-.modal-content input {
+/* Selected Date Box */
+.selected-date-box {
+  margin-top: 16px;
+  padding: 12px 18px;
+  background: #eaf3ff;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 700;
+  border-left: 6px solid #4c87e6;
+  text-align: center;
   width: 100%;
-  padding: 8px;
-  border-radius: 8px;
-  border: 1px solid rgba(14, 20, 24, 0.1);
+  color: #0a2a43;
 }
 
-.modal-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 14px;
+/* REACT CALENDAR CUSTOM STYLE */
+.react-calendar {
+  width: 100%;
+  border: none;
+  background: #ffffff;
+  font-family: inherit;
+  border-radius: 12px;
 }
 
-.modal-actions .btn.save {
-  background: #0ea5e9;
+.react-calendar__navigation button {
+  color: #1b3a25;
+  font-size: 18px;
+  font-weight: 700;
 }
 
-.modal-actions .btn.cancel {
-  background: #ef4444;
+.react-calendar__month-view__weekdays {
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #2e4e2e;
 }
 
-/* Responsive */
-@media (max-width: 640px) {
-  .search-filter {
-    flex-direction: column;
-    align-items: stretch;
-    width: 100%;
-  }
-
-  .filter-dropdown {
-    width: 100%;
-  }
-
-  .search-box {
-    width: 100%;
-  }
-
-  .appointment-card {
-    padding: 14px;
-  }
+.react-calendar__tile {
+  padding: 10px 0;
+  font-weight: 600;
+  border-radius: 10px;
+  transition: 0.2s ease;
 }
+
+/* Normal Days */
+.react-calendar__tile:hover {
+  background: #e3f7e3;
+}
+
+/* Selected Day */
+.react-calendar__tile--active {
+  background: #4e8f52 !important;
+  color: white !important;
+  border-radius: 12px;
+}
+
+/* TODAY Highlight */
+.react-calendar__tile--now {
+  background: #d8e9ff !important;
+  color: #0052cc !important;
+  font-weight: 700;
+  border-radius: 12px;
+}
+

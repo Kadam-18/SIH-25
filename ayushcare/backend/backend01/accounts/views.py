@@ -6,6 +6,8 @@ from django.contrib.auth.hashers import make_password, check_password
 from django.core.mail import send_mail
 from rest_framework_simplejwt.tokens import RefreshToken
 
+from django.db import IntegrityError
+
 import random
 from .models import EmailOTP
 from .serializers import SignupSerializer, VerifyOTPSerializer, LoginSerializer
@@ -49,39 +51,92 @@ class SignupView(APIView):
         return Response({"success": False, "errors": serializer.errors}, status=400)
 
 
+# class VerifyOTPView(APIView):
+#     def post(self, request):
+#         serializer = VerifyOTPSerializer(data=request.data)
+
+#         if serializer.is_valid():
+#             email = serializer.validated_data["email"]
+#             otp = serializer.validated_data["otp"]
+
+#             try:
+#                 otp_entry = EmailOTP.objects.get(email=email)
+#             except EmailOTP.DoesNotExist:
+#                 return Response({"success": False, "message": "OTP not found"}, status=404)
+
+#             if otp_entry.otp != otp:
+#                 return Response({"success": False, "message": "Invalid OTP"}, status=400)
+
+#             # Create user with stored values
+#             user = User.objects.create(
+#                 username=otp_entry.temp_username,
+#                 email=email,
+#                 password=make_password(otp_entry.temp_password),
+#             )
+
+#             # Done → delete OTP entry
+#             otp_entry.delete()
+
+#             return Response(
+#                 {"success": True, "message": "Signup successful"},
+#                 status=200
+#             )
+
+#         return Response({"success": False, "errors": serializer.errors}, status=400)
+
+
 class VerifyOTPView(APIView):
     def post(self, request):
         serializer = VerifyOTPSerializer(data=request.data)
 
-        if serializer.is_valid():
-            email = serializer.validated_data["email"]
-            otp = serializer.validated_data["otp"]
+        if not serializer.is_valid():
+            return Response(
+                {"success": False, "errors": serializer.errors},
+                status=400
+            )
 
-            try:
-                otp_entry = EmailOTP.objects.get(email=email)
-            except EmailOTP.DoesNotExist:
-                return Response({"success": False, "message": "OTP not found"}, status=404)
+        email = serializer.validated_data["email"]
+        otp = serializer.validated_data["otp"]
 
-            if otp_entry.otp != otp:
-                return Response({"success": False, "message": "Invalid OTP"}, status=400)
+        otp_entry = EmailOTP.objects.filter(email=email).first()
+        if not otp_entry:
+            return Response(
+                {"success": False, "message": "OTP expired or not found"},
+                status=400
+            )
 
-            # Create user with stored values
-            user = User.objects.create(
+        if otp_entry.otp != otp:
+            return Response(
+                {"success": False, "message": "Invalid OTP"},
+                status=400
+            )
+
+        # ✅ Prevent duplicate users
+        if User.objects.filter(email=email).exists():
+            otp_entry.delete()
+            return Response(
+                {"success": False, "message": "User already exists. Please login."},
+                status=400
+            )
+
+        try:
+            User.objects.create(
                 username=otp_entry.temp_username,
                 email=email,
                 password=make_password(otp_entry.temp_password),
             )
-
-            # Done → delete OTP entry
-            otp_entry.delete()
-
+        except IntegrityError:
             return Response(
-                {"success": True, "message": "Signup successful"},
-                status=200
+                {"success": False, "message": "Account already exists"},
+                status=400
             )
 
-        return Response({"success": False, "errors": serializer.errors}, status=400)
+        otp_entry.delete()
 
+        return Response(
+            {"success": True, "message": "Signup successful"},
+            status=200
+        )
 
 class LoginView(APIView):
     def post(self, request):

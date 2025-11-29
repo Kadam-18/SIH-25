@@ -1,15 +1,15 @@
 import React from "react";
 import { FaBars, FaHome, FaSearch, FaUserCircle } from "react-icons/fa";
-import { useNavigate } from "react-router-dom"; // ✅ Import navigation hook
+import { useNavigate } from "react-router-dom";
 import "./Navbar.css";
 
-export default function Navbar({ sidebarOpen, setSidebarOpen }) {
-  const navigate = useNavigate(); // ✅ Initialize navigate()
+export default function Navbar({ sidebarOpen, setSidebarOpen, userName = "Mahi Sharma" }) {
+  const navigate = useNavigate();
 
   return (
     <header className="navbar">
+      {/* LEFT: menu / home */}
       <div className="navbar-left">
-        {/* Hamburger or Home icon depending on sidebar state */}
         {!sidebarOpen ? (
           <button
             className="icon-btn"
@@ -26,7 +26,7 @@ export default function Navbar({ sidebarOpen, setSidebarOpen }) {
         )}
       </div>
 
-      {/* Search bar centered */}
+      {/* CENTER: search */}
       <div className="navbar-center">
         <div className="search-wrapper">
           <FaSearch className="search-icon" />
@@ -37,15 +37,23 @@ export default function Navbar({ sidebarOpen, setSidebarOpen }) {
         </div>
       </div>
 
-      {/* Login / Signup Button */}
-      <div className="navbar-right">
-        <button
-          className="btn-outline"
-          onClick={() => navigate("/login")} // ✅ Navigation handled here
-        >
-          <FaUserCircle style={{ marginRight: 8 }} />
-          Login / Signup
-        </button>
+      {/* RIGHT: profile icon + name */}
+      <div
+        className="navbar-right"
+        onClick={() => navigate("/userprofile")}
+      >
+        <div className="account-btn">
+          <div className="avatar-circle">
+            {/* later you can replace false with check for user photo */}
+            {false ? (
+              <img src="/user-photo.jpg" alt="User" className="avatar-img" />
+            ) : (
+              <FaUserCircle className="default-avatar" />
+            )}
+          </div>
+          <span className="user-name">{userName}</span>
+          <span className="dots">...</span>
+        </div>
       </div>
     </header>
   );

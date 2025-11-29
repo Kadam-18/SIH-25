@@ -13,6 +13,7 @@ import Notifications from "./pages/Notifications.jsx";
 import LandingPage from "./pages/Landing.jsx";
 import CompleteProfile from "./pages/CompleteProfile.jsx";
 
+import ProgressTracking from "./pages/Progresstracking.jsx";
 import VerifyOTP from "./pages/VerifyOTP.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
@@ -36,13 +37,12 @@ const App = () => {
           <Route path="/verify-otp" element={<VerifyOTP />} />
           <Route path="/login" element={<Login />} />
           <Route path="/landing" element={<LandingPage />} />
-          <Route path="/feedback" element={<Feedback />} />
 
           {/* Must be PUBLIC */}
           <Route path="/complete-profile" element={<CompleteProfile />} />
 
-          <Route path="/centers" element={<Centers/>} />
-          <Route path="/centers/:id" element={<CenterDetail/>} />
+          {/* <Route path="/centers" element={<Centers/>} />
+          <Route path="/centers/:id" element={<CenterDetail/>} /> */}
 
           {/* Protected dashboard */}
           <Route
@@ -58,6 +58,11 @@ const App = () => {
             <Route path="/userprofile" element={<UserProfile />} />
             <Route path="/notifications" element={<Notifications />} />
             <Route path="/schedule" element={<Schedulepage />} />
+            {/* other sidebar pages later */}
+            <Route path="/centers" element={<Centers/>} />
+            <Route path="/centers/:id" element={<CenterDetail/>} />
+            <Route path="/feedback" element={<Feedback />} />
+            <Route path="/progress" element={<ProgressTracking />} />
           </Route>
         </Routes>
 

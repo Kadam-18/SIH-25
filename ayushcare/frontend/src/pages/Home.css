@@ -7,77 +7,13 @@
   color: #2f4f29;
 }
 
-/* --- CENTER IMAGE SECTION --- */
-.center-image-container {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  margin-bottom: 40px;
-}
-
-.center-image-container img {
-  width: 340px;
-  height: 220px;
-  border-radius: 14px;
-  object-fit: cover;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-}
-
-/* --- CONTACT SECTION WRAPPER --- */
-.contact-wrapper {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  margin-top: 50px 0;
-}
-
-/* --- GRID FOR CONTACT DETAILS --- */
-.contact-grid {
-  background: rgba(255, 255, 255, 0.75); /* glass effect */
-  backdrop-filter: blur(6px);
-  border-radius: 16px;
-  padding: 30px 40px;
-  max-width: 1000px;
-  width: 90%;
-  margin: auto;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
-}
-
-/* Improve grid spacing & alignment */
-.contact-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 25px;
-  text-align: center;
-}
-
-/* Individual item */
-.contact-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-}
-
-/* Icons */
-.contact-item i {
-  font-size: 26px;
-  color: #2f4f29;
-  margin-bottom: 8px;
-}
-
-/* Headings */
-.contact-item h4 {
-  font-size: 18px;
-  font-weight: 700;
-  margin: 0;
-  color: #2f4f29;
-}
-
-/* Values */
-.contact-item p {
-  font-size: 15px;
-  color: #333;
+/* PAGE MAIN CONTAINER */
+.container {
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 0 20px; 
+  position: relative;
+  z-index: 2;
 }
 
 /* Social icons */
@@ -101,7 +37,7 @@
   color: #4f8f52;
 }
 
-/* 🌿 Wrapper Box for Why Section */
+/*  Wrapper Box for Why Section */
 .why-box {
   max-width: 900px;               /* keeps it centered */
   margin: 40px auto;              /* space above + center horizontally */
@@ -163,7 +99,7 @@
   color: #555;
 }
 
-/* 🌿 Stats Section (5000+, 50+, 20 years) */
+/*  Stats Section (5000+, 50+, 20 years) */
 .stats-section {
   margin-top: 30px;
   display: flex;
@@ -195,11 +131,11 @@
 }
 /* HOME PAGE BACKGROUND */
 .home-root {
-  background: url("/bg-landing.jpg") center/cover no-repeat fixed;
+  background: url("/home1-bg.jpg") center/cover no-repeat fixed;
   min-height: 100vh;
   width: 100%;
   padding-top: 90px;
-  position: relative;     /* required for overlay */
+  position: fixed;     /* required for overlay */
   z-index: 1;
   animation: bgFade 6s ease-in-out infinite alternate;
 
@@ -207,10 +143,10 @@
 
 /* Optional light blur overlay for readability */
 .home-root::before {
-  content: "";
+  content: normal;
   position: absolute;
   inset: 0;
-  background: rgba(255, 255, 255, 0.3); /* soft white overlay */
+  background: rgba(255, 255, 255, 0.599); /* soft white overlay */
   backdrop-filter: blur(2px);
   z-index: -1;
 }
@@ -218,11 +154,74 @@
   from { filter: brightness(1); }
   to { filter: brightness(0.92); }
 }
-/* PAGE MAIN CONTAINER */
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px; 
-  position: relative;
-  z-index: 2;
+
+/* --- CONTACT SECTION WRAPPER --- */
+.contact-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 50px 0;
+}/* --- CENTER IMAGE SECTION --- */
+.center-image-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 40px;
+}
+
+.center-image-container img {
+  width: 340px;
+  height: 220px;
+  border-radius: 14px;
+  object-fit: cover;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+/* --- GRID FOR CONTACT DETAILS --- */
+.contact-grid {
+  background: rgba(255, 255, 255, 0.75); /* glass effect */
+  backdrop-filter: blur(6px);
+  border-radius: 16px;
+  padding: 30px 40px;
+  max-width: 1000px;
+  width: 90%;
+  margin: auto;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+
+/* Improve grid spacing & alignment */
+.contact-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 25px;
+  text-align: center;
+}
+
+/* Individual item */
+.contact-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Icons */
+.contact-item i {
+  font-size: 26px;
+  color: #2f4f29;
+  margin-bottom: 8px;
+}
+
+/* Headings */
+.contact-item h4 {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0;
+  color: #2f4f29;
+}
+
+/* Values */
+.contact-item p {
+  font-size: 15px;
+  color: #333;
 }

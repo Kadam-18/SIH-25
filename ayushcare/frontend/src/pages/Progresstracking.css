@@ -1,0 +1,54 @@
+.progress-container {
+  padding: 24px;
+}
+
+.subtitle {
+  color: #666;
+  margin-bottom: 15px;
+}
+
+.tab-buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 25px;
+}
+
+.tab-buttons button {
+  padding: 10px 20px;
+  border: none;
+  background: #eaeaea;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.tab-buttons button.active {
+  background: #2a9d8f;
+  color: white;
+}
+
+.chart-card {
+  background: white;
+  padding: 20px;
+  margin-bottom: 25px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.notes-card {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.tag {
+  font-size: 12px;
+  margin-bottom: 15px;
+}
+
+.patient-tag {
+  color: #1d3557;
+}
+
+.therapist-tag {
+  color: #2a9d8f;
+}

@@ -1,7 +1,10 @@
 import React, { useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Landing.css";
 
 export default function LandingPage() {
+  const navigate = useNavigate();
+
   const homeRef = useRef(null);
   const galleryRef = useRef(null);
   const aboutRef = useRef(null);
@@ -14,15 +17,12 @@ export default function LandingPage() {
   return (
     <div className="landing-root">
 
-      {/* ---------------- NAVBAR ---------------- */}
+      {/* Navbar */}
       <nav className="landing-navbar">
-        {/* Ayushcare Logo on Left */}
         <div className="nav-logo">
-       <img src="/ayushcare-logo.png" alt="AyushCare Logo" className="logo-img" />
-      </div>
+          <img src="/ayushcare-logo.png" alt="AyushCare Logo" className="logo-img" />
+        </div>
 
-
-        {/* Menu Buttons */}
         <div className="nav-links">
           <button onClick={() => scrollToSection(homeRef)}>Home</button>
           <button onClick={() => scrollToSection(galleryRef)}>Gallery</button>
@@ -30,72 +30,71 @@ export default function LandingPage() {
           <button onClick={() => scrollToSection(workRef)}>Work With Us</button>
         </div>
 
-        {/* Login Button , Auth Buttons */}
-      <div className="nav-auth">
-        <button className="signup-btn" onClick={() => window.location.href="/signup"}>
-          Sign Up
-        </button>
-
-        <button className="login-btn" onClick={() => window.location.href="/login"}>
-          Login
-        </button>
-      </div>
-
+        <div className="nav-auth">
+          <button className="signup-btn" onClick={() => navigate("/signup")}>Sign Up</button>
+          <button className="login-btn" onClick={() => navigate("/login")}>Login</button>
+        </div>
       </nav>
 
-      {/* ---------------- HERO SECTION ---------------- */}
+      {/* Hero Section */}
       <section className="hero-section" ref={homeRef}>
-        <h1>Experience the Ancient Healing of Panchakarma</h1>
-        <p>Rebalance • Detoxify • Rejuvenate</p>
-      </section>
-
-     {/* ---------------- GALLERY SECTION ---------------- */}
-    <section className="gallery-section" ref={galleryRef}>
-      <h2 className="gallery-title">Gallery</h2>
-       <div className="gallery-grid">
-        
-      <div className="gallery-card">
-          <img src="/clinic1.jpg" alt="Panchakarma Clinic" />
-          <p>Panchakarma Clinic</p>
-      </div>
-
-      <div className="gallery-card">
-          <img src="/Equipment.jpg" alt="Panchakarma Equipments" />
-          <p>Panchakarma Equipments</p>
-      </div>
-
-      <div className="gallery-card">
-          <img src="/gallery3.avif" alt="Therapy Room" />
-          <p>Panchakarma Therapy Room</p>
-      </div>
-
-      <div className="gallery-card">
-          <img src="/gallery4.jpg" alt="Ayurvedic Treatment Setup" />
-          <p>Ayurvedic Treatment Setup</p>
-      </div>
-
-      <div className="gallery-card">
-          <img src="/gallery5.jpg" alt="Panchakarma Procedure" />
-          <p>Panchakarma Procedure</p>
-      </div>
-
-      </div>
-    </section>
-
-
-      {/* ---------------- ABOUT SECTION ---------------- */}
-      <section className="about-section" ref={aboutRef}>
-        <h2>About Panchakarma</h2>
-        <p>
-          Panchakarma is a holistic Ayurvedic cleansing and healing process that rejuvenates
-          the body and mind through detoxification therapies.
+        <h1 className="landing-welcome">Welcome to AyushCare</h1>
+        <h2 className="landing-title">
+          Experience the Ancient Healing of Panchakarma
+        </h2>
+        <p className="landing-sub">
+          A holistic journey towards balance, detoxification, and natural rejuvenation.
+          <br />Embrace the ancient wisdom of Panchakarma — where healing begins from within.
         </p>
       </section>
 
-      {/* ---------------- WORK WITH US SECTION ---------------- */}
+      {/* Gallery */}
+      <section className="gallery-section" ref={galleryRef}>
+        <h2 className="gallery-title">GALLERY</h2>
+
+        <div className="gallery-grid">
+          <div className="gallery-card">
+            <img src="/Equipment.jpg" alt="Equipments" />
+            <p>Panchakarma Equipments</p>
+          </div>
+
+          <div className="gallery-card">
+            <img src="/gallery3.avif" alt="Therapy Room" />
+            <p>Panchakarma Therapy Room</p>
+          </div>
+
+          <div className="gallery-card">
+            <img src="/treatment1.jpeg" alt="Setup" />
+            <p>Ayurvedic Treatment Setup</p>
+          </div>
+
+          <div className="gallery-card">
+            <img src="/treatment 2.jpg" alt="Procedure" />
+            <p>Panchakarma Procedure</p>
+          </div>
+        </div>
+      </section>
+
+      {/* About */}
+      <section className="about-section" ref={aboutRef}>
+        <h2>About Panchakarma</h2>
+        <p>
+          Panchakarma is the essence of Ayurvedic healing — a therapeutic detoxification system
+          designed to cleanse the body, balance the doshas, and restore natural immunity.
+          Herbal therapies, medicated oils, steam treatments, and rejuvenation practices
+          help eliminate deep-rooted toxins and revitalize both mind and body.
+        </p>
+      </section>
+
+      {/* Work With Us */}
       <section className="work-section" ref={workRef}>
         <h2>Work With Us</h2>
-        <p>Join us as a certified therapy center, therapist, or wellness partner.</p>
+        <p>
+          Join AyushCare as a wellness partner, clinic or Ayurvedic centre.
+          Grow with digital tools for patient engagement, therapy scheduling,
+          service promotion, and national-level client visibility.
+        </p>
+        <button className="join-btn">Become a Partner</button>
       </section>
 
     </div>
