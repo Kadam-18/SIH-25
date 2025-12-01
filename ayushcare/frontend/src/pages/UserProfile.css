@@ -1,132 +1,273 @@
-.profile-root {
-  padding: 28px;
-  background: #f6f8f9;
-  min-height: calc(100vh - 80px);
-  font-family: "Inter", "Segoe UI", sans-serif;
-}
-
-/* Header */
-.profile-header {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  margin-bottom: 20px;
-}
-
-.avatar {
-  font-size: 60px;
-  color: #00b894;
-}
-
-.profile-header h1 {
-  margin: 0;
-  font-size: 24px;
-  color: #111827;
-}
-
-.muted {
-  color: #6b7280;
-  font-size: 14px;
-}
-
-/* Card layout */
-.profile-card {
-  background: #ffffff;
-  border-radius: 12px;
+/* Main Container with Background */
+.user-profile-container {
+  min-height: 100vh;
+  background: 
+    linear-gradient(rgba(206, 225, 184, 0.536), rgba(255, 255, 255, 0.645)),
+    url('/bg1.jpg') center/cover fixed;
   padding: 20px;
-  margin-bottom: 24px;
-  box-shadow: 0 6px 20px rgba(17, 24, 39, 0.08);
 }
 
-/* Card header */
-.card-header {
+/* Main Profile Wrapper */
+.profile-wrapper {
+  display: grid;
+  grid-template-columns: 32% 68%;
+  gap: 22px;
+  padding: 30px;
+  min-height: 100vh;
+}
+
+/* LEFT MAIN PROFILE */
+.profile-left {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 25px;
+  text-align: center;
+  border-radius: 16px;
+  box-shadow: 0 4px 22px rgba(0,0,0,0.08);
+  backdrop-filter: blur(10px);
+}
+
+.photo-container {
+  background: #ffffff;
+  width: 100%;
+  height: 260px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 14px;
+  justify-content: center;
+  border-bottom: 1px solid rgba(0,0,0,0.09);
 }
 
-.card-header h2 {
-  font-size: 18px;
+.profile-big-photo {
+  font-size: 140px;
+  color: #1f4d2b; /* Green color for profile logo */
+}
+
+.profile-title {
+  font-size: 20px; /* Increased font size */
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: #1f4d2b; /* Green color matching profile logo */
+  position: relative;
+  display: inline-block;
+}
+
+.profile-title::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50px;
+  height: 2px;
+  background: #1f4d2b;
+  border-radius: 2px;
+}
+
+.info-line {
+  font-size: 15px;
+  margin: 6px 0;
   color: #111827;
+  font-weight: 600;
 }
 
-.edit-btn,
-.save-btn {
+.info-line.bold {
+  font-weight: 700;
+}
+
+.save-edit-btn {
+  margin-top: 18px;
+  width: 70%;
+  padding: 10px 0;
+  background: linear-gradient(90deg, #ff7b7b, #ff9933);
   border: none;
-  background: #00b894;
+  border-radius: 30px;
   color: white;
-  padding: 8px 12px;
-  border-radius: 8px;
+  font-weight: 700;
   cursor: pointer;
-  font-weight: 600;
+  font-size: 15px;
+  transition: 0.3s ease;
   display: flex;
   align-items: center;
-  gap: 6px;
-  transition: all 0.3s ease;
+  justify-content: center;
+  gap: 8px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.edit-btn:hover,
-.save-btn:hover {
-  background: #019a78;
+.save-edit-btn:hover {
   transform: translateY(-2px);
 }
 
-/* Form grid */
-.form-grid {
+/* RIGHT SIDE CARDS */
+.profile-right {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.info-box {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 22px rgba(0,0,0,0.08);
+  height: 100%;
+  backdrop-filter: blur(10px);
+}
+
+.equal-height {
+  min-height: 260px;
+}
+
+/* Enhanced Header Titles */
+.header-title {
+  font-size: 22px; /* Increased font size */
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: #1f4d2b; /* Green color matching profile logo */
+  position: relative;
+  display: inline-block;
+  padding-bottom: 8px;
+}
+
+.header-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, #1f4d2b, #2d6a4f);
+  border-radius: 2px;
+}
+
+/* Enhanced Info Grid Styles */
+.boxed {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
 }
 
-label {
+.detail-box {
+  background: linear-gradient(135deg, #ffffff, #f8f9f7);
+  border: 1px solid #e8e8e8;
+  padding: 16px 18px;
+  border-radius: 12px;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  border-left: 3px solid #1f4d2b; /* PERMANENT GREEN BORDER FOR ALL BOXES */
+}
+
+.detail-box::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 100%;
+  background: linear-gradient(180deg, #1f4d2b, #2d6a4f);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.detail-box:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 20px rgba(31, 77, 43, 0.1);
+  border-color: rgba(31, 77, 43, 0.2);
+}
+
+.detail-box:hover::before {
+  opacity: 1;
+}
+
+/* Enhanced labels with green accent */
+.detail-box label {
   display: block;
+  font-size: 13px;
   font-weight: 600;
-  font-size: 14px;
-  color: #334155;
+  color: #1f4d2b; /* Green color */
   margin-bottom: 6px;
+  letter-spacing: 0.5px;
 }
 
-input,
-select,
-textarea {
-  width: 100%;
-  padding: 8px 10px;
-  border-radius: 8px;
-  border: 1px solid rgba(14, 20, 24, 0.1);
-  font-size: 14px;
-  color: #111827;
-  background: #fff;
-  transition: border-color 0.3s ease;
+.detail-box span {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111;
 }
 
-input:focus,
-select:focus,
-textarea:focus {
-  border-color: #00b894;
-  outline: none;
+/* REMOVED: Special styling for important fields since all boxes now have green border */
+/* All boxes now have the permanent green left border */
+
+/* Medical info specific enhancements */
+.info-box:nth-child(2) .detail-box {
+  background: linear-gradient(135deg, #ffffff, #f7f9f7);
 }
 
-textarea {
-  min-height: 70px;
-  resize: vertical;
+.info-box:nth-child(2) .detail-box:hover {
+  background: linear-gradient(135deg, #f0f7f0, #ffffff);
 }
 
-.full-width {
+/* BMI special styling */
+.detail-box:has(label:contains("BMI")) {
+  background: linear-gradient(135deg, #ffffff, #e8f5e8) !important;
+}
+
+.detail-box:has(label:contains("BMI")) span {
+  color: #1f4d2b;
+  font-size: 16px;
+}
+
+/* CHANGED: Address box now spans 2 columns */
+.full {
   grid-column: span 2;
 }
 
-/* Responsive */
-@media (max-width: 640px) {
-  .profile-root {
-    padding: 18px;
-  }
+/* Redesigned Card */
+.redesigned-card {
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 22px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  backdrop-filter: blur(10px);
+}
 
-  .full-width {
-    grid-column: span 1;
-  }
+/* Additional enhancements for better visual hierarchy */
+.detail-box:has(label:contains("Healthy")) span {
+  color: #1f4d2b;
+  font-weight: 700;
+}
 
-  .avatar {
-    font-size: 50px;
-  }
+.detail-box:has(label:contains("None")) span {
+  color: #1f4d2b;
+  font-weight: 700;
+}
+
+/* Make the address box stand out but not full width */
+.detail-box.full {
+  background: linear-gradient(135deg, #ffffff, #f0f4f0);
+  /* Green border is already applied to all boxes */
+  grid-column: span 2; /* Takes 2 columns instead of full width */
+}
+
+.detail-box.full label {
+  color: #1f4d2b;
+  font-weight: 700;
+}
+
+/* Ensure all boxes maintain hover effects */
+.detail-box.full:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 20px rgba(31, 77, 43, 0.1);
+  border-color: rgba(31, 77, 43, 0.2);
+}
+
+.detail-box.full:hover::before {
+  opacity: 1;
+}.detail-box {
+  border-left: 3px solid #1f4d2b; /* PERMANENT GREEN BORDER FOR ALL BOXES */
 }

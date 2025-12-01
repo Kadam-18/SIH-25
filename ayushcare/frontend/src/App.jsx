@@ -9,11 +9,14 @@ import PatientHistory from "./pages/PatientHistory.jsx";
 import UserProfile from "./pages/Userprofile.jsx";
 import Layout from "./components/Layout.jsx";
 import Schedulepage from "./pages/Schedulepage.jsx";
-// import ProgressTracking from "./pages/Progresstracking.jsx"
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Notifications from "./pages/Notifications.jsx";
+import Centers from "./pages/Centers";
+import CenterDetail from "./pages/CenterDetail";
+import ProgressTracking from "./pages/Progresstracking.jsx";
+
 
 const App = () => {
   console.log("PatientHistory page loaded ✅");
@@ -38,6 +41,10 @@ const App = () => {
             <Route path="/notifications" element={<Notifications />} />
             <Route path="/schedule" element={<Schedulepage />} />
             {/* other sidebar pages later */}
+           <Route path="/centres" element={<Centers/>} />
+           <Route path="/centers/:id" element={<CenterDetail/>} />
+          <Route path="/progress" element={<ProgressTracking />} />
+
           </Route>
         </Routes>
 

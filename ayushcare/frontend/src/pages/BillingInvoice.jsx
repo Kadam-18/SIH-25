@@ -1,21 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import "./BillingInvoice.css";
 
 export default function BillingInvoice() {
+  // STATUS CAN BE "Paid" or "Unpaid"
+  const [invoiceStatus, setInvoiceStatus] = useState("Unpaid");
+
+  const therapies = [
+    { name: "Panchakarma Detox Package", qty: 1, price: 12000, total: 12000 },
+    { name: "Abhyanga + Shirodhara Combo", qty: 2, price: 2200, total: 4400 },
+    { name: "Herbal Oils & Medication Kit", qty: 1, price: 1200, total: 1200 },
+    { name: "Virechana Cleansing", qty: 1, price: 6000, total: 6000 },
+    { name: "Nasya (Nasal Therapy)", qty: 1, price: 1500, total: 1500 },
+  ];
+
   return (
     <div className="invoice-wrapper">
-      {/* Left Green Branding Column */}
       <aside className="invoice-side">
-
-      {/* SEARCH BAR INSIDE SIDEBAR */}
-      <div className="invoice-search">
-        <input
-          type="text"
-          placeholder="Search invoice..."
-          className="invoice-search-input"
-        />
-      </div>
-       {/* --------------- */}
         <h2 className="invoice-heading-vertical">INVOICE</h2>
 
         <div className="brand-box">
@@ -36,7 +36,7 @@ export default function BillingInvoice() {
         </div>
       </aside>
 
-      {/* Right main invoice */}
+      {/* RIGHT MAIN CONTENT */}
       <main className="invoice-main">
         <header className="invoice-top">
           <div>
@@ -54,7 +54,7 @@ export default function BillingInvoice() {
           </div>
         </header>
 
-        {/* Invoice Items Table */}
+        {/* TABLE */}
         <table className="invoice-table">
           <thead>
             <tr>
@@ -64,36 +64,38 @@ export default function BillingInvoice() {
               <th>TOTAL</th>
             </tr>
           </thead>
+
           <tbody>
-            <tr>
-              <td>Panchakarma Detox Package</td>
-              <td>01</td>
-              <td>₹12,000</td>
-              <td>₹12,000</td>
-            </tr>
-            <tr>
-              <td>Abhyanga + Shirodhara Combo</td>
-              <td>02</td>
-              <td>₹2,200</td>
-              <td>₹4,400</td>
-            </tr>
-            <tr>
-              <td>Herbal Oils & Medication Kit</td>
-              <td>01</td>
-              <td>₹1,200</td>
-              <td>₹1,200</td>
-            </tr>
+            {therapies.map((t, index) => (
+              <tr key={index}>
+                <td>{t.name}</td>
+                <td>{t.qty}</td>
+                <td>₹{t.price.toLocaleString()}</td>
+                <td>₹{t.total.toLocaleString()}</td>
+              </tr>
+            ))}
           </tbody>
         </table>
 
-        {/* Summary total */}
+        {/* SUMMARY */}
         <div className="summary-box">
           <p>Subtotal: <span>₹17,600</span></p>
           <p>Discount: <span>₹600</span></p>
           <p>Grand Total: <strong>₹17,000</strong></p>
         </div>
 
-        <div className="paid-stamp">PAID</div>
+        {/* PAYMENT LOGIC BUTTON */}
+        <div className="payment-actions">
+          {invoiceStatus === "Paid" ? (
+            <button className="paid-stamp">PAID</button>
+          ) : (
+            <>
+              <button className="unpaid-stamp">UNPAID</button>
+              <button className="pay-now-btn" onClick={() => setInvoiceStatus("Paid")}>Pay Now</button>
+            </>
+          )}
+        </div>
+
         <button className="download-btn">Download PDF</button>
       </main>
     </div>

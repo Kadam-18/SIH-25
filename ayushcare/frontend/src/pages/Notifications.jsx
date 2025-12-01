@@ -26,7 +26,7 @@ const Notifications = () => {
 
   return (
     <div className="notifications-root">
-      <h2 className="noti-title">NOtIfIcAtIoNs 🔔</h2>
+      <h2 className="noti-title">notifications </h2>
 
       <div className="notifications-list">
         {notifications.map((n, index) => (

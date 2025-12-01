@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./Progresstracking.css";
+import "./ProgressTracking.css";
 
 import {
   Chart as ChartJS,

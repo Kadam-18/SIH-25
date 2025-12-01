@@ -1,11 +1,31 @@
-/* --- SECTION TITLE --- */
 .section-title {
   text-align: center;
   font-size: 24px;
   font-weight: 700;
   margin: 40px 0 20px;
-  color: #2f4f29;
+  color: #ffffff; /* white text */
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.45); /* improved visibility */
 }
+/* newly added */
+.description-section h2 {
+  text-align: center;
+  font-size: 28px;
+  font-weight: 700;
+  color: #ffffff; /* white */
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.55);
+}
+
+.description-section p {
+  text-align: center;
+  font-size: 17px;
+  color: #e8f5e9; /* soft pale white-green */
+  max-width: 900px;
+  margin: auto;
+  line-height: 1.6;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+}
+
+
 
 /* PAGE MAIN CONTAINER */
 .container {
@@ -52,14 +72,16 @@
   text-align: center;
   font-size: 26px;
   font-weight: 700;
-  color: #2f4f29;
+  color: #ffffff;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
   margin-bottom: 10px;
 }
 
 .why-section p {
   text-align: center;
   font-size: 15px;
-  color: #444;
+    color: #f1fdf1;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.35);
   margin-bottom: 25px;
   line-height: 1.6;
 }
@@ -78,7 +100,7 @@
   border-radius: 12px;
   border: 1px solid #d9ecd9;
   text-align: center;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.399);
   transition: 0.2s ease;
 }
 

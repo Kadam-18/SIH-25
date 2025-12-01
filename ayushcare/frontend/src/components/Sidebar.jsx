@@ -26,7 +26,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
     { icon: <FaHome />, text: "Home", path: "/home" },
     { icon: <FaCalendarAlt />, text: "Schedule", path: "/schedule" },
     { icon: <FaChartLine />, text: "Progress Tracking", path: "/progress" },
-    { icon: <FaBell />, text: "Notifications", path: "/notifications" },
+    // { icon: <FaBell />, text: "Notifications", path: "/notifications" },
     { icon: <FaFileInvoice />, text: "Billing & Invoices", path: "/billing" },
     { icon: <FaHistory />, text: "Patient History", path: "/patienthistory" },
     { icon: <FaClinicMedical />, text: "Panchakarma Centres", path: "/centres" },
