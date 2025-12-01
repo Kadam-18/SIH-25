@@ -1,12 +1,15 @@
 from django.shortcuts import render
+from django.contrib.auth.models import User
 
 # Create your views here.
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import UserDeviceSerializer
-from .models import UserDevice
+from rest_framework import generics, permissions
+from .serializers import UserDeviceSerializer, NotificationSerializer
+from .models import UserDevice, Notification
+from .utils import send_push_notification, send_websocket_notification
 
 @api_view(["POST"])
 def register_device(request):
@@ -44,3 +47,16 @@ def broadcast_notification(request):
 
     send_websocket_notification(title, message)
     return Response({"message": "WebSocket message sent"})
+
+
+# -----------------------------------
+# User Notifications List
+# -----------------------------------
+class UserNotificationsListView(generics.ListAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = NotificationSerializer
+
+    def get_queryset(self):
+        return Notification.objects.filter(
+            user=self.request.user
+        ).order_by("-created_at")

@@ -126,6 +126,7 @@ class Appointment(models.Model):
 
     date = models.DateField()
     time = models.TimeField()
+
     appointment_type = models.CharField(
         max_length=30,
         choices=APPT_TYPE_CHOICES,
@@ -148,9 +149,10 @@ class Appointment(models.Model):
 
     class Meta:
         ordering = ["-date", "-time"]
+        unique_together = ("doctor", "date", "time")  # ✅ SLOT BLOCKING
 
     def __str__(self):
-        return f"Appt {self.id} | {self.patient.username} | {self.date} {self.time}"
+        return f"{self.patient.username} | {self.date} {self.time}"
 
 
 # ==========

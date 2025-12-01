@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { apiGet, getDoctorsByCenter, createAppointment } from "../api";
 import { useParams, useNavigate } from "react-router-dom";
+import "./CenterDetail.css";
 
 export default function CenterDetail() {
   const { id } = useParams();
@@ -60,111 +61,173 @@ export default function CenterDetail() {
 
     const res = await createAppointment(payload, token);
 
-    if (res && res.id) {
-      alert("Appointment booked successfully!");
+    if (res && res.success && res.data && res.data.id) {
+      alert("Appointment booked successfully! Check your notifications for important information.");
       navigate("/schedule");
     } else {
       console.error("Booking failed:", res);
-      alert("Failed to book — check console");
+      alert(res?.error || res?.message || "Failed to book appointment. Please try again.");
     }
   };
 
-  if (!center) return <div>Loading...</div>;
+  if (!center) return <div style={{ padding: "40px", textAlign: "center" }}>Loading center details...</div>;
+
+  // Get image URLs - prefer image1_url/image2_url from serializer, fallback to direct paths
+  const image1Url = center.image1_url || (center.image1 ? `${import.meta.env.VITE_API_URL || "http://localhost:8000"}${center.image1}` : null);
+  const image2Url = center.image2_url || (center.image2 ? `${import.meta.env.VITE_API_URL || "http://localhost:8000"}${center.image2}` : null);
 
   return (
-    <div style={{ padding: 24 }}>
-      <div style={{ display: "flex", gap: 20 }}>
-        
-        {/* LEFT SIDE */}
-        <div style={{ width: "50%" }}>
-          <div style={{ display: "flex", gap: 8 }}>
-            <img
-              src={center.image1 ? `http://localhost:8000${center.image1}` : "/placeholder1.jpg"}
-              alt=""
-              style={{ width: "50%", height: 220, objectFit: "cover", borderRadius: 8 }}
-            />
-            <img
-              src={center.image2 ? `http://localhost:8000${center.image2}` : "/placeholder2.jpg"}
-              alt=""
-              style={{ width: "50%", height: 220, objectFit: "cover", borderRadius: 8 }}
-            />
-          </div>
+    <div className="center-detail-container">
+      {/* Hero Section */}
+      <div className="center-hero">
+        <div className="center-hero-images">
+          <img
+            src={image1Url || "/placeholder1.jpg"}
+            alt={center.name}
+            onError={(e) => { e.target.src = "/placeholder1.jpg"; }}
+          />
+          <img
+            src={image2Url || "/placeholder2.jpg"}
+            alt={center.name}
+            onError={(e) => { e.target.src = "/placeholder2.jpg"; }}
+          />
+        </div>
+        <div className="center-hero-info">
+          <h1>{center.name}</h1>
+          <p className="location">📍 {center.city}, {center.state} - {center.pincode}</p>
+          <p className="address">{center.address}</p>
+          <p className="contact">📞 {center.contact_number}</p>
+        </div>
+      </div>
 
-          <div style={{ marginTop: 8 }}>
-            <img
-              src={center.map_image_url}
-              alt="map"
-              style={{ width: "100%", height: 260, objectFit: "cover", borderRadius: 8 }}
-            />
-          </div>
+      <div className="center-detail-content">
+        {/* LEFT SIDE - Map */}
+        <div className="center-detail-left">
+          {center.map_embed_url ? (
+            <div className="map-container">
+              <iframe
+                width="100%"
+                height="400"
+                style={{ border: 0, borderRadius: "12px" }}
+                loading="lazy"
+                allowFullScreen
+                src={center.map_embed_url}
+                title={`Map of ${center.name}`}
+              ></iframe>
+              <a
+                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${center.name}, ${center.address}, ${center.city}, ${center.state}`)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="map-link-btn"
+              >
+                🗺️ Open in Google Maps
+              </a>
+            </div>
+          ) : center.map_image_url ? (
+            <div className="map-container">
+              <img
+                src={center.map_image_url}
+                alt="map"
+                style={{ width: "100%", height: 400, objectFit: "cover", borderRadius: "12px" }}
+                onError={(e) => {
+                  e.target.style.display = "none";
+                  e.target.parentElement.innerHTML = '<p>Map not available</p>';
+                }}
+              />
+            </div>
+          ) : null}
+
         </div>
 
-        {/* RIGHT SIDE */}
-        <div style={{ width: "50%" }}>
-          <h2>{center.name}</h2>
-          <p>{center.address}</p>
-          <p><strong>Phone:</strong> {center.contact_number}</p>
-          <p>{center.description}</p>
-
-          <hr />
-
-          <h3>Doctors</h3>
-          <table style={{ width: "100%", borderCollapse: "collapse" }}>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Specialty</th>
-                <th>Timing</th>
-                <th>Book</th>
-              </tr>
-            </thead>
-            <tbody>
-              {doctors.map((d) => (
-                <tr key={d.id}>
-                  <td>{d.name}</td>
-                  <td>{d.specialty}</td>
-                  <td>{d.timing}</td>
-                  <td>
-                    <button onClick={() => setSelectedDoctorId(d.id)}>
-                      Select
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-
-          <div style={{ marginTop: 16 }}>
-            <h4>Book appointment</h4>
-
-            <p>
-              <strong>Selected doctor id:</strong>{" "}
-              {selectedDoctorId || "none"}
-            </p>
-
-            <label>Date:</label><br />
-            <input
-              type="date"
-              value={selectedDate}
-              onChange={(e) => setSelectedDate(e.target.value)}
-            />
-
-            <div style={{ marginTop: 8 }}>
-              <label>Time slot:</label><br />
-              <select
-                value={selectedSlot}
-                onChange={(e) => setSelectedSlot(e.target.value)}
-              >
-                <option value="">Choose slot</option>
-                <option value="10am-2pm">10:00 AM - 02:00 PM</option>
-                <option value="2pm-6pm">02:00 PM - 06:00 PM</option>
-                <option value="6pm-10pm">06:00 PM - 10:00 PM</option>
-              </select>
+        {/* RIGHT SIDE - Details & Booking */}
+        <div className="center-detail-right">
+          {center.description && (
+            <div className="description-section">
+              <h3>About</h3>
+              <p>{center.description}</p>
             </div>
+          )}
 
-            <div style={{ marginTop: 12 }}>
-              <button onClick={bookAppointment}>
-                Book Appointment & Pay
+          {center.available_services && (
+            <div className="services-section">
+              <h3>Available Services</h3>
+              <p>{center.available_services}</p>
+            </div>
+          )}
+
+          <div className="doctors-section">
+            <h3>👨‍⚕️ Available Doctors</h3>
+            {doctors.length > 0 ? (
+              <div className="doctors-list">
+                {doctors.map((d) => (
+                  <div 
+                    key={d.id} 
+                    className={`doctor-card ${selectedDoctorId === d.id ? 'selected' : ''}`}
+                    onClick={() => setSelectedDoctorId(d.id)}
+                  >
+                    <div className="doctor-info">
+                      <h4>{d.name}</h4>
+                      <p className="specialty">{d.specialty || "General Practitioner"}</p>
+                      <p className="timing">⏰ {d.timing || "Flexible"}</p>
+                    </div>
+                    <button 
+                      className={selectedDoctorId === d.id ? 'btn-selected' : 'btn-select'}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedDoctorId(d.id);
+                      }}
+                    >
+                      {selectedDoctorId === d.id ? '✓ Selected' : 'Select'}
+                    </button>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p>No doctors available at this center.</p>
+            )}
+          </div>
+
+          <div className="booking-section">
+            <h3>📅 Book Appointment</h3>
+            
+            {selectedDoctorId ? (
+              <div className="selected-doctor-info">
+                <p>Selected: <strong>{doctors.find(d => d.id === selectedDoctorId)?.name}</strong></p>
+              </div>
+            ) : (
+              <p className="warning">⚠️ Please select a doctor first</p>
+            )}
+
+            <div className="booking-form">
+              <div className="form-group">
+                <label>Select Date *</label>
+                <input
+                  type="date"
+                  value={selectedDate}
+                  onChange={(e) => setSelectedDate(e.target.value)}
+                  min={new Date().toISOString().split('T')[0]}
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Select Time Slot *</label>
+                <select
+                  value={selectedSlot}
+                  onChange={(e) => setSelectedSlot(e.target.value)}
+                >
+                  <option value="">Choose a time slot</option>
+                  <option value="10am-2pm">10:00 AM - 02:00 PM</option>
+                  <option value="2pm-6pm">02:00 PM - 06:00 PM</option>
+                  <option value="6pm-10pm">06:00 PM - 10:00 PM</option>
+                </select>
+              </div>
+
+              <button 
+                className="btn-book"
+                onClick={bookAppointment}
+                disabled={!selectedDoctorId || !selectedDate || !selectedSlot}
+              >
+                📋 Book Appointment & Pay
               </button>
             </div>
           </div>

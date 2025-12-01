@@ -1,5 +1,6 @@
   // src/api.js
-  export const BASE_URL = "http://localhost:8000";
+  // Use environment variable with fallback for development
+  export const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
   function buildHeaders(token = null) {
     const h = { "Content-Type": "application/json" };

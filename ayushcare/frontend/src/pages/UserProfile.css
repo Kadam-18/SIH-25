@@ -116,6 +116,23 @@ textarea {
   grid-column: span 2;
 }
 
+.chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.chip {
+  display: inline-block;
+  padding: 6px 12px;
+  background: #e8f2ff;
+  color: #0b74ff;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
 /* Responsive */
 @media (max-width: 640px) {
   .profile-root {

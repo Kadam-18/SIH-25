@@ -1,186 +1,254 @@
-// import React from "react";
-// import {Chart as ChartJS} from "chart.js/auto"
-
-import "./Progresstracking.css"
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { Doughnut, Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
+  ArcElement,
+  Tooltip,
   CategoryScale,
   LinearScale,
-  PointElement,
-  LineElement,
   BarElement,
-  Tooltip,
+  Title,
   Legend,
 } from "chart.js";
-import { Line, Bar } from "react-chartjs-2";
+import DarkModeToggle from "../components/DarkModeToggle";
+import { apiGet } from "../api";
 import "./ProgressTracking.css";
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  BarElement,
-  Tooltip,
-  Legend
-);
+ChartJS.register(ArcElement, Tooltip, CategoryScale, LinearScale, BarElement, Title, Legend);
 
-export default function ProgressTracking() {
-  const [activeTab, setActiveTab] = useState("self");
+// 🎨 Color system
+const COLORS = {
+  Pain: "#ff6b6b",
+  Sleep: "#6c8cff",
+  Stress: "#f5a623",
+  Energy: "#2ecc71",
+  Digestion: "#9b59b6",
+  Mood: "#feca57",
 
-  // ✅ Dummy data – later comes from backend
-  const days = ["Day 1", "Day 2", "Day 3", "Day 4", "Day 5"];
+  Therapy: "#1dd1a1",
+  Agni: "#ff793f",
+  Vata: "#48dbfb",
+  Pitta: "#ee5253",
+  Kapha: "#10ac84",
+};
 
-  // ---------------- PATIENT DATA ----------------
-  const selfObservationData = {
-    pain: [8, 7, 6, 5, 3],
-    sleep: [4, 5, 6, 7, 8],
-    energy: [3, 4, 5, 6, 7],
-  };
+const ActivityRing = ({ value, label, color, yesterday }) => {
+  const improved = value > yesterday;
 
-  // ---------------- THERAPIST DATA ----------------
-  const therapistData = {
-    therapySessions: [1, 2, 3, 4, 5],
-    weight: [72, 71.5, 71, 70.8, 70.5],
+  const data = {
+    datasets: [
+      {
+        data: [value, 100 - value],
+        backgroundColor: [color, "#2c2f3f"],
+        borderWidth: 0,
+        cutout: "72%",
+      },
+    ],
   };
 
   return (
-    <div className="progress-container">
-      <h2>Progress Tracking</h2>
-      <p className="subtitle">
-        Track your healing journey with daily observations and clinical updates
-      </p>
+    <div className={`ring-card ${improved ? "pulse" : ""}`}>
+      <Doughnut data={data} />
+      <div className="ring-center">
+        <h3>{value}%</h3>
+        <p>{label}</p>
+        <span className={improved ? "up" : "down"}>
+          {improved ? "▲ Improved" : "▼ No change"}
+        </span>
+      </div>
+    </div>
+  );
+};
 
-      {/* Tabs */}
-      <div className="tab-buttons">
-        <button
-          className={activeTab === "self" ? "active" : ""}
-          onClick={() => setActiveTab("self")}
-        >
+export default function ProgressTracking() {
+  const [tab, setTab] = useState("self");
+  const [dark, setDark] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [progressData, setProgressData] = useState(null);
+  const [summary, setSummary] = useState(null);
+
+  useEffect(() => {
+    fetchProgressData();
+  }, []);
+
+  const fetchProgressData = async () => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem("token");
+      
+      // Get progress summary
+      const summaryRes = await apiGet("/api/progress/summary/", token);
+      if (summaryRes && summaryRes.success) {
+        setSummary(summaryRes.data);
+        
+        // Get latest entry for today's data
+        const entries = summaryRes.data.entries || [];
+        if (entries.length > 0) {
+          const latest = entries[0];
+          const previous = entries.length > 1 ? entries[1] : null;
+          
+          setProgressData({
+            today: {
+              Pain: latest.pain_level || 0,
+              Sleep: latest.sleep_quality || 0,
+              Stress: latest.stress_level || 0,
+              Energy: latest.energy_level || 0,
+              Digestion: latest.digestion_quality || 0,
+              Mood: latest.mood_level || 0,
+            },
+            yesterday: previous ? {
+              Pain: previous.pain_level || 0,
+              Sleep: previous.sleep_quality || 0,
+              Stress: previous.stress_level || 0,
+              Energy: previous.energy_level || 0,
+              Digestion: previous.digestion_quality || 0,
+              Mood: previous.mood_level || 0,
+            } : null
+          });
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching progress data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Default data if no progress entries
+  const selfToday = progressData?.today || {
+    Pain: 0,
+    Sleep: 0,
+    Stress: 0,
+    Energy: 0,
+    Digestion: 0,
+    Mood: 0,
+  };
+
+  const selfYesterday = progressData?.yesterday || {
+    Pain: 0,
+    Sleep: 0,
+    Stress: 0,
+    Energy: 0,
+    Digestion: 0,
+    Mood: 0,
+  };
+
+  // Calculate KPI from summary
+  const avgEnergy = summary?.average_metrics?.energy || 0;
+  const energyTrend = summary?.improvement_trends?.energy || 0;
+  const sleepTrend = summary?.improvement_trends?.sleep || 0;
+  const stressTrend = summary?.improvement_trends?.stress || 0;
+  const totalEntries = summary?.total_entries || 0;
+
+  return (
+    <div className={`progress-root ${dark ? "dark" : ""}`}>
+
+      {/* HEADER */}
+      <div className="progress-top">
+        <div>
+          <h2>Progress Dashboard</h2>
+          <p>Your healing, visualized beautifully</p>
+        </div>
+        <DarkModeToggle dark={dark} setDark={setDark} />
+      </div>
+
+      {/* KPI SUMMARY */}
+      <div className="kpi-grid">
+        <div className="kpi">
+          🔥 Avg Energy 
+          <b>{energyTrend > 0 ? ` +${Math.round(energyTrend)}%` : energyTrend < 0 ? ` ${Math.round(energyTrend)}%` : " No change"}</b>
+        </div>
+        <div className="kpi">
+          😴 Sleep Quality 
+          <b>{sleepTrend > 0 ? ` +${Math.round(sleepTrend)}%` : " No change"}</b>
+        </div>
+        <div className="kpi">
+          📊 Progress Entries 
+          <b> {totalEntries} {totalEntries === 1 ? "entry" : "entries"}</b>
+        </div>
+        <div className="kpi">
+          📉 Stress 
+          <b>{stressTrend < 0 ? ` ${Math.round(stressTrend)}%` : stressTrend > 0 ? ` +${Math.round(stressTrend)}%` : " No change"}</b>
+        </div>
+      </div>
+
+      {/* TABS */}
+      <div className="progress-tabs">
+        <button className={tab === "self" ? "active" : ""} onClick={() => setTab("self")}>
           Self Observation
         </button>
-
-        <button
-          className={activeTab === "therapist" ? "active" : ""}
-          onClick={() => setActiveTab("therapist")}
-        >
+        <button className={tab === "therapist" ? "active" : ""} onClick={() => setTab("therapist")}>
           Therapist Observation
         </button>
       </div>
 
-      {/* ---------------- SELF OBSERVATION TAB ---------------- */}
-      {activeTab === "self" && (
-        <div className="tab-content">
-          <h3>Patient Self Observation</h3>
-          <p className="tag patient-tag">Data entered by patient</p>
-
-          {/* Pain Chart */}
-          <div className="chart-card">
-            <h4>Pain Level Progress</h4>
-            <Line
-              data={{
-                labels: days,
-                datasets: [
-                  {
-                    label: "Pain Level",
-                    data: selfObservationData.pain,
-                    borderColor: "#e63946",
-                    backgroundColor: "rgba(230,57,70,0.2)",
-                  },
-                ],
-              }}
-            />
-          </div>
-
-          {/* Sleep Chart */}
-          <div className="chart-card">
-            <h4>Sleep Quality</h4>
-            <Line
-              data={{
-                labels: days,
-                datasets: [
-                  {
-                    label: "Sleep Quality",
-                    data: selfObservationData.sleep,
-                    borderColor: "#1d3557",
-                    backgroundColor: "rgba(29,53,87,0.2)",
-                  },
-                ],
-              }}
-            />
-          </div>
-
-          {/* Energy Chart */}
-          <div className="chart-card">
-            <h4>Energy Levels</h4>
-            <Bar
-              data={{
-                labels: days,
-                datasets: [
-                  {
-                    label: "Energy",
-                    data: selfObservationData.energy,
-                    backgroundColor: "#457b9d",
-                  },
-                ],
-              }}
-            />
-          </div>
+      {loading ? (
+        <div style={{ textAlign: "center", padding: "40px" }}>
+          <p>Loading progress data...</p>
         </div>
-      )}
-
-      {/* ---------------- THERAPIST OBSERVATION TAB ---------------- */}
-      {activeTab === "therapist" && (
-        <div className="tab-content">
-          <h3>Therapist Observation</h3>
-          <p className="tag therapist-tag">Data entered by clinic</p>
-
-          {/* Therapy Completion */}
-          <div className="chart-card">
-            <h4>Therapy Sessions Completed</h4>
-            <Bar
-              data={{
-                labels: days,
-                datasets: [
-                  {
-                    label: "Sessions",
-                    data: therapistData.therapySessions,
-                    backgroundColor: "#2a9d8f",
-                  },
-                ],
-              }}
-            />
-          </div>
-
-          {/* Weight Trend */}
-          <div className="chart-card">
-            <h4>Weight Trend</h4>
-            <Line
-              data={{
-                labels: days,
-                datasets: [
-                  {
-                    label: "Weight (kg)",
-                    data: therapistData.weight,
-                    borderColor: "#264653",
-                    backgroundColor: "rgba(38,70,83,0.2)",
-                  },
-                ],
-              }}
-            />
-          </div>
-
-          {/* Notes */}
-          <div className="notes-card">
-            <h4>Therapist Notes</h4>
-            <p>
-              Patient is responding well to Panchakarma therapy. Agni improving
-              steadily. Continue Abhyanga + Swedana for next 3 sessions.
-            </p>
-          </div>
+      ) : totalEntries === 0 ? (
+        <div style={{ textAlign: "center", padding: "40px" }}>
+          <p>No progress entries yet. Fill out your first progress form after your therapy session!</p>
         </div>
+      ) : (
+        <>
+          {/* RINGS */}
+          <div className="rings-grid">
+            {tab === "self" &&
+              Object.keys(selfToday).map((k) => (
+                <ActivityRing
+                  key={k}
+                  label={k}
+                  value={Math.round(selfToday[k])}
+                  yesterday={selfYesterday ? Math.round(selfYesterday[k]) : 0}
+                  color={COLORS[k]}
+                />
+              ))}
+          </div>
+
+          {/* BAR CHART FOR TRENDS */}
+          {summary && summary.entries && summary.entries.length > 1 && (
+            <div style={{ marginTop: "40px", padding: "20px", background: dark ? "#1f2933" : "white", borderRadius: "16px" }}>
+              <h3 style={{ marginBottom: "20px" }}>Progress Over Time</h3>
+              <Bar
+                data={{
+                  labels: summary.entries.slice().reverse().map((e, i) => `Day ${e.day_number}`),
+                  datasets: [
+                    {
+                      label: "Energy",
+                      data: summary.entries.slice().reverse().map(e => e.energy_level),
+                      backgroundColor: COLORS.Energy,
+                    },
+                    {
+                      label: "Sleep",
+                      data: summary.entries.slice().reverse().map(e => e.sleep_quality),
+                      backgroundColor: COLORS.Sleep,
+                    },
+                    {
+                      label: "Mood",
+                      data: summary.entries.slice().reverse().map(e => e.mood_level),
+                      backgroundColor: COLORS.Mood,
+                    },
+                  ],
+                }}
+                options={{
+                  responsive: true,
+                  plugins: {
+                    legend: {
+                      position: "top",
+                    },
+                  },
+                  scales: {
+                    y: {
+                      beginAtZero: true,
+                      max: 100,
+                    },
+                  },
+                }}
+              />
+            </div>
+          )}
+        </>
       )}
     </div>
   );

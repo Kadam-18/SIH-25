@@ -105,7 +105,15 @@ class VerifyOTPView(APIView):
                 status=400
             )
 
-        if otp_entry.otp != otp:
+        # Check if OTP is expired (5 minutes)
+        if otp_entry.is_expired():
+            otp_entry.delete()
+            return Response(
+                {"success": False, "message": "OTP has expired. Please request a new one."},
+                status=400
+            )
+
+        if not otp_entry.is_valid(otp):
             return Response(
                 {"success": False, "message": "Invalid OTP"},
                 status=400

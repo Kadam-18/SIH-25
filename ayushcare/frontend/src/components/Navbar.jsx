@@ -1,10 +1,24 @@
-import React from "react";
-import { FaBars, FaHome, FaSearch, FaUserCircle } from "react-icons/fa";
+import React, { useState } from "react";
+import { FaBars, FaHome, FaSearch, FaUserCircle, FaSignOutAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import "./Navbar.css";
 
 export default function Navbar({ sidebarOpen, setSidebarOpen, userName = "Mahi Sharma" }) {
   const navigate = useNavigate();
+  const [showLogoutMenu, setShowLogoutMenu] = useState(false);
+
+  const handleLogout = () => {
+    // Clear tokens
+    localStorage.removeItem("token");
+    localStorage.removeItem("refresh_token");
+    
+    // Show success message
+    toast.success("Logged out successfully");
+    
+    // Redirect to login
+    navigate("/login");
+  };
 
   return (
     <header className="navbar">
@@ -38,11 +52,11 @@ export default function Navbar({ sidebarOpen, setSidebarOpen, userName = "Mahi S
       </div>
 
       {/* RIGHT: profile icon + name */}
-      <div
-        className="navbar-right"
-        onClick={() => navigate("/userprofile")}
-      >
-        <div className="account-btn">
+      <div className="navbar-right">
+        <div 
+          className="account-btn"
+          onClick={() => setShowLogoutMenu(!showLogoutMenu)}
+        >
           <div className="avatar-circle">
             {/* later you can replace false with check for user photo */}
             {false ? (
@@ -54,6 +68,26 @@ export default function Navbar({ sidebarOpen, setSidebarOpen, userName = "Mahi S
           <span className="user-name">{userName}</span>
           <span className="dots">...</span>
         </div>
+        
+        {showLogoutMenu && (
+          <div className="logout-menu">
+            <button 
+              className="logout-menu-item"
+              onClick={() => {
+                navigate("/userprofile");
+                setShowLogoutMenu(false);
+              }}
+            >
+              <FaUserCircle /> Profile
+            </button>
+            <button 
+              className="logout-menu-item logout-btn"
+              onClick={handleLogout}
+            >
+              <FaSignOutAlt /> Logout
+            </button>
+          </div>
+        )}
       </div>
     </header>
   );

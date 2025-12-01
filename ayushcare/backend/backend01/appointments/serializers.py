@@ -80,6 +80,10 @@ class DoctorSerializer(serializers.ModelSerializer):
 
 class AppointmentSerializer(serializers.ModelSerializer):
     doctor = DoctorSerializer(read_only=True)
+    
+    # Add doctor_name and center_name fields for frontend compatibility
+    doctor_name = serializers.SerializerMethodField()
+    center_name = serializers.SerializerMethodField()
 
     doctor_id = serializers.PrimaryKeyRelatedField(
         queryset=Doctor.objects.all(),
@@ -97,6 +101,8 @@ class AppointmentSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "doctor",
+            "doctor_name",
+            "center_name",
             "doctor_id",
             "center_id",
             "date",
@@ -107,6 +113,20 @@ class AppointmentSerializer(serializers.ModelSerializer):
             "status",
             "created_at",
         ]
+
+    def get_doctor_name(self, obj):
+        """Return doctor name for frontend compatibility"""
+        if obj.doctor:
+            return obj.doctor.name
+        return None
+    
+    def get_center_name(self, obj):
+        """Return center name from location_name or doctor's center"""
+        if obj.location_name:
+            return obj.location_name
+        if obj.doctor and obj.doctor.center:
+            return obj.doctor.center.name
+        return None
 
     def create(self, validated_data):
         validated_data.pop("center_id")  # ✅ KEY LINE

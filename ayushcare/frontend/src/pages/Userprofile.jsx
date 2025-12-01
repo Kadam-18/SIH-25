@@ -23,6 +23,14 @@ export default function UserProfile() {
     allergies: "",
     current_health_condition: "",
     current_medication: "",
+    past_medical_history: [],
+    blood_pressure: "",
+    pulse_rate: "",
+    stress_level: "",
+    energy_level: "",
+    lifestyle_addictions: "",
+    contraindications: [],
+    treatment_goals: [],
   });
 
   const [editingPersonal, setEditingPersonal] = useState(false);
@@ -47,12 +55,20 @@ export default function UserProfile() {
         });
 
         setMedicalInfo({
-          blood_group: d.blood_group || d.blood_group || "",
-          height: d.height || "",
-          weight: d.weight || "",
+          blood_group: d.blood_group || "",
+          height: d.height || d.height_cm || "",
+          weight: d.weight || d.weight_kg || "",
           allergies: d.allergies || "",
-          current_health_condition: d.current_health_condition || "",
+          current_health_condition: d.current_symptoms || "",
           current_medication: d.current_medication || "",
+          past_medical_history: d.past_medical_history || [],
+          blood_pressure: d.blood_pressure || "",
+          pulse_rate: d.pulse_rate || "",
+          stress_level: d.stress_level || "",
+          energy_level: d.energy_level || "",
+          lifestyle_addictions: Array.isArray(d.addictions) ? d.addictions.join(", ") : (d.addictions || ""),
+          contraindications: d.contraindications || [],
+          treatment_goals: d.treatment_goals || [],
         });
       }
     };
@@ -214,6 +230,60 @@ export default function UserProfile() {
             <label>Current Medication</label>
             <input type="text" name="current_medication" value={medicalInfo.current_medication} onChange={handleMedicalChange} readOnly={!editingMedical} />
           </div>
+
+          {medicalInfo.past_medical_history && medicalInfo.past_medical_history.length > 0 && (
+            <div className="full-width">
+              <label>Past Medical History</label>
+              <div className="chip-list">
+                {medicalInfo.past_medical_history.map((item, idx) => (
+                  <span key={idx} className="chip">{item}</span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {medicalInfo.blood_pressure && (
+            <div>
+              <label>Blood Pressure</label>
+              <input type="text" value={medicalInfo.blood_pressure} readOnly />
+            </div>
+          )}
+
+          {medicalInfo.pulse_rate && (
+            <div>
+              <label>Pulse Rate</label>
+              <input type="text" value={medicalInfo.pulse_rate} readOnly />
+            </div>
+          )}
+
+          {medicalInfo.lifestyle_addictions && (
+            <div className="full-width">
+              <label>Lifestyle / Addictions</label>
+              <input type="text" value={medicalInfo.lifestyle_addictions} readOnly />
+            </div>
+          )}
+
+          {medicalInfo.contraindications && medicalInfo.contraindications.length > 0 && (
+            <div className="full-width">
+              <label>Contraindications</label>
+              <div className="chip-list">
+                {medicalInfo.contraindications.map((item, idx) => (
+                  <span key={idx} className="chip">{item}</span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {medicalInfo.treatment_goals && medicalInfo.treatment_goals.length > 0 && (
+            <div className="full-width">
+              <label>Treatment Goals</label>
+              <div className="chip-list">
+                {medicalInfo.treatment_goals.map((item, idx) => (
+                  <span key={idx} className="chip">{item}</span>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

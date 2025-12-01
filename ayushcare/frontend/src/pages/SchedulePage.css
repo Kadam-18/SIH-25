@@ -146,6 +146,13 @@
   padding: 8px;
 }
 
+.highlight-date {
+  background: #2563eb !important;
+  color: white !important;
+  border-radius: 50%;
+}
+
+
 .react-calendar__tile--active {
   background: #4e8f52 !important;
   color: white !important;

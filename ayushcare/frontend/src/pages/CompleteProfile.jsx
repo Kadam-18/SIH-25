@@ -8,13 +8,16 @@ export default function CompleteProfile() {
   const navigate = useNavigate();
   const location = useLocation();
   const token = localStorage.getItem("token");
-  // email passed from login (or fallback empty)
-  const initialEmail = location.state?.email || "";
+  
+  // Get user data from location state or fetch from backend
+  const userDataFromState = location.state || {};
+  const initialEmail = userDataFromState.email || "";
+  const initialUsername = userDataFromState.username || "";
 
   const [step, setStep] = useState(1);
 
   const [form, setForm] = useState({
-    full_name: "",
+    full_name: initialUsername || "",
     gender: "Male",
     dob: "",
     phone: "",
@@ -26,6 +29,7 @@ export default function CompleteProfile() {
     emergency_contact_name: "",
     emergency_contact_relation: "",
     emergency_contact_phone: "",
+    preferred_communication: "Email",
 
     // medical
     blood_group: "A+",
@@ -49,6 +53,55 @@ export default function CompleteProfile() {
     contraindications: [], // checklist
     treatment_goals: [], // multi-select
   });
+  
+  // Load existing profile data if available
+  useEffect(() => {
+    const loadExistingProfile = async () => {
+      try {
+        const res = await apiGet("/api/patient/profile/", token);
+        if (res && res.success && res.data) {
+          const data = res.data;
+          setForm(prev => ({
+            ...prev,
+            full_name: data.full_name || prev.full_name || initialUsername,
+            email: data.email || data.user_email || prev.email || initialEmail,
+            gender: data.gender || prev.gender,
+            dob: data.dob || prev.dob,
+            phone: data.phone || prev.phone,
+            address: data.address || prev.address,
+            marital_status: data.marital_status || prev.marital_status,
+            occupation: data.occupation || prev.occupation,
+            lifestyle: data.lifestyle || prev.lifestyle,
+            emergency_contact_name: data.emergency_contact_name || prev.emergency_contact_name,
+            emergency_contact_relation: data.emergency_contact_relation || prev.emergency_contact_relation,
+            emergency_contact_phone: data.emergency_contact_phone || prev.emergency_contact_phone,
+            preferred_communication: data.preferred_communication || prev.preferred_communication,
+            blood_group: data.blood_group || prev.blood_group,
+            height: data.height || data.height_cm || prev.height,
+            weight: data.weight || data.weight_kg || prev.weight,
+            allergies: data.allergies || prev.allergies,
+            current_medication: data.current_medication || prev.current_medication,
+            past_medical_history: data.past_medical_history || prev.past_medical_history,
+            blood_pressure: data.blood_pressure || prev.blood_pressure,
+            pulse_rate: data.pulse_rate || prev.pulse_rate,
+            menstrual_history: data.menstrual_history || prev.menstrual_history,
+            addictions: data.addictions || prev.lifestyle_addictions,
+            lifestyle_addictions: Array.isArray(data.addictions) ? data.addictions.join(", ") : (data.addictions || prev.lifestyle_addictions),
+            prakriti: data.prakriti || prev.prakriti,
+            vikriti: data.vikriti || prev.vikriti,
+            contraindications: data.contraindications || prev.contraindications,
+            treatment_goals: data.treatment_goals || prev.treatment_goals,
+          }));
+        }
+      } catch (error) {
+        console.log("No existing profile found, starting fresh");
+      }
+    };
+    
+    if (token) {
+      loadExistingProfile();
+    }
+  }, [token, initialEmail, initialUsername]);
 
   // Option lists
   const pastHistoryOptions = [
@@ -86,12 +139,6 @@ export default function CompleteProfile() {
     "General wellness",
   ];
 
-  useEffect(() => {
-    // If email was passed via state, set it
-    if (initialEmail) {
-      setForm((f) => ({ ...f, email: initialEmail }));
-    }
-  }, [initialEmail]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -133,29 +180,47 @@ export default function CompleteProfile() {
   const goPrev = () => setStep(1);
 
   const submitForm = async () => {
-  const token = localStorage.getItem("token");
+    const token = localStorage.getItem("token");
+    
+    if (!token) {
+      alert("Please login first");
+      navigate("/login");
+      return;
+    }
 
-  // 1️⃣ Check if profile exists
-  const check = await apiGet("/api/patient/profile/", token);
+    // Prepare form data - map height/weight correctly
+    const formData = {
+      ...form,
+      height_cm: form.height ? parseFloat(form.height) : null,
+      weight_kg: form.weight ? parseFloat(form.weight) : null,
+    };
+    
+    // Remove height/weight if using height_cm/weight_kg
+    delete formData.height;
+    delete formData.weight;
 
-  let res;
+    // 1️⃣ Check if profile exists
+    const check = await apiGet("/api/patient/profile/", token);
 
-  if (!check.success) {
-    // 2️⃣ No profile → create profile
-    res = await apiPost("/api/patient/profile/", form, token);
-  } else {
-    // 3️⃣ Profile exists → update profile
-    res = await apiPut("/api/patient/profile/", form, token);
-  }
+    let res;
 
-  // 4️⃣ Redirect if API success
-  if (res.success !== false) {
-    alert("Profile Saved Successfully!");
-    navigate("/home");
-  } else {
-    alert("Error saving profile: " + res.message);
-  }
-};
+    if (!check || !check.success) {
+      // 2️⃣ No profile → create profile
+      res = await apiPost("/api/patient/profile/", formData, token);
+    } else {
+      // 3️⃣ Profile exists → update profile
+      res = await apiPut("/api/patient/profile/", formData, token);
+    }
+
+    // 4️⃣ Redirect if API success
+    if (res && res.success !== false) {
+      alert("Profile Saved Successfully!");
+      navigate("/home");
+    } else {
+      alert("Error saving profile: " + (res?.message || "Unknown error"));
+      console.error("Profile save error:", res);
+    }
+  };
 
 
   return (
