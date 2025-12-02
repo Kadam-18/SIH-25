@@ -17,7 +17,13 @@ GOOGLE_MAPS_API_KEY = os.getenv("GOOGLE_MAPS_API_KEY", "")
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "dev-secret")
 # Default should be False for security - only enable in development
 DEBUG = os.getenv("DEBUG", "False") == "True"
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
+# ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    '.railway.app',  # Railway domain
+    os.environ.get('ALLOWED_HOST', ''),
+]
 # Add Railway domain
 if os.getenv("RAILWAY_ENVIRONMENT"):
     ALLOWED_HOSTS.append(".railway.app")
@@ -63,11 +69,13 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
+    # 'whitenoise.middleware.WhiteNoiseMiddleware',
+    'corsheaders.middleware.CorsMiddleware', 
+    "whitenoise.middleware.WhiteNoiseMiddleware",
 
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
 
-    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
@@ -105,7 +113,11 @@ DATABASES = {
         "PASSWORD": os.getenv("MYSQLPASSWORD") or os.getenv("MYSQL_PASSWORD", ""),
         "HOST": os.getenv("MYSQLHOST") or os.getenv("MYSQL_HOST", "localhost"),
         "PORT": os.getenv("MYSQLPORT") or os.getenv("MYSQL_PORT", "3306"),
-        "OPTIONS": {"charset": "utf8mb4"},
+        # "OPTIONS": {"charset": "utf8mb4"},
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+            'charset': 'utf8mb4',
+        },
     }
 }
 
@@ -147,16 +159,20 @@ EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 
 # Static Files
 STATIC_URL = "/static/"
-STATIC_ROOT = BASE_DIR / "staticfiles"
+# STATIC_ROOT = BASE_DIR / "staticfiles"
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Media Files (for user uploads)
 MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / "media"
+# MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # CORS
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",  # Vite default port
     "http://127.0.0.1:5173",
+    os.environ.get('FRONTEND_URL', 'https://your-vercel-app.vercel.app'),
 ]
 # Add Vercel frontend URL from environment
 FRONTEND_URL = os.getenv("FRONTEND_URL", "")
