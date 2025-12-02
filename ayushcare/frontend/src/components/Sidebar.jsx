@@ -29,7 +29,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
     // { icon: <FaBell />, text: "Notifications", path: "/notifications" },
     { icon: <FaFileInvoice />, text: "Billing & Invoices", path: "/billing" },
     { icon: <FaHistory />, text: "Patient History", path: "/patienthistory" },
-    { icon: <FaClinicMedical />, text: "Panchakarma Centres", path: "/centres" },
+    { icon: <FaClinicMedical />, text: "Panchakarma Centres", path: "/centers" },
     { icon: <FaCommentDots />, text: "Feedback", path: "/feedback" },
   ];
 

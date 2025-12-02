@@ -209,7 +209,51 @@
   font-size: 14px;
   font-weight: 700;
   cursor: pointer;
+<<<<<<< HEAD
   padding: 10px 16px;
+=======
+}
+.calendar-box {
+  width: 300px;
+  background: #ffffffcc;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+}
+
+.left-title {
+  font-size: 20px;
+  font-weight: 800;
+  margin-bottom: 12px;
+  color: #1b3a25;
+}
+
+.selected-date {
+  margin-top: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.react-calendar {
+  border: none;
+  font-family: inherit;
+  border-radius: 12px;
+  background: #fff;
+  padding: 8px;
+}
+
+.highlight-date {
+  background: #2563eb !important;
+  color: white !important;
+  border-radius: 50%;
+}
+
+
+.react-calendar__tile--active {
+  background: #4e8f52 !important;
+  color: white !important;
+>>>>>>> d5b6cd62c9eff8010fd8b1a883fbef2e766000f3
   border-radius: 8px;
   transition: background 0.2s ease;
 }

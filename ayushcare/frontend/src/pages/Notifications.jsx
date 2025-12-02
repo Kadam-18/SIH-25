@@ -1,45 +1,66 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Notifications.css";
 import { FiBell } from "react-icons/fi";
+import { apiGet } from "../api";
 
 const Notifications = () => {
-  const [notifications] = useState([
-    {
-      id: 1,
-      title: "Upcoming Therapy Session",
-      message: "Your Abhyanga therapy is scheduled for tomorrow at 10:00 AM.",
-      time: "2h ago",
-    },
-    {
-      id: 2,
-      title: "Post-Therapy Reminder",
-      message: "Please avoid cold food and rest adequately for 24 hours after your therapy.",
-      time: "1 day ago",
-    },
-    {
-      id: 3,
-      title: "New Wellness Tip",
-      message: "Stay hydrated! Warm water helps maintain dosha balance post therapy.",
-      time: "3 days ago",
-    },
-  ]);
+  const [notifications, setNotifications] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchNotifications();
+  }, []);
+
+  const fetchNotifications = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await apiGet("/api/notifications/my/", token);
+      
+      if (res && Array.isArray(res)) {
+        setNotifications(res);
+      } else {
+        console.error("Unexpected notifications response:", res);
+        setNotifications([]);
+      }
+    } catch (error) {
+      console.error("Error fetching notifications:", error);
+      setNotifications([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="notifications-root">
+        <h2 className="noti-title">NOtIfIcAtIoNs 🔔</h2>
+        <p>Loading notifications...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="notifications-root">
       <h2 className="noti-title">notifications </h2>
 
-      <div className="notifications-list">
-        {notifications.map((n, index) => (
-          <div
-            key={n.id}
-            className={`noti-card ${index % 2 === 0 ? "left" : "right"}`}
-          >
-            <h3>{n.title}</h3>
-            <p>{n.message}</p>
-            <span className="time">{n.time}</span>
-          </div>
-        ))}
-      </div>
+      {notifications.length === 0 ? (
+        <div style={{ textAlign: "center", padding: "40px" }}>
+          <p>No notifications yet. You'll see updates about your appointments here!</p>
+        </div>
+      ) : (
+        <div className="notifications-list">
+          {notifications.map((n, index) => (
+            <div
+              key={n.id}
+              className={`noti-card ${index % 2 === 0 ? "left" : "right"}`}
+            >
+              <h3>{n.title}</h3>
+              <p style={{ whiteSpace: "pre-line" }}>{n.message}</p>
+              <span className="time">{n.time_ago || "Just now"}</span>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

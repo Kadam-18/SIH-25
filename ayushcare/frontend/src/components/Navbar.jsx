@@ -1,12 +1,20 @@
 import React, { useState, useRef, useEffect } from "react";
 import { FaBars, FaHome, FaSearch, FaUserCircle, FaBell, FaChevronDown, FaCog, FaSignOutAlt, FaUser } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { useApp } from "../context/AppContext";
+import { t } from "../i18n";
 import "./Navbar.css";
 
-export default function Navbar({ sidebarOpen, setSidebarOpen, userName = "Mahi Sharma" }) {
+export default function Navbar({ sidebarOpen, setSidebarOpen }) {
   const navigate = useNavigate();
+  const { user, language, loadUserData } = useApp();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    loadUserData();
+  }, []);
 
   const handleProfileClick = () => {
     navigate("/userprofile");
@@ -72,7 +80,7 @@ export default function Navbar({ sidebarOpen, setSidebarOpen, userName = "Mahi S
           <FaSearch className="search-icon" />
           <input
             className="search-input"
-            placeholder="Search Panchakarma therapies, centres..."
+            placeholder={t("search", language) + " Panchakarma therapies, centres..."}
           />
         </div>
       </div>
@@ -103,7 +111,7 @@ export default function Navbar({ sidebarOpen, setSidebarOpen, userName = "Mahi S
                   <FaUserCircle className="default-avatar" />
                 )}
               </div>
-              <span className="user-name">{userName}</span>
+              <span className="user-name">{user?.name || "User"}</span>
               <FaChevronDown className={`dropdown-arrow ${dropdownOpen ? 'rotate' : ''}`} />
             </div>
           </div>
@@ -113,19 +121,39 @@ export default function Navbar({ sidebarOpen, setSidebarOpen, userName = "Mahi S
             <div className="dropdown-menu">
               <div className="dropdown-item" onClick={handleProfileClick}>
                 <FaUser className="dropdown-icon" />
-                <span>Profile</span>
+                <span>{t("profile", language)}</span>
               </div>
               <div className="dropdown-item" onClick={handleSettings}>
                 <FaCog className="dropdown-icon" />
-                <span>Settings</span>
+                <span>{t("settings", language)}</span>
               </div>
               <div className="dropdown-item" onClick={handleLogout}>
                 <FaSignOutAlt className="dropdown-icon" />
-                <span>Logout</span>
+                <span>{t("logout", language)}</span>
               </div>
             </div>
           )}
         </div>
+        
+        {/* {showLogoutMenu && (
+          <div className="logout-menu">
+            <button 
+              className="logout-menu-item"
+              onClick={() => {
+                navigate("/userprofile");
+                setShowLogoutMenu(false);
+              }}
+            >
+              <FaUserCircle /> Profile
+            </button>
+            <button 
+              className="logout-menu-item logout-btn"
+              onClick={handleLogout}
+            >
+              <FaSignOutAlt /> Logout
+            </button>
+          </div>
+        )} */}
       </div>
     </header>
   );

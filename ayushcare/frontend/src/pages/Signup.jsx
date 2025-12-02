@@ -2,50 +2,68 @@ import React, { useState, useEffect } from "react";
 import "./Signup.css";
 import "./Auth.css";
 import { useNavigate } from "react-router-dom";
+import { apiPost } from "../api";
 
 export default function Signup() {
-  const navigate = useNavigate();// directed to home page 
-  const [role, setRole] = useState(""); // patient or clinic
+  const navigate = useNavigate();
+
+  const [role, setRole] = useState("");
   const [email, setEmail] = useState("");
-  const [otp, setOtp] = useState("");
-  const [timer, setTimer] = useState(0);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [otp, setOtp] = useState("");
+  const [timer, setTimer] = useState(0);
 
-  // OTP Timer effect
+  // Countdown timer
   useEffect(() => {
-    let interval = null;
-    if (timer > 0) {
-      interval = setInterval(() => {
-        setTimer((prev) => prev - 1);
-      }, 1000);
-    }
+    if (timer <= 0) return;
+    const interval = setInterval(() => setTimer((t) => t - 1), 1000);
     return () => clearInterval(interval);
   }, [timer]);
 
-  const sendOtp = () => {
-    if (!email) {
-      alert("Enter email first!");
-      return;
+  // Send OTP API
+  const sendOtp = async () => {
+    if (!email || !username || !password || !role)
+      return alert("Fill all fields first");
+
+    const res = await apiPost("/api/auth/signup/", {
+      email,
+      username,
+      password,
+      role,
+    });
+
+    if (res.success) {
+      setTimer(60);
+      alert("OTP sent to your email");
+      navigate("/verify-otp", { state: { email } });
+    } else {
+      alert(res.message || "Error sending OTP");
     }
-    setTimer(60);  // start timer
-    alert(`OTP sent to ${email}`);  // later call backend API here
   };
 
- const handleSignup = (e) => {
-  e.preventDefault();
-  alert("Signup Complete!");
-  navigate("/home");   // redirect to Home page
-};
+  // Final Signup (Verify OTP)
+  const handleSignup = async (e) => {
+    e.preventDefault();
 
+    const res = await apiPost("/api/auth/verify-otp/", {
+      email,
+      otp,
+    });
+
+    if (res.success) {
+      alert("Account Created!");
+      navigate("/login");
+    } else {
+      alert(res.message || "Invalid OTP");
+    }
+  };
 
   return (
     <div className="auth-container">
-
       <div className="signup-box">
         <h2>Create Account</h2>
 
-        {/* Role Selection */}
         <div className="role-select">
           <button
             className={role === "patient" ? "active" : ""}
@@ -62,7 +80,6 @@ export default function Signup() {
           </button>
         </div>
 
-        {/* Show form only after role selection */}
         {role && (
           <form onSubmit={handleSignup}>
             <input
@@ -86,7 +103,6 @@ export default function Signup() {
               onChange={(e) => setPassword(e.target.value)}
             />
 
-            {/* OTP Field & Send OTP Button */}
             <div className="otp-row">
               <input
                 type="text"
@@ -115,7 +131,6 @@ export default function Signup() {
           Already have an account? <a href="/login">Login</a>
         </p>
       </div>
-
     </div>
   );
-}
+} 
