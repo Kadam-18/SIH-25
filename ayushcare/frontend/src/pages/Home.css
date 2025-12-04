@@ -220,30 +220,111 @@
 }
 
 /* Individual item */
+/* Individual item */
 .contact-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  text-align: center;
+  gap: 6px;  /* slightly smaller spacing */
 }
 
-/* Icons */
+/* Icon centered above text */
 .contact-item i {
-  font-size: 26px;
+  font-size: 32px;         /* slightly bigger for clarity */
   color: #2f4f29;
-  margin-bottom: 8px;
+  margin: 0;               /* remove bottom margin */
 }
 
-/* Headings */
+/* Title directly below icon */
 .contact-item h4 {
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 700;
   margin: 0;
-  color: #2f4f29;
+  color: #1f3b23;
 }
 
-/* Values */
+/* Multi-line text fully centered */
 .contact-item p {
   font-size: 15px;
   color: #333;
+  line-height: 1.4;
+  margin: 0;
+  max-width: 150px; /* keep long text wrapped neatly */
 }
+/* Fix contact icon vertical alignment */
+.fixed-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+}
+
+/* Larger consistent icon */
+.contact-icon {
+  font-size: 28px;
+  color: #2f4f29;
+  margin-bottom: 6px;
+}
+
+.center-text {
+  text-align: center !important;
+}
+
+/* Make social icons appear side by side */
+.social-row {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 6px;
+}
+
+.social-row i, 
+.social-row svg {
+  font-size: 20px;
+  cursor: pointer;
+}
+/* --- UNIFIED 6-CARD GRID --- */
+.why-6-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  max-width: 1200px;
+  margin: 30px auto;
+  padding: 0 20px;
+}
+
+/* All 6 cards same size */
+.why-6-card {
+  background: #ffffff;
+  min-height: 200px;             /* same height for all */
+  padding: 24px 20px;
+  border-radius: 16px;
+  border: 1px solid #d9ecd9;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  transition: 0.3s ease;
+}
+
+.why-6-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.25);
+}
+
+.why-6-card h3 {
+  font-size: 22px;
+  font-weight: 700;
+  color: #2f4f29;
+  margin-bottom: 10px;
+}
+
+.why-6-card p {
+  font-size: 15px;
+  color: #444;
+  margin: 0;
+}
+

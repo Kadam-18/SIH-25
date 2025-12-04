@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
-import { FaUser, FaBell, FaLock, FaSignOutAlt, FaCalendarAlt, FaHeart, FaPalette, FaSave, FaUpload } from "react-icons/fa";
+import { 
+  FaUser, FaBell, FaLock, FaSignOutAlt, FaCalendarAlt, 
+  FaHeart, FaPalette, FaSave, FaUpload, FaTrash,
+  FaTwitter, FaFacebook, FaApple, FaLinkedin, FaGoogle
+} from "react-icons/fa";
 import { apiGet, apiPut, apiPost } from "../api";
 import { useApp } from "../context/AppContext";
 import { t } from "../i18n";
@@ -11,6 +15,7 @@ export default function Settings() {
   const { theme, setTheme, language, setLanguage } = useApp();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [activeSection, setActiveSection] = useState("basic");
 
   // Account Information
   const [accountInfo, setAccountInfo] = useState({
@@ -22,12 +27,17 @@ export default function Settings() {
     gender: "",
   });
 
-  // Notification Preferences
-  const [notifications, setNotifications] = useState({
-    email_notifications: true,
-    appointment_reminders: true,
-    therapy_updates: true,
-    doctor_messages: true,
+  // Notifications
+  const [emailNotifications, setEmailNotifications] = useState({
+    news: true,
+    updates: true,
+    userResearch: false,
+    reminders: true,
+  });
+
+  const [pushNotifications, setPushNotifications] = useState({
+    reminders: true,
+    activity: true,
   });
 
   // Password Change
@@ -35,13 +45,6 @@ export default function Settings() {
     current_password: "",
     new_password: "",
     confirm_password: "",
-  });
-
-  // Appointment Preferences
-  const [appPreferences, setAppPreferences] = useState({
-    default_reminder_time: 24,
-    preferred_center_id: null,
-    notification_sound: true,
   });
 
   // Health Preferences
@@ -58,13 +61,18 @@ export default function Settings() {
     language: language || "en",
   });
 
+  // Delete account confirmation
+  const [deleteConfirm, setDeleteConfirm] = useState("");
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+
   const [centers, setCenters] = useState([]);
   const [newCondition, setNewCondition] = useState("");
 
   useEffect(() => {
+    loadProfile();
     loadSettings();
     loadCenters();
-    loadProfile();
+    setTimeout(() => setLoading(false), 500);
   }, []);
 
   const loadProfile = async () => {
@@ -73,12 +81,12 @@ export default function Settings() {
       if (res && res.success && res.data) {
         const d = res.data;
         setAccountInfo({
-          name: d.full_name || "",
-          email: d.user_email || d.email || "",
+          name: d.full_name || "John Doe",
+          email: d.user_email || d.email || "email@example.com",
           phone: d.phone || "",
-          dob: d.dob || "",
+          dob: d.dob || "9/17/2023",
           address: d.address || "",
-          gender: d.gender || "",
+          gender: d.gender || "Male",
         });
       }
     } catch (error) {
@@ -91,36 +99,40 @@ export default function Settings() {
       const res = await apiGet("/api/user/settings/", token);
       if (res && res.success && res.data) {
         const data = res.data;
-        setNotifications({
-          email_notifications: data.email_notifications ?? true,
-          appointment_reminders: data.appointment_reminders ?? true,
-          therapy_updates: data.therapy_updates ?? true,
-          doctor_messages: data.doctor_messages ?? true,
-        });
-        setAppPreferences({
-          default_reminder_time: data.default_reminder_time ?? 24,
-          preferred_center_id: data.preferred_center_id ?? null,
-          notification_sound: data.notification_sound ?? true,
-        });
+        
+        // Update notifications
+        if (data.notifications) {
+          setEmailNotifications({
+            news: data.notifications.news || true,
+            updates: data.notifications.updates || true,
+            userResearch: data.notifications.userResearch || false,
+            reminders: data.notifications.reminders || true,
+          });
+          setPushNotifications({
+            reminders: data.notifications.pushReminders || true,
+            activity: data.notifications.pushActivity || true,
+          });
+        }
+
+        // Update health preferences
         setHealthPreferences({
           medical_conditions: data.medical_conditions || [],
           ayurvedic_body_type: data.ayurvedic_body_type || "",
           health_notes: data.health_notes || "",
         });
+
+        // Update UI preferences
         const uiPrefs = {
           theme: data.theme || "light",
           time_format: data.time_format || "12",
           language: data.language || "en",
         };
         setUiPreferences(uiPrefs);
-        // Update context
         setTheme(uiPrefs.theme);
         setLanguage(uiPrefs.language);
       }
     } catch (error) {
       console.error("Error loading settings:", error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -135,14 +147,13 @@ export default function Settings() {
     }
   };
 
-  const updateAccountInfo = async () => {
+  const updateProfile = async () => {
     setSaving(true);
     try {
       const res = await apiPut(
         "/api/user/update-profile/",
         {
-          first_name: accountInfo.name.split(" ")[0] || accountInfo.name,
-          last_name: accountInfo.name.split(" ").slice(1).join(" ") || "",
+          name: accountInfo.name,
           email: accountInfo.email,
           phone: accountInfo.phone,
           address: accountInfo.address,
@@ -152,37 +163,35 @@ export default function Settings() {
         token
       );
       if (res && res.success) {
-        toast.success("Account information updated successfully!");
+        toast.success("Profile updated successfully!");
       } else {
-        toast.error(res?.message || "Failed to update account information");
+        toast.error(res?.message || "Failed to update profile");
       }
     } catch (error) {
-      toast.error("Error updating account information");
+      toast.error("Error updating profile");
     } finally {
       setSaving(false);
     }
   };
 
-  const updateNotifications = async () => {
-    try {
-      const res = await apiPut("/api/user/settings/", { ...notifications }, token);
-      if (res && res.success) {
-        toast.success("Notification preferences updated!");
-      }
-    } catch (error) {
-      toast.error("Error updating notifications");
-    }
+  const toggleEmailNotification = (key) => {
+    const updated = { ...emailNotifications, [key]: !emailNotifications[key] };
+    setEmailNotifications(updated);
+    saveNotifications({ email: updated });
   };
 
-  const handleNotificationChange = (key) => {
-    const updated = { ...notifications, [key]: !notifications[key] };
-    setNotifications(updated);
-    // Auto-save
-    apiPut("/api/user/settings/", { [key]: updated[key] }, token).then((res) => {
-      if (res && res.success) {
-        toast.success("Preference updated!");
-      }
-    });
+  const togglePushNotification = (key) => {
+    const updated = { ...pushNotifications, [key]: !pushNotifications[key] };
+    setPushNotifications(updated);
+    saveNotifications({ push: updated });
+  };
+
+  const saveNotifications = async (notifications) => {
+    try {
+      await apiPut("/api/user/settings/", { notifications }, token);
+    } catch (error) {
+      console.error("Error saving notifications:", error);
+    }
   };
 
   const changePassword = async () => {
@@ -210,50 +219,24 @@ export default function Settings() {
     }
   };
 
-  const logoutAllDevices = async () => {
-    if (!window.confirm("Are you sure you want to logout from all devices?")) {
-      return;
-    }
-    try {
-      const res = await apiPost("/api/logout-all-devices/", {}, token);
-      if (res && res.success) {
-        toast.success("Logged out from all devices successfully!");
-        // Optionally redirect to login
-        setTimeout(() => {
-          localStorage.removeItem("token");
-          window.location.href = "/login";
-        }, 2000);
-      } else {
-        toast.error(res?.message || "Failed to logout from all devices");
-      }
-    } catch (error) {
-      toast.error("Error logging out from all devices");
-    }
-  };
-
-  const updateAppPreferences = async () => {
-    try {
-      const res = await apiPut("/api/user/settings/", { ...appPreferences }, token);
-      if (res && res.success) {
-        toast.success("Appointment preferences updated!");
-      }
-    } catch (error) {
-      toast.error("Error updating preferences");
-    }
-  };
-
   const updateHealthPreferences = async () => {
+    setSaving(true);
     try {
       const res = await apiPut("/api/user/settings/", { ...healthPreferences }, token);
       if (res && res.success) {
         toast.success("Health preferences updated!");
+      } else {
+        toast.error(res?.message || "Failed to update health preferences");
       }
     } catch (error) {
       toast.error("Error updating health preferences");
+    } finally {
+      setSaving(false);
     }
   };
 
   const updateUiPreferences = async () => {
+    setSaving(true);
     try {
       const res = await apiPut("/api/user/settings/", { ...uiPreferences }, token);
       if (res && res.success) {
@@ -261,9 +244,13 @@ export default function Settings() {
         // Update context (which will apply theme)
         setTheme(uiPreferences.theme);
         setLanguage(uiPreferences.language);
+      } else {
+        toast.error(res?.message || "Failed to update UI preferences");
       }
     } catch (error) {
       toast.error("Error updating UI preferences");
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -275,7 +262,8 @@ export default function Settings() {
       };
       setHealthPreferences(updated);
       setNewCondition("");
-      updateHealthPreferences();
+      // Auto-save
+      apiPut("/api/user/settings/", { medical_conditions: updated.medical_conditions }, token);
     }
   };
 
@@ -285,411 +273,564 @@ export default function Settings() {
       medical_conditions: healthPreferences.medical_conditions.filter((_, i) => i !== index),
     };
     setHealthPreferences(updated);
-    updateHealthPreferences();
+    // Auto-save
+    apiPut("/api/user/settings/", { medical_conditions: updated.medical_conditions }, token);
+  };
+
+  const handleDeleteAccount = () => {
+    if (deleteConfirm !== "DELETE MY ACCOUNT") {
+      toast.error("Please type 'DELETE MY ACCOUNT' to confirm");
+      return;
+    }
+    
+    if (window.confirm("Are you sure you want to delete your account? This action cannot be undone!")) {
+      toast.info("Account deletion initiated. This would call the delete API.");
+      // In real app: apiPost("/api/delete-account/", { confirm: deleteConfirm }, token)
+      setShowDeleteConfirm(false);
+      setDeleteConfirm("");
+    }
+  };
+
+  const renderSection = () => {
+    switch (activeSection) {
+      case "basic":
+        return (
+          <div className="settings-content">
+            <h2 className="section-title">Basic Information</h2>
+            <div className="form-section">
+              <label className="form-label">Profile photo</label>
+              <p className="form-description">This will be displayed on your profile.</p>
+              <div className="profile-upload-area">
+                <div className="profile-avatar">
+                  <FaUser size={48} />
+                </div>
+                <button className="upload-btn">
+                  <FaUpload /> Upload Photo
+                </button>
+              </div>
+            </div>
+
+            <div className="form-section">
+              <label className="form-label">Name</label>
+              <input 
+                type="text" 
+                className="form-input"
+                value={accountInfo.name}
+                onChange={(e) => setAccountInfo({...accountInfo, name: e.target.value})}
+                placeholder="Full Name"
+              />
+            </div>
+
+            <div className="form-section">
+              <label className="form-label">Email Address</label>
+              <input 
+                type="email" 
+                className="form-input"
+                value={accountInfo.email}
+                onChange={(e) => setAccountInfo({...accountInfo, email: e.target.value})}
+                placeholder="Email"
+              />
+            </div>
+
+            <div className="form-row">
+              <div className="form-section">
+                <label className="form-label">Gender</label>
+                <select 
+                  className="form-input"
+                  value={accountInfo.gender}
+                  onChange={(e) => setAccountInfo({...accountInfo, gender: e.target.value})}
+                >
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <div className="form-section">
+                <label className="form-label">Date of Birth</label>
+                <input 
+                  type="text" 
+                  className="form-input"
+                  value={accountInfo.dob}
+                  onChange={(e) => setAccountInfo({...accountInfo, dob: e.target.value})}
+                  placeholder="MM/DD/YYYY"
+                />
+              </div>
+            </div>
+
+            <div className="form-section">
+              <label className="form-label">Phone No.</label>
+              <input 
+                type="tel" 
+                className="form-input"
+                value={accountInfo.phone}
+                onChange={(e) => setAccountInfo({...accountInfo, phone: e.target.value})}
+                placeholder="Enter phone number"
+              />
+            </div>
+
+            <div className="form-section">
+              <label className="form-label">Address</label>
+              <textarea 
+                className="form-input"
+                value={accountInfo.address}
+                onChange={(e) => setAccountInfo({...accountInfo, address: e.target.value})}
+                placeholder="Enter your full address"
+                rows={3}
+                style={{ resize: 'vertical' }}
+              />
+            </div>
+
+            <button className="save-btn" onClick={updateProfile} disabled={saving}>
+              {saving ? "Saving..." : "Save Changes"}
+            </button>
+          </div>
+        );
+
+      case "notifications":
+        return (
+          <div className="settings-content">
+            <h2 className="section-title">Notifications</h2>
+            
+            <div className="notification-section">
+              <h3 className="subsection-title">Email notification</h3>
+              <p className="subsection-description">
+                Get emails to find out what's going on when you're not online. You can turn these off.
+              </p>
+              
+              <div className="notification-list">
+                <div className="notification-item">
+                  <div className="notification-info">
+                    <h4>News</h4>
+                    <p>News about products and feature updates.</p>
+                  </div>
+                  <label className="switch">
+                    <input 
+                      type="checkbox" 
+                      checked={emailNotifications.news}
+                      onChange={() => toggleEmailNotification("news")}
+                    />
+                    <span className="slider"></span>
+                  </label>
+                </div>
+
+                <div className="notification-item">
+                  <div className="notification-info">
+                    <h4>Updates</h4>
+                    <p>Intent's updates.</p>
+                  </div>
+                  <label className="switch">
+                    <input 
+                      type="checkbox" 
+                      checked={emailNotifications.updates}
+                      onChange={() => toggleEmailNotification("updates")}
+                    />
+                    <span className="slider"></span>
+                  </label>
+                </div>
+
+                <div className="notification-item">
+                  <div className="notification-info">
+                    <h4>User research</h4>
+                    <p>Users can run the timeline program or participate in such product user reviews.</p>
+                  </div>
+                  <label className="switch">
+                    <input 
+                      type="checkbox" 
+                      checked={emailNotifications.userResearch}
+                      onChange={() => toggleEmailNotification("userResearch")}
+                    />
+                    <span className="slider"></span>
+                  </label>
+                </div>
+
+                <div className="notification-item">
+                  <div className="notification-info">
+                    <h4>Reminders</h4>
+                    <p>These are notifications to remind you of updating your right item manual.</p>
+                  </div>
+                  <label className="switch">
+                    <input 
+                      type="checkbox" 
+                      checked={emailNotifications.reminders}
+                      onChange={() => toggleEmailNotification("reminders")}
+                    />
+                    <span className="slider"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div className="notification-section">
+              <h3 className="subsection-title">Push notification</h3>
+              <p className="subsection-description">
+                Get push notification to, app to find out what's going on when you're online.
+              </p>
+              
+              <div className="notification-list">
+                <div className="notification-item">
+                  <div className="notification-info">
+                    <h4>Reminders</h4>
+                    <p>These are notifications to remind you of updating your right item manual.</p>
+                  </div>
+                  <label className="switch">
+                    <input 
+                      type="checkbox" 
+                      checked={pushNotifications.reminders}
+                      onChange={() => togglePushNotification("reminders")}
+                    />
+                    <span className="slider"></span>
+                  </label>
+                </div>
+
+                <div className="notification-item">
+                  <div className="notification-info">
+                    <h4>More activity about you</h4>
+                    <p>These are notifications for posts on your phone, with each other headlining to your posts, and more.</p>
+                  </div>
+                  <label className="switch">
+                    <input 
+                      type="checkbox" 
+                      checked={pushNotifications.activity}
+                      onChange={() => togglePushNotification("activity")}
+                    />
+                    <span className="slider"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "health":
+        return (
+          <div className="settings-content">
+            <h2 className="section-title">Health Preferences</h2>
+            
+            <div className="form-section">
+              <label className="form-label">Medical Conditions</label>
+              <div className="tags-input">
+                <input
+                  type="text"
+                  value={newCondition}
+                  onChange={(e) => setNewCondition(e.target.value)}
+                  onKeyPress={(e) => e.key === "Enter" && addMedicalCondition()}
+                  placeholder="Add medical condition and press Enter"
+                  className="form-input"
+                />
+                <button onClick={addMedicalCondition} className="btn-tag">Add</button>
+              </div>
+              <div className="tags-list">
+                {healthPreferences.medical_conditions.map((condition, index) => (
+                  <span key={index} className="tag">
+                    {condition}
+                    <button onClick={() => removeMedicalCondition(index)} className="tag-remove">
+                      ×
+                    </button>
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div className="form-section">
+              <label className="form-label">Ayurvedic Body Type</label>
+              <select
+                className="form-input"
+                value={healthPreferences.ayurvedic_body_type}
+                onChange={(e) =>
+                  setHealthPreferences({ ...healthPreferences, ayurvedic_body_type: e.target.value })
+                }
+              >
+                <option value="">Select Body Type</option>
+                <option value="Vata">Vata</option>
+                <option value="Pitta">Pitta</option>
+                <option value="Kapha">Kapha</option>
+                <option value="Vata-Pitta">Vata-Pitta</option>
+                <option value="Vata-Kapha">Vata-Kapha</option>
+                <option value="Pitta-Kapha">Pitta-Kapha</option>
+                <option value="Tridosha">Tridosha</option>
+              </select>
+            </div>
+
+            <div className="form-section">
+              <label className="form-label">Custom Health Notes</label>
+              <textarea
+                className="form-input"
+                value={healthPreferences.health_notes}
+                onChange={(e) =>
+                  setHealthPreferences({ ...healthPreferences, health_notes: e.target.value })
+                }
+                placeholder="Add any additional health notes or preferences"
+                rows={4}
+                style={{ resize: 'vertical' }}
+              />
+            </div>
+
+            <button className="save-btn" onClick={updateHealthPreferences} disabled={saving}>
+              {saving ? "Saving..." : "Save Health Preferences"}
+            </button>
+          </div>
+        );
+
+      case "ui": // CHANGED: This replaces the "social" section
+        return (
+          <div className="settings-content">
+            <h2 className="section-title">App UI Preferences</h2>
+            
+            <div className="form-section">
+              <label className="form-label">Theme</label>
+              <div className="radio-group">
+                <label className="radio-option">
+                  <input
+                    type="radio"
+                    name="theme"
+                    value="light"
+                    checked={uiPreferences.theme === "light"}
+                    onChange={(e) => setUiPreferences({ ...uiPreferences, theme: e.target.value })}
+                  />
+                  <span>Light</span>
+                </label>
+                <label className="radio-option">
+                  <input
+                    type="radio"
+                    name="theme"
+                    value="dark"
+                    checked={uiPreferences.theme === "dark"}
+                    onChange={(e) => setUiPreferences({ ...uiPreferences, theme: e.target.value })}
+                  />
+                  <span>Dark</span>
+                </label>
+              </div>
+            </div>
+
+            <div className="form-section">
+              <label className="form-label">Time Format</label>
+              <div className="radio-group">
+                <label className="radio-option">
+                  <input
+                    type="radio"
+                    name="time_format"
+                    value="12"
+                    checked={uiPreferences.time_format === "12"}
+                    onChange={(e) => setUiPreferences({ ...uiPreferences, time_format: e.target.value })}
+                  />
+                  <span>12-hour</span>
+                </label>
+                <label className="radio-option">
+                  <input
+                    type="radio"
+                    name="time_format"
+                    value="24"
+                    checked={uiPreferences.time_format === "24"}
+                    onChange={(e) => setUiPreferences({ ...uiPreferences, time_format: e.target.value })}
+                  />
+                  <span>24-hour</span>
+                </label>
+              </div>
+            </div>
+
+            <div className="form-section">
+              <label className="form-label">Language</label>
+              <select
+                className="form-input"
+                value={uiPreferences.language}
+                onChange={(e) => setUiPreferences({ ...uiPreferences, language: e.target.value })}
+              >
+                <option value="en">English</option>
+                <option value="hi">हिंदी (Hindi)</option>
+                <option value="es">Español (Spanish)</option>
+                <option value="fr">Français (French)</option>
+                <option value="de">Deutsch (German)</option>
+                <option value="zh">中文 (Chinese)</option>
+                <option value="ja">日本語 (Japanese)</option>
+                <option value="ar">العربية (Arabic)</option>
+              </select>
+            </div>
+
+            <button className="save-btn" onClick={updateUiPreferences} disabled={saving}>
+              {saving ? "Saving..." : "Save UI Preferences"}
+            </button>
+          </div>
+        );
+
+      case "security":
+        return (
+          <div className="settings-content">
+            <h2 className="section-title">Password & Security</h2>
+            
+            <div className="form-section">
+              <label className="form-label">Enter Current Password</label>
+              <input 
+                type="password" 
+                className="form-input"
+                value={password.current_password}
+                onChange={(e) => setPassword({...password, current_password: e.target.value})}
+                placeholder="Current password"
+              />
+            </div>
+
+            <div className="form-section">
+              <label className="form-label">Enter new Password</label>
+              <input 
+                type="password" 
+                className="form-input"
+                value={password.new_password}
+                onChange={(e) => setPassword({...password, new_password: e.target.value})}
+                placeholder="New password"
+              />
+            </div>
+
+            <div className="form-section">
+              <label className="form-label">Confirm new password</label>
+              <input 
+                type="password" 
+                className="form-input"
+                value={password.confirm_password}
+                onChange={(e) => setPassword({...password, confirm_password: e.target.value})}
+                placeholder="Confirm new password"
+              />
+            </div>
+
+            <button className="save-btn" onClick={changePassword} disabled={saving}>
+              {saving ? "Changing Password..." : "Change Password"}
+            </button>
+          </div>
+        );
+
+      case "delete":
+        return (
+          <div className="settings-content">
+            <h2 className="section-title delete-title">Delete your account</h2>
+            <div className="delete-warning">
+              <p className="warning-text">
+                When you delete your account, you lose access to Front account services, 
+                and we permanently delete your personal data. You can cancel the deletion for 14 days.
+              </p>
+              
+              {!showDeleteConfirm ? (
+                <button 
+                  className="delete-account-btn"
+                  onClick={() => setShowDeleteConfirm(true)}
+                >
+                  Delete Account
+                </button>
+              ) : (
+                <div className="delete-confirm-section">
+                  <label className="form-label">
+                    Confirm that <strong>I want to delete my account</strong> by typing "DELETE MY ACCOUNT"
+                  </label>
+                  <input 
+                    type="text" 
+                    className="form-input"
+                    value={deleteConfirm}
+                    onChange={(e) => setDeleteConfirm(e.target.value)}
+                    placeholder="DELETE MY ACCOUNT"
+                  />
+                  <div className="delete-actions">
+                    <button 
+                      className="confirm-delete-btn"
+                      onClick={handleDeleteAccount}
+                      disabled={deleteConfirm !== "DELETE MY ACCOUNT"}
+                    >
+                      <FaTrash /> Confirm Delete
+                    </button>
+                    <button 
+                      className="cancel-delete-btn"
+                      onClick={() => {
+                        setShowDeleteConfirm(false);
+                        setDeleteConfirm("");
+                      }}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+            
+            <div className="learn-more">
+              <a href="#" className="learn-more-link">Learn more</a>
+            </div>
+          </div>
+        );
+
+      default:
+        return null;
+    }
   };
 
   if (loading) {
     return (
       <div className="settings-container">
-        <div className="settings-loading">Loading settings...</div>
+        <div className="loading-spinner">Loading settings...</div>
       </div>
     );
   }
 
   return (
     <div className="settings-container">
-      <h1 className="settings-title">Settings</h1>
+      <header className="settings-header">
+        <h1 className="settings-title">Account / Setting</h1>
+      </header>
 
-      {/* Account Information */}
-      <div className="settings-card">
-        <div className="settings-card-header">
-          <FaUser className="settings-icon" />
-          <h2>{t("accountInformation", language)}</h2>
-        </div>
-        <div className="settings-card-content">
-          <div className="form-group">
-            <label>Name</label>
-            <input
-              type="text"
-              value={accountInfo.name}
-              onChange={(e) => setAccountInfo({ ...accountInfo, name: e.target.value })}
-              placeholder="Full Name"
-            />
-          </div>
-          <div className="form-group">
-            <label>Email</label>
-            <input
-              type="email"
-              value={accountInfo.email}
-              onChange={(e) => setAccountInfo({ ...accountInfo, email: e.target.value })}
-              placeholder="Email Address"
-            />
-          </div>
-          <div className="form-group">
-            <label>Phone</label>
-            <input
-              type="tel"
-              value={accountInfo.phone}
-              onChange={(e) => setAccountInfo({ ...accountInfo, phone: e.target.value })}
-              placeholder="Phone Number"
-            />
-          </div>
-          <div className="form-row">
-            <div className="form-group">
-              <label>Date of Birth</label>
-              <input
-                type="date"
-                value={accountInfo.dob}
-                onChange={(e) => setAccountInfo({ ...accountInfo, dob: e.target.value })}
-              />
-            </div>
-            <div className="form-group">
-              <label>Gender</label>
-              <select
-                value={accountInfo.gender}
-                onChange={(e) => setAccountInfo({ ...accountInfo, gender: e.target.value })}
-              >
-                <option value="">Select Gender</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-                <option value="Other">Other</option>
-              </select>
-            </div>
-          </div>
-          <div className="form-group">
-            <label>Address</label>
-            <textarea
-              value={accountInfo.address}
-              onChange={(e) => setAccountInfo({ ...accountInfo, address: e.target.value })}
-              placeholder="Full Address"
-              rows={3}
-            />
-          </div>
-          <div className="form-group">
-            <label>Profile Picture</label>
-            <div className="profile-picture-upload">
-              <FaUpload className="upload-icon" />
-              <span>Click to upload or drag and drop</span>
-              <input type="file" accept="image/*" style={{ display: "none" }} />
-            </div>
-          </div>
-          <button className="btn-primary" onClick={updateAccountInfo} disabled={saving}>
-            <FaSave /> {saving ? "Saving..." : "Update Account"}
-          </button>
-        </div>
-      </div>
-
-      {/* Notification Preferences */}
-      <div className="settings-card">
-        <div className="settings-card-header">
-          <FaBell className="settings-icon" />
-          <h2>{t("notificationPreferences", language)}</h2>
-        </div>
-        <div className="settings-card-content">
-          <div className="toggle-group">
-            <label>Email Notifications</label>
-            <label className="toggle-switch">
-              <input
-                type="checkbox"
-                checked={notifications.email_notifications}
-                onChange={() => handleNotificationChange("email_notifications")}
-              />
-              <span className="slider"></span>
-            </label>
-          </div>
-          <div className="toggle-group">
-            <label>Appointment Reminders</label>
-            <label className="toggle-switch">
-              <input
-                type="checkbox"
-                checked={notifications.appointment_reminders}
-                onChange={() => handleNotificationChange("appointment_reminders")}
-              />
-              <span className="slider"></span>
-            </label>
-          </div>
-          <div className="toggle-group">
-            <label>Therapy Updates</label>
-            <label className="toggle-switch">
-              <input
-                type="checkbox"
-                checked={notifications.therapy_updates}
-                onChange={() => handleNotificationChange("therapy_updates")}
-              />
-              <span className="slider"></span>
-            </label>
-          </div>
-          <div className="toggle-group">
-            <label>Doctor Messages</label>
-            <label className="toggle-switch">
-              <input
-                type="checkbox"
-                checked={notifications.doctor_messages}
-                onChange={() => handleNotificationChange("doctor_messages")}
-              />
-              <span className="slider"></span>
-            </label>
-          </div>
-        </div>
-      </div>
-
-      {/* Change Password */}
-      <div className="settings-card">
-        <div className="settings-card-header">
-          <FaLock className="settings-icon" />
-          <h2>Change Password</h2>
-        </div>
-        <div className="settings-card-content">
-          <div className="form-group">
-            <label>Current Password</label>
-            <input
-              type="password"
-              value={password.current_password}
-              onChange={(e) => setPassword({ ...password, current_password: e.target.value })}
-              placeholder="Enter current password"
-            />
-          </div>
-          <div className="form-group">
-            <label>New Password</label>
-            <input
-              type="password"
-              value={password.new_password}
-              onChange={(e) => setPassword({ ...password, new_password: e.target.value })}
-              placeholder="Enter new password"
-            />
-          </div>
-          <div className="form-group">
-            <label>Confirm New Password</label>
-            <input
-              type="password"
-              value={password.confirm_password}
-              onChange={(e) => setPassword({ ...password, confirm_password: e.target.value })}
-              placeholder="Confirm new password"
-            />
-          </div>
-          <button className="btn-primary" onClick={changePassword} disabled={saving}>
-            <FaLock /> {saving ? "Changing..." : "Change Password"}
-          </button>
-        </div>
-      </div>
-
-      {/* Appointment Preferences */}
-      <div className="settings-card">
-        <div className="settings-card-header">
-          <FaCalendarAlt className="settings-icon" />
-          <h2>Appointment Preferences</h2>
-        </div>
-        <div className="settings-card-content">
-          <div className="form-group">
-            <label>Default Reminder Time (hours before)</label>
-            <input
-              type="number"
-              value={appPreferences.default_reminder_time}
-              onChange={(e) =>
-                setAppPreferences({ ...appPreferences, default_reminder_time: parseInt(e.target.value) })
-              }
-              min="1"
-              max="168"
-            />
-          </div>
-          <div className="form-group">
-            <label>Preferred Appointment Center</label>
-            <select
-              value={appPreferences.preferred_center_id || ""}
-              onChange={(e) =>
-                setAppPreferences({ ...appPreferences, preferred_center_id: parseInt(e.target.value) || null })
-              }
+      <div className="settings-layout">
+        {/* Sidebar */}
+        <div className="settings-sidebar">
+          <nav className="settings-nav">
+            <button 
+              className={`nav-item ${activeSection === "basic" ? "active" : ""}`}
+              onClick={() => setActiveSection("basic")}
             >
-              <option value="">Select Center</option>
-              {centers.map((center) => (
-                <option key={center.id} value={center.id}>
-                  {center.name}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="toggle-group">
-            <label>Notification Sound</label>
-            <label className="toggle-switch">
-              <input
-                type="checkbox"
-                checked={appPreferences.notification_sound}
-                onChange={() =>
-                  setAppPreferences({
-                    ...appPreferences,
-                    notification_sound: !appPreferences.notification_sound,
-                  })
-                }
-              />
-              <span className="slider"></span>
-            </label>
-          </div>
-          <button className="btn-primary" onClick={updateAppPreferences}>
-            <FaSave /> Save Preferences
-          </button>
-        </div>
-      </div>
+              <FaUser className="nav-icon" />
+              <span>Basic Information</span>
+            </button>
 
-      {/* Health Preferences */}
-      <div className="settings-card">
-        <div className="settings-card-header">
-          <FaHeart className="settings-icon" />
-          <h2>Health Preferences</h2>
-        </div>
-        <div className="settings-card-content">
-          <div className="form-group">
-            <label>Medical Conditions</label>
-            <div className="tags-input">
-              <input
-                type="text"
-                value={newCondition}
-                onChange={(e) => setNewCondition(e.target.value)}
-                onKeyPress={(e) => e.key === "Enter" && addMedicalCondition()}
-                placeholder="Add medical condition and press Enter"
-              />
-              <button onClick={addMedicalCondition} className="btn-tag">Add</button>
-            </div>
-            <div className="tags-list">
-              {healthPreferences.medical_conditions.map((condition, index) => (
-                <span key={index} className="tag">
-                  {condition}
-                  <button onClick={() => removeMedicalCondition(index)} className="tag-remove">
-                    ×
-                  </button>
-                </span>
-              ))}
-            </div>
-          </div>
-          <div className="form-group">
-            <label>Ayurvedic Body Type</label>
-            <select
-              value={healthPreferences.ayurvedic_body_type}
-              onChange={(e) =>
-                setHealthPreferences({ ...healthPreferences, ayurvedic_body_type: e.target.value })
-              }
+            <button 
+              className={`nav-item ${activeSection === "notifications" ? "active" : ""}`}
+              onClick={() => setActiveSection("notifications")}
             >
-              <option value="">Select Body Type</option>
-              <option value="Vata">Vata</option>
-              <option value="Pitta">Pitta</option>
-              <option value="Kapha">Kapha</option>
-              <option value="Vata-Pitta">Vata-Pitta</option>
-              <option value="Vata-Kapha">Vata-Kapha</option>
-              <option value="Pitta-Kapha">Pitta-Kapha</option>
-              <option value="Tridosha">Tridosha</option>
-            </select>
-          </div>
-          <div className="form-group">
-            <label>Custom Health Notes</label>
-            <textarea
-              value={healthPreferences.health_notes}
-              onChange={(e) =>
-                setHealthPreferences({ ...healthPreferences, health_notes: e.target.value })
-              }
-              placeholder="Add any additional health notes or preferences"
-              rows={4}
-            />
-          </div>
-          <button className="btn-primary" onClick={updateHealthPreferences}>
-            <FaSave /> Save Health Preferences
-          </button>
-        </div>
-      </div>
+              <FaBell className="nav-icon" />
+              <span>Notifications</span>
+            </button>
 
-      {/* App UI Preferences */}
-      <div className="settings-card">
-        <div className="settings-card-header">
-          <FaPalette className="settings-icon" />
-          <h2>App UI Preferences</h2>
-        </div>
-        <div className="settings-card-content">
-          <div className="form-group">
-            <label>Theme</label>
-            <div className="radio-group">
-              <label className="radio-option">
-                <input
-                  type="radio"
-                  name="theme"
-                  value="light"
-                  checked={uiPreferences.theme === "light"}
-                  onChange={(e) => setUiPreferences({ ...uiPreferences, theme: e.target.value })}
-                />
-                <span>Light</span>
-              </label>
-              <label className="radio-option">
-                <input
-                  type="radio"
-                  name="theme"
-                  value="dark"
-                  checked={uiPreferences.theme === "dark"}
-                  onChange={(e) => setUiPreferences({ ...uiPreferences, theme: e.target.value })}
-                />
-                <span>Dark</span>
-              </label>
-            </div>
-          </div>
-          <div className="form-group">
-            <label>Time Format</label>
-            <div className="radio-group">
-              <label className="radio-option">
-                <input
-                  type="radio"
-                  name="time_format"
-                  value="12"
-                  checked={uiPreferences.time_format === "12"}
-                  onChange={(e) => setUiPreferences({ ...uiPreferences, time_format: e.target.value })}
-                />
-                <span>12-hour</span>
-              </label>
-              <label className="radio-option">
-                <input
-                  type="radio"
-                  name="time_format"
-                  value="24"
-                  checked={uiPreferences.time_format === "24"}
-                  onChange={(e) => setUiPreferences({ ...uiPreferences, time_format: e.target.value })}
-                />
-                <span>24-hour</span>
-              </label>
-            </div>
-          </div>
-          <div className="form-group">
-            <label>Language</label>
-            <select
-              value={uiPreferences.language}
-              onChange={(e) => setUiPreferences({ ...uiPreferences, language: e.target.value })}
+            <button 
+              className={`nav-item ${activeSection === "health" ? "active" : ""}`}
+              onClick={() => setActiveSection("health")}
             >
-              <option value="en">English</option>
-              <option value="hi">हिंदी (Hindi)</option>
-              <option value="es">Español (Spanish)</option>
-              <option value="fr">Français (French)</option>
-              <option value="de">Deutsch (German)</option>
-              <option value="zh">中文 (Chinese)</option>
-              <option value="ja">日本語 (Japanese)</option>
-              <option value="ar">العربية (Arabic)</option>
-            </select>
-          </div>
-          <button className="btn-primary" onClick={updateUiPreferences}>
-            <FaSave /> Save UI Preferences
-          </button>
-        </div>
-      </div>
+              <FaHeart className="nav-icon" />
+              <span>Health Preferences</span>
+            </button>
 
-      {/* Logout from All Devices */}
-      <div className="settings-card">
-        <div className="settings-card-header">
-          <FaSignOutAlt className="settings-icon" />
-          <h2>Security</h2>
+            <button 
+              className={`nav-item ${activeSection === "ui" ? "active" : ""}`}
+              onClick={() => setActiveSection("ui")}
+            >
+              <FaPalette className="nav-icon" />
+              <span>App UI Preferences</span>
+            </button>
+
+            <button 
+              className={`nav-item ${activeSection === "security" ? "active" : ""}`}
+              onClick={() => setActiveSection("security")}
+            >
+              <FaLock className="nav-icon" />
+              <span>Password & Security</span>
+            </button>
+
+            <button 
+              className={`nav-item ${activeSection === "delete" ? "active" : ""}`}
+              onClick={() => setActiveSection("delete")}
+            >
+              <FaTrash className="nav-icon" />
+              <span>Delete Account</span>
+            </button>
+          </nav>
         </div>
-        <div className="settings-card-content">
-          <p className="settings-description">
-            This will log you out from all devices and invalidate all active sessions. You will need to login again.
-          </p>
-          <button className="btn-danger" onClick={logoutAllDevices}>
-            <FaSignOutAlt /> Logout from All Devices
-          </button>
+
+        {/* Main Content */}
+        <div className="settings-main">
+          {renderSection()}
         </div>
       </div>
     </div>
   );
 }
-
