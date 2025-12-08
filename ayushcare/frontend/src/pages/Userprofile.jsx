@@ -1,287 +1,148 @@
-// src/pages/Userprofile.jsx
-import React, { useEffect, useState } from "react";
-import { FaUserCircle, FaEdit, FaSave } from "react-icons/fa";
+import React, { useState, useEffect } from "react";
+import { FaUserCircle, FaEdit, FaPhone, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
 import "./UserProfile.css";
-import { apiGet } from "../api";
 
 export default function UserProfile() {
-  const token = localStorage.getItem("token");
-
-  const [personalInfo, setPersonalInfo] = useState({
-    full_name: "",
-    gender: "",
-    dob: "",
-    email: "",
-    phone: "",
-    address: "",
+  const [personalInfo] = useState({
+    fullName: "Anirudh Yadav",
+    phone: "+91 98765 43210",
+    email: "anirudh@example.com",
+    gender: "Male",
+    dob: "1998-10-12",
+    address: "Bhopal, Madhya Pradesh, India",
   });
 
-  const [medicalInfo, setMedicalInfo] = useState({
-    blood_group: "",
-    height: "",
-    weight: "",
-    allergies: "",
-    current_health_condition: "",
-    current_medication: "",
-    past_medical_history: [],
-    blood_pressure: "",
-    pulse_rate: "",
-    stress_level: "",
-    energy_level: "",
-    lifestyle_addictions: "",
-    contraindications: [],
-    treatment_goals: [],
+  const [medicalInfo] = useState({
+    bloodGroup: "B+",
+    height: 175,
+    weight: 68,
+    allergy: "None",
+    condition: "Healthy",
+    medication: "Ayurvedic",
   });
 
-  const [editingPersonal, setEditingPersonal] = useState(false);
-  const [editingMedical, setEditingMedical] = useState(false);
-
+  const [editing, setEditing] = useState(false);
   const [bmi, setBmi] = useState(0);
-  const [age, setAge] = useState(0);
-
-
-  useEffect(() => {
-    const load = async () => {
-      if (!token) return;
-      const res = await apiGet("/api/patient/profile/", token);
-      if (res && res.success && res.data) {
-        const d = res.data;
-        setPersonalInfo({
-          full_name: d.full_name || "",
-          gender: d.gender || "",
-          dob: d.dob || "",
-          email: d.user_email || d.email || "",
-          phone: d.phone || "",
-          address: d.address || "",
-        });
-
-        setMedicalInfo({
-          blood_group: d.blood_group || "",
-          height: d.height || d.height_cm || "",
-          weight: d.weight || d.weight_kg || "",
-          allergies: d.allergies || "",
-          current_health_condition: d.current_symptoms || "",
-          current_medication: d.current_medication || "",
-          past_medical_history: d.past_medical_history || [],
-          blood_pressure: d.blood_pressure || "",
-          pulse_rate: d.pulse_rate || "",
-          stress_level: d.stress_level || "",
-          energy_level: d.energy_level || "",
-          lifestyle_addictions: Array.isArray(d.addictions) ? d.addictions.join(", ") : (d.addictions || ""),
-          contraindications: d.contraindications || [],
-          treatment_goals: d.treatment_goals || [],
-        });
-      }
-    };
-    load();
-  }, [token]);
 
   useEffect(() => {
     const h = medicalInfo.height / 100;
     setBmi((medicalInfo.weight / (h * h)).toFixed(1));
   }, [medicalInfo.height, medicalInfo.weight]);
 
-  useEffect(() => {
-    if (personalInfo.dob) {
-      const birth = new Date(personalInfo.dob);
-      const today = new Date();
-      let userAge = today.getFullYear() - birth.getFullYear();
-      const m = today.getMonth() - birth.getMonth();
-      if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) {
-        userAge--;
-      }
-      setAge(userAge);
-    }
-  }, [personalInfo.dob]);
-
-  const handlePersonalChange = (e) => {
-    const { name, value } = e.target;
-    setPersonalInfo((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleMedicalChange = (e) => {
-    const { name, value } = e.target;
-    setMedicalInfo((prev) => ({ ...prev, [name]: value }));
-  };
-
   return (
-    <div className="profile-root">
-      <div className="profile-header">
-        <FaUserCircle className="avatar" />
-        <div>
-          <h1>My Profile</h1>
-          <p className="muted">Manage your personal and medical details.</p>
-        </div>
-      </div>
-
-      <div className="profile-card">
-        <div className="card-header">
-          <h2>🧍 Personal Information</h2>
-          {!editingPersonal ? (
-            <button className="edit-btn" onClick={() => setEditingPersonal(true)}>
-              <FaEdit /> Edit
-            </button>
-          ) : (
-            <button className="save-btn" onClick={() => setEditingPersonal(false)}>
-              <FaSave /> Save Changes
-            </button>
-          )}
-        </div>
-
-        <div className="form-grid">
-          <div>
-            <label>Full Name</label>
-            <input type="text" name="full_name" value={personalInfo.full_name} onChange={handlePersonalChange} readOnly={!editingPersonal} />
+    <div className="profile-container">
+      {/* Background Pattern/Image */}
+      <div className="background-overlay"></div>
+      
+      {/* Main Content */}
+      <div className="profile-wrapper">
+        {/* LEFT PROFILE CARD - My Profile */}
+        <div className="profile-left card-elevated">
+          <div className="profile-photo-section">
+            <FaUserCircle className="profile-big-photo" />
+            <div className="profile-status"></div>
           </div>
 
-          <div>
-            <label>Gender</label>
-            <select name="gender" value={personalInfo.gender} onChange={handlePersonalChange} disabled={!editingPersonal}>
-              <option>Male</option>
-              <option>Female</option>
-              <option>Other</option>
-            </select>
-          </div>
-
-          <div>
-            <label>Date of Birth</label>
-            <input type="date" name="dob" value={personalInfo.dob} onChange={handlePersonalChange} readOnly={!editingPersonal} />
-          </div>
-
-          <div>
-            <label>Email</label>
-            <input type="email" name="email" value={personalInfo.email} readOnly />
-          </div>
-
-          <div>
-            <label>Phone Number</label>
-            <input type="text" name="phone" value={personalInfo.phone} onChange={handlePersonalChange} readOnly={!editingPersonal} />
-          </div>
-
-          <div className="full-width">
-            <label>Address</label>
-            <textarea name="address" value={personalInfo.address} onChange={handlePersonalChange} readOnly={!editingPersonal} />
-          </div>
-        </div>
-      </div>
-
-      <div className="profile-card">
-        <div className="card-header">
-          <h2>🧬 Medical Information</h2>
-          {!editingMedical ? (
-            <button className="edit-btn" onClick={() => setEditingMedical(true)}>
-              <FaEdit /> Edit
-            </button>
-          ) : (
-            <button className="save-btn" onClick={() => setEditingMedical(false)}>
-              <FaSave /> Save Changes
-            </button>
-          )}
-        </div>
-
-        <div className="form-grid">
-          <div>
-            <label>Age</label>
-            <input type="number" value={age} readOnly />
-          </div>
-
-          <div>
-            <label>Blood Group</label>
-            <select name="blood_group" value={medicalInfo.blood_group} onChange={handleMedicalChange} disabled={!editingMedical}>
-              <option>A+</option>
-              <option>A-</option>
-              <option>B+</option>
-              <option>B-</option>
-              <option>AB+</option>
-              <option>AB-</option>
-              <option>O+</option>
-              <option>O-</option>
-            </select>
-          </div>
-
-          <div>
-            <label>Height (cm)</label>
-            <input type="number" name="height" value={medicalInfo.height} onChange={handleMedicalChange} readOnly={!editingMedical} />
-          </div>
-
-          <div>
-            <label>Weight (kg)</label>
-            <input type="number" name="weight" value={medicalInfo.weight} onChange={handleMedicalChange} readOnly={!editingMedical} />
-          </div>
-
-          <div>
-            <label>BMI</label>
-            <input type="text" value={bmi} readOnly />
-          </div>
-
-          <div>
-            <label>Allergies</label>
-            <input type="text" name="allergies" value={medicalInfo.allergies} onChange={handleMedicalChange} readOnly={!editingMedical} />
-          </div>
-
-          <div>
-            <label>Current Condition</label>
-            <input type="text" name="current_health_condition" value={medicalInfo.current_health_condition} onChange={handleMedicalChange} readOnly={!editingMedical} />
-          </div>
-
-          <div>
-            <label>Current Medication</label>
-            <input type="text" name="current_medication" value={medicalInfo.current_medication} onChange={handleMedicalChange} readOnly={!editingMedical} />
-          </div>
-
-          {medicalInfo.past_medical_history && medicalInfo.past_medical_history.length > 0 && (
-            <div className="full-width">
-              <label>Past Medical History</label>
-              <div className="chip-list">
-                {medicalInfo.past_medical_history.map((item, idx) => (
-                  <span key={idx} className="chip">{item}</span>
-                ))}
+          <div className="profile-info-section">
+            <h3 className="profile-title">My Profile</h3>
+            <div className="profile-name">{personalInfo.fullName}</div>
+            
+            <div className="contact-info">
+              <div className="contact-item">
+                <FaPhone className="contact-icon" />
+                <span>{personalInfo.phone}</span>
+              </div>
+              <div className="contact-item">
+                <FaEnvelope className="contact-icon" />
+                <span>{personalInfo.email}</span>
+              </div>
+              <div className="contact-item">
+                <FaMapMarkerAlt className="contact-icon" />
+                <span>{personalInfo.address}</span>
               </div>
             </div>
-          )}
 
-          {medicalInfo.blood_pressure && (
-            <div>
-              <label>Blood Pressure</label>
-              <input type="text" value={medicalInfo.blood_pressure} readOnly />
+            <button className="edit-profile-btn" onClick={() => setEditing(!editing)}>
+              <FaEdit /> {editing ? "Save Changes" : "Edit Profile"}
+            </button>
+          </div>
+        </div>
+
+        {/* RIGHT PROFILE CARDS */}
+        <div className="profile-right">
+          {/* GENERAL INFORMATION CARD */}
+          <div className="general-info-card card-elevated">
+            <div className="card-header">
+              <h3 className="card-title">General Information</h3>
+              <div className="card-divider"></div>
             </div>
-          )}
-
-          {medicalInfo.pulse_rate && (
-            <div>
-              <label>Pulse Rate</label>
-              <input type="text" value={medicalInfo.pulse_rate} readOnly />
-            </div>
-          )}
-
-          {medicalInfo.lifestyle_addictions && (
-            <div className="full-width">
-              <label>Lifestyle / Addictions</label>
-              <input type="text" value={medicalInfo.lifestyle_addictions} readOnly />
-            </div>
-          )}
-
-          {medicalInfo.contraindications && medicalInfo.contraindications.length > 0 && (
-            <div className="full-width">
-              <label>Contraindications</label>
-              <div className="chip-list">
-                {medicalInfo.contraindications.map((item, idx) => (
-                  <span key={idx} className="chip">{item}</span>
-                ))}
+            
+            <div className="info-grid">
+              <div className="info-item">
+                <label>Full Name</label>
+                <p className="info-value bold">{personalInfo.fullName}</p>
+              </div>
+              <div className="info-item">
+                <label>Phone</label>
+                <p className="info-value">{personalInfo.phone}</p>
+              </div>
+              <div className="info-item">
+                <label>Email</label>
+                <p className="info-value">{personalInfo.email}</p>
+              </div>
+              <div className="info-item">
+                <label>Gender</label>
+                <p className="info-value">{personalInfo.gender}</p>
+              </div>
+              <div className="info-item">
+                <label>Date of Birth</label>
+                <p className="info-value">{personalInfo.dob}</p>
+              </div>
+              <div className="info-item full-width">
+                <label>Address</label>
+                <p className="info-value">{personalInfo.address}</p>
               </div>
             </div>
-          )}
+          </div>
 
-          {medicalInfo.treatment_goals && medicalInfo.treatment_goals.length > 0 && (
-            <div className="full-width">
-              <label>Treatment Goals</label>
-              <div className="chip-list">
-                {medicalInfo.treatment_goals.map((item, idx) => (
-                  <span key={idx} className="chip">{item}</span>
-                ))}
+          {/* MEDICAL INFORMATION CARD */}
+          <div className="medical-info-card card-elevated">
+            <div className="card-header">
+              <h3 className="card-title">Medical Information</h3>
+              <div className="card-divider"></div>
+            </div>
+            
+            <div className="medical-grid">
+              <div className="medical-item">
+                <div className="medical-label">Blood Group</div>
+                <div className="medical-value highlight">{medicalInfo.bloodGroup}</div>
+              </div>
+              <div className="medical-item">
+                <div className="medical-label">Height</div>
+                <div className="medical-value">{medicalInfo.height} cm</div>
+              </div>
+              <div className="medical-item">
+                <div className="medical-label">Weight</div>
+                <div className="medical-value">{medicalInfo.weight} kg</div>
+              </div>
+              <div className="medical-item">
+                <div className="medical-label">BMI</div>
+                <div className="medical-value">{bmi}</div>
+              </div>
+              <div className="medical-item">
+                <div className="medical-label">Allergy</div>
+                <div className="medical-value">{medicalInfo.allergy}</div>
+              </div>
+              <div className="medical-item">
+                <div className="medical-label">Condition</div>
+                <div className="medical-value">{medicalInfo.condition}</div>
+              </div>
+              <div className="medical-item">
+                <div className="medical-label">Medication</div>
+                <div className="medical-value">{medicalInfo.medication}</div>
               </div>
             </div>
-          )}
+          </div>
         </div>
       </div>
     </div>
