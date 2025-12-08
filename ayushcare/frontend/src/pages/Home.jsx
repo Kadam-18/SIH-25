@@ -36,7 +36,7 @@ export default function Home() {
 
           <button
             className="hero-btn"
-            onClick={() => (window.location.href = "/centres")}
+            onClick={() => (window.location.href = "/centers")}
           >
             Book My Therapy
           </button>
