@@ -1,12 +1,15 @@
+/* ==================== GLOBAL BASE ===================== */
 html, body {
   height: 100%;
   width: 100%;
   margin: 0;
   padding: 0;
   overflow-x: hidden;
+  font-family: "Poppins", sans-serif;
   -webkit-text-size-adjust: 100%;
 }
 
+/* Background container for ALL auth pages */
 .auth-container {
   background: url("../assets/signup-background2.jpg") no-repeat center center/cover;
   height: 100vh;
@@ -16,58 +19,57 @@ html, body {
   align-items: center;
 }
 
+/* Glass-style box (Same for login, signup, forgot, OTP) */
 .auth-box {
-  background: rgba(0, 0, 0, 0.5);
+  background: rgb(255, 255, 255);
   backdrop-filter: blur(10px);
   border-radius: 20px;
   padding: 40px 50px;
   width: 350px;
   text-align: center;
-  color: white;
+  color: #225b39;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
 }
 
-/* Headings */
+/* ==================== HEADINGS ===================== */
 .auth-box h2 {
   font-size: 28px;
-  margin-bottom: 5px;
-  color: #00ff66;
+  margin-bottom: 20px;
+  color: #225b39;     /* Exact signup color */
 }
 
-.auth-box p {
-  font-size: 14px;
-  margin-bottom: 25px;
-  color: #fbfafa;
-}
-
-/* Inputs */
+/* ==================== INPUT FIELDS ===================== */
 .auth-box input {
   width: 100%;
   padding: 12px 15px;
   margin-bottom: 15px;
   background: rgba(255, 255, 255, 0.15);
-  border: 1px solid #00ff66;
-  border-radius: 22px;   /* <--- Rounded edges */
-  color: white;
+  border: 1px solid #225b39;
+  border-radius: 22px;
   font-size: 16px;
+  color: black;
   outline: none;
   transition: 0.3s ease;
 }
 
 .auth-box input:focus {
-  border-color: #00cc55;
   background: rgba(255, 255, 255, 0.25);
+  border-color: #225b39;
 }
 
+/* Placeholder */
+.auth-box input::placeholder {
+  color: rgba(25, 24, 24, 0.637);
+}
 
-/* Buttons */
+/* ==================== BUTTON ===================== */
 .auth-box button {
   width: 100%;
   padding: 12px;
-  background-color: #00ff66;
+  background-color: #3c7f50;
   border: none;
-  border-radius: 25px;  /* <--- Already rounded */
-  color: black;
+  border-radius: 25px;
+  color: white;
   font-size: 16px;
   cursor: pointer;
   font-weight: bold;
@@ -75,30 +77,22 @@ html, body {
 }
 
 .auth-box button:hover {
-  background-color: #00cc55;
+  background-color: #2b6f37;
 }
 
-/* Link text (optional) */
+/* ==================== LINKS ===================== */
 .auth-box a {
-  color: #00ff66;
+  color: #3c7f50;
   text-decoration: none;
   font-size: 14px;
+  font-weight: 600;
 }
+
 .auth-box a:hover {
   text-decoration: underline;
 }
-/* Input Fields Text */
-.auth-box input {
-  color: white;                      /* Text color */
-  font-size: 16px;
-}
 
-/* Placeholder styling */
-.auth-box input::placeholder {
-  color: rgba(255, 255, 255, 0.85);  /* Brighter placeholder */
-  font-size: 16px;
-}
-/* =========================forgot area=========================== */
+/* ==================== FORGOT PASSWORD TEXT ===================== */
 .forgot-text {
   margin-top: -10px;
   margin-bottom: 15px;
@@ -109,12 +103,10 @@ html, body {
   font-size: 14px;
   font-weight: 600;
   padding: 5px 10px;
-  border-radius: 8px;   /* <--- Rounded edges */
-  display: inline-block;
+  border-radius: 8px;
 }
 
-
 .forgot-text:hover {
-  text-decoration: underline;
   color: #2b6f37;
+  text-decoration: underline;
 }
