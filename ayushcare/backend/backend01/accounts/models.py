@@ -81,6 +81,3 @@ def create_profile(sender, instance, created, **kwargs):
     if created:
         PatientProfile.objects.create(user=instance)
         UserSettings.objects.create(user=instance)
-
-# Note: Doctor model is defined in clinic/models.py
-# This file only contains EmailOTP model and signal handlers

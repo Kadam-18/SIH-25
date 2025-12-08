@@ -17,177 +17,12 @@ import "leaflet/dist/leaflet.css";
 import "./PanchakarmaCenters.css";
 import { getCenters } from "../api";
 
-// Fix Leaflet default icon issue
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png",
   iconUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png",
   shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png",
 });
-
-// Sample data for panchakarma centers across India
-// const centers = [
-//   {
-//     id: 1,
-//     name: "Ayurveda Yoga Villa",
-//     city: "Rishikesh",
-//     state: "Uttarakhand",
-//     pincode: "249201",
-//     address: "Laxman Jhula Road, Tapovan, Rishikesh",
-//     specialties: ["Panchakarma", "Yoga Therapy", "Detox"],
-//     rating: 4.8,
-//     phone: "+91-135-2445678",
-//     website: "www.ayurvedayogavilla.com",
-//     timing: "7:00 AM - 8:00 PM",
-//     doctors: 8,
-//     coordinates: { lat: 30.1339, lng: 78.3361 },
-//     popular: true
-//   },
-//   {
-//     id: 2,
-//     name: "Sanjeevani Ayurvedic Center",
-//     city: "Kerala",
-//     state: "Kerala",
-//     pincode: "682301",
-//     address: "MG Road, Ernakulam, Kochi",
-//     specialties: ["Kerala Panchakarma", "Abhyangam", "Shirodhara"],
-//     rating: 4.9,
-//     phone: "+91-484-2456789",
-//     website: "www.sanjeevaniayurveda.com",
-//     timing: "6:00 AM - 9:00 PM",
-//     doctors: 12,
-//     coordinates: { lat: 9.9312, lng: 76.2673 },
-//     popular: true
-//   },
-//   {
-//     id: 3,
-//     name: "Prakriti Wellness Center",
-//     city: "Delhi",
-//     state: "Delhi",
-//     pincode: "110001",
-//     address: "Connaught Place, New Delhi",
-//     specialties: ["Therapeutic Massage", "Nasya", "Basti"],
-//     rating: 4.7,
-//     phone: "+91-11-23456789",
-//     website: "www.prakritiwellness.com",
-//     timing: "8:00 AM - 8:00 PM",
-//     doctors: 6,
-//     coordinates: { lat: 28.6139, lng: 77.2090 },
-//     popular: true
-//   },
-//   {
-//     id: 4,
-//     name: "Swasthya Panchakarma Clinic",
-//     city: "Mumbai",
-//     state: "Maharashtra",
-//     pincode: "400001",
-//     address: "Marine Drive, Mumbai",
-//     specialties: ["Full Panchakarma", "Rejuvenation", "Stress Relief"],
-//     rating: 4.6,
-//     phone: "+91-22-26789012",
-//     website: "www.swasthyapanchakarma.com",
-//     timing: "7:30 AM - 8:30 PM",
-//     doctors: 10,
-//     coordinates: { lat: 18.9750, lng: 72.8258 },
-//     popular: true
-//   },
-//   {
-//     id: 5,
-//     name: "Vedasara Ayurvedic Hospital",
-//     city: "Bangalore",
-//     state: "Karnataka",
-//     pincode: "560001",
-//     address: "MG Road, Bangalore",
-//     specialties: ["Traditional Panchakarma", "Kayakalpa", "Rasayana"],
-//     rating: 4.8,
-//     phone: "+91-80-23456789",
-//     website: "www.vedasara.com",
-//     timing: "6:30 AM - 9:00 PM",
-//     doctors: 15,
-//     coordinates: { lat: 12.9716, lng: 77.5946 },
-//     popular: true
-//   },
-//   {
-//     id: 6,
-//     name: "Shree Ayurveda Center",
-//     city: "Pune",
-//     state: "Maharashtra",
-//     pincode: "411001",
-//     address: "FC Road, Pune",
-//     specialties: ["Detox Programs", "Weight Management", "Skin Care"],
-//     rating: 4.5,
-//     phone: "+91-20-25678901",
-//     website: "www.shreeayurveda.com",
-//     timing: "8:00 AM - 8:00 PM",
-//     doctors: 7,
-//     coordinates: { lat: 18.5204, lng: 73.8567 },
-//     popular: false
-//   },
-//   {
-//     id: 7,
-//     name: "Ayurgram Wellness Resort",
-//     city: "Goa",
-//     state: "Goa",
-//     pincode: "403001",
-//     address: "Calangute Beach, Goa",
-//     specialties: ["Beachside Therapy", "Meditation", "Ayurvedic Diet"],
-//     rating: 4.7,
-//     phone: "+91-832-2456789",
-//     website: "www.ayurgram.com",
-//     timing: "6:00 AM - 10:00 PM",
-//     doctors: 9,
-//     coordinates: { lat: 15.2993, lng: 74.1240 },
-//     popular: false
-//   },
-//   {
-//     id: 8,
-//     name: "Dhanwantari Ayurveda",
-//     city: "Chennai",
-//     state: "Tamil Nadu",
-//     pincode: "600001",
-//     address: "Anna Salai, Chennai",
-//     specialties: ["Siddha Panchakarma", "Herbal Treatment", "Oil Therapy"],
-//     rating: 4.6,
-//     phone: "+91-44-23456789",
-//     website: "www.dhanwantari.com",
-//     timing: "7:00 AM - 8:00 PM",
-//     doctors: 11,
-//     coordinates: { lat: 13.0827, lng: 80.2707 },
-//     popular: false
-//   },
-//   {
-//     id: 9,
-//     name: "Rishi Ayurveda Center",
-//     city: "Haridwar",
-//     state: "Uttarakhand",
-//     pincode: "249401",
-//     address: "Har Ki Pauri, Haridwar",
-//     specialties: ["Spiritual Healing", "Ganga Therapy", "Pranayama"],
-//     rating: 4.8,
-//     phone: "+91-133-4567890",
-//     website: "www.rishiayurveda.com",
-//     timing: "5:00 AM - 9:00 PM",
-//     doctors: 8,
-//     coordinates: { lat: 29.9457, lng: 78.1642 },
-//     popular: false
-//   },
-//   {
-//     id: 10,
-//     name: "Nadi Pariksha Center",
-//     city: "Hyderabad",
-//     state: "Telangana",
-//     pincode: "500001",
-//     address: "HITEC City, Hyderabad",
-//     specialties: ["Nadi Diagnosis", "Pulse Reading", "Personalized Therapy"],
-//     rating: 4.7,
-//     phone: "+91-40-23456789",
-//     website: "www.nadipariksha.com",
-//     timing: "8:00 AM - 8:00 PM",
-//     doctors: 6,
-//     coordinates: { lat: 17.3850, lng: 78.4867 },
-//     popular: false
-//   }
-// ];
 
 export default function PanchakarmaCenters() {
   const [searchPincode, setSearchPincode] = useState("");
@@ -197,10 +32,7 @@ export default function PanchakarmaCenters() {
   const [sortBy, setSortBy] = useState("rating");
   const [showFilters, setShowFilters] = useState(false);
   const [centers, setCenters] = useState([]);
-  // const [filteredCenters, setFilteredCenters] = useState([]);
-  // const [searchPincode, setSearchPincode] = useState("");
 
-  // Popular centers (top 5 by rating)
   const popularCenters = centers
     .filter(center => center.popular)
     .sort((a, b) => b.rating - a.rating)
@@ -246,12 +78,6 @@ export default function PanchakarmaCenters() {
   // Get unique states for filter
   const states = ["all", ...new Set(centers.map(center => center.state))];
 
-  // Initialize Google Maps (simulated - in real app you'd use Google Maps API)
-  // useEffect(() => {
-    // In a real implementation, you would load Google Maps API here
-    // For now, we'll simulate with a static image
-  // }, []);
-
     useEffect(() => {
     async function loadCenters() {
       const res = await getCenters(); // call your API
@@ -270,10 +96,10 @@ export default function PanchakarmaCenters() {
   // Handle center selection
   const handleCenterSelect = (center) => {
     setSelectedCenter(center);
-    // In a real app, you would center the map on these coordinates
+   
   };
 
-  // Handle Enter key press for search
+ 
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
       handlePincodeSearch();
@@ -294,7 +120,7 @@ export default function PanchakarmaCenters() {
 
       {/* Main Content */}
       <div className="centers-main">
-        {/* Search and Filters Section */}
+        
         <div className="search-section">
           <div className="search-container">
             <div className="search-box">

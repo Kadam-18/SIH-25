@@ -53,39 +53,6 @@ class SignupView(APIView):
         return Response({"success": False, "errors": serializer.errors}, status=400)
 
 
-# class VerifyOTPView(APIView):
-#     def post(self, request):
-#         serializer = VerifyOTPSerializer(data=request.data)
-
-#         if serializer.is_valid():
-#             email = serializer.validated_data["email"]
-#             otp = serializer.validated_data["otp"]
-
-#             try:
-#                 otp_entry = EmailOTP.objects.get(email=email)
-#             except EmailOTP.DoesNotExist:
-#                 return Response({"success": False, "message": "OTP not found"}, status=404)
-
-#             if otp_entry.otp != otp:
-#                 return Response({"success": False, "message": "Invalid OTP"}, status=400)
-
-#             # Create user with stored values
-#             user = User.objects.create(
-#                 username=otp_entry.temp_username,
-#                 email=email,
-#                 password=make_password(otp_entry.temp_password),
-#             )
-
-#             # Done → delete OTP entry
-#             otp_entry.delete()
-
-#             return Response(
-#                 {"success": True, "message": "Signup successful"},
-#                 status=200
-#             )
-
-#         return Response({"success": False, "errors": serializer.errors}, status=400)
-
 
 class VerifyOTPView(APIView):
     def post(self, request):
@@ -107,7 +74,6 @@ class VerifyOTPView(APIView):
                 status=400
             )
 
-        # Check if OTP is expired (5 minutes)
         if otp_entry.is_expired():
             otp_entry.delete()
             return Response(
@@ -121,7 +87,6 @@ class VerifyOTPView(APIView):
                 status=400
             )
 
-        # ✅ Prevent duplicate users
         if User.objects.filter(email=email).exists():
             otp_entry.delete()
             return Response(
@@ -234,9 +199,7 @@ class UpdateProfileView(APIView):
         # Update profile picture if provided
         profile_picture = request.FILES.get('profile_picture')
         if profile_picture:
-            # Store profile picture (you may want to add a field to User or PatientProfile)
-            # For now, we'll skip this as it requires additional setup
-            pass
+             pass
         
         user.save()
         
