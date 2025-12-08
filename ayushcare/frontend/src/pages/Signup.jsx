@@ -60,77 +60,59 @@ export default function Signup() {
   };
 
   return (
-    <div className="auth-container">
-      <div className="signup-box">
-        <h2>Create Account</h2>
+  <div className="auth-container">
+    <div className="signup-box">
+      <h2>Create Account</h2>
 
-        <div className="role-select">
-          <button
-            className={role === "patient" ? "active" : ""}
-            onClick={() => setRole("patient")}
-          >
-            As Patient
-          </button>
+      <form onSubmit={handleSignup}>
+        <input
+          type="text"
+          placeholder="Full Name"
+          required
+          onChange={(e) => setUsername(e.target.value)}
+        />
+
+        <input
+          type="email"
+          placeholder="Email Address"
+          required
+          onChange={(e) => setEmail(e.target.value)}
+        />
+
+        <input
+          type="password"
+          placeholder="Create Password"
+          required
+          onChange={(e) => setPassword(e.target.value)}
+        />
+
+        <div className="otp-row">
+          <input
+            type="text"
+            placeholder="Enter OTP"
+            required
+            onChange={(e) => setOtp(e.target.value)}
+          />
 
           <button
-            className={role === "clinic" ? "active" : ""}
-            onClick={() => setRole("clinic")}
+            type="button"
+            className="otp-btn"
+            onClick={sendOtp}
+            disabled={timer > 0}
           >
-            As Clinic
+            {timer > 0 ? `Resend in ${timer}s` : "Send OTP"}
           </button>
         </div>
 
-        {role && (
-          <form onSubmit={handleSignup}>
-            <input
-              type="text"
-              placeholder="Full Name"
-              required
-              onChange={(e) => setUsername(e.target.value)}
-            />
+        <button type="submit" className="signup-submit">
+          Create Account
+        </button>
+      </form>
 
-            <input
-              type="email"
-              placeholder="Email Address"
-              required
-              onChange={(e) => setEmail(e.target.value)}
-            />
-
-            <input
-              type="password"
-              placeholder="Create Password"
-              required
-              onChange={(e) => setPassword(e.target.value)}
-            />
-
-            <div className="otp-row">
-              <input
-                type="text"
-                placeholder="Enter OTP"
-                required
-                onChange={(e) => setOtp(e.target.value)}
-              />
-
-              <button
-                type="button"
-                className="otp-btn"
-                onClick={sendOtp}
-                disabled={timer > 0}
-              >
-                {timer > 0 ? `Resend in ${timer}s` : "Send OTP"}
-              </button>
-            </div>
-
-            <button type="submit" className="signup-submit">
-              Create Account
-            </button>
-          </form>
-        )}
-
-        <p className="login-link">
-          Already have an account? <a href="/login">Login</a>
-        </p>
-      </div>
+      <p className="login-link">
+        Already have an account? <a href="/login">Login</a>
+      </p>
     </div>
-  );
+  </div>
+);
 } 

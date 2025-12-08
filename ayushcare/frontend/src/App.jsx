@@ -13,6 +13,8 @@ import Notifications from "./pages/Notifications.jsx";
 import LandingPage from "./pages/Landing.jsx";
 import CompleteProfile from "./pages/CompleteProfile.jsx";
 
+import ForgotPassword from "./pages/ForgotPassword.jsx";
+
 import ProgressTracking from "./pages/Progresstracking.jsx";
 import VerifyOTP from "./pages/VerifyOTP.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
@@ -40,6 +42,7 @@ const App = () => {
           <Route path="/signup" element={<Signup />} />
           <Route path="/verify-otp" element={<VerifyOTP />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/landing" element={<LandingPage />} />
           <Route path="/payment-success" element={<PaymentSuccess />} />
           <Route path="/payment-failed" element={<PaymentFailed />} />
@@ -71,6 +74,7 @@ const App = () => {
             <Route path="/feedback" element={<Feedback />} />
             <Route path="/progress" element={<ProgressTracking />} />
             <Route path="/centers" element={<PanchakarmaCenters />} />
+
           </Route>
         </Routes>
 
