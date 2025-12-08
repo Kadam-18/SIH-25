@@ -22,14 +22,14 @@ export default function Home() {
     "https://images.unsplash.com/photo-1540199542-3a6a80450f70?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=5d7626a9fef3bc8f6eaf72e7f6f7f5a1"
   ];
 
-  const userName = "Mahi";
+  const userName = "Mahi Sharma";
 
   return (
     <div className="home-root" style={{ position: "relative" }}>
 
       <main className="container">
 
-        {/* ⭐ HERO GREETING SECTION ABOVE CAROUSEL ⭐ */}
+        {/*  HERO GREETING SECTION ABOVE CAROUSEL  */}
         <div className="hero-greeting-fixed">
           <h1>Hello, {userName} 👋</h1>
           <h2>Let’s Start Your Panchakarma Therapy</h2>
@@ -42,7 +42,7 @@ export default function Home() {
           </button>
         </div>
 
-        {/* ⭐ CAROUSEL BELOW THE GREETING ⭐ */}
+        {/*  CAROUSEL BELOW THE GREETING  */}
         <div className="hero-wrapper">
           <Carousel images={heroImages} />
         </div>

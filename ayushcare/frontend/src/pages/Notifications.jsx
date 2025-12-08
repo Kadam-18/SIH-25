@@ -1,66 +1,48 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import "./Notifications.css";
 import { FiBell } from "react-icons/fi";
-import { apiGet } from "../api";
+import { FaClipboardCheck, FaCalendarCheck, FaHeartbeat, FaCommentDots } from "react-icons/fa";
 
 const Notifications = () => {
-  const [notifications, setNotifications] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetchNotifications();
-  }, []);
-
-  const fetchNotifications = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      const res = await apiGet("/api/notifications/my/", token);
-      
-      if (res && Array.isArray(res)) {
-        setNotifications(res);
-      } else {
-        console.error("Unexpected notifications response:", res);
-        setNotifications([]);
-      }
-    } catch (error) {
-      console.error("Error fetching notifications:", error);
-      setNotifications([]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="notifications-root">
-        <h2 className="noti-title">NOtIfIcAtIoNs 🔔</h2>
-        <p>Loading notifications...</p>
-      </div>
-    );
-  }
-
   return (
     <div className="notifications-root">
-      <h2 className="noti-title">notifications </h2>
+      <h2 className="noti-title">NOTIFICATIONS</h2>
 
-      {notifications.length === 0 ? (
-        <div style={{ textAlign: "center", padding: "40px" }}>
-          <p>No notifications yet. You'll see updates about your appointments here!</p>
+      <div className="notification-grid">
+        
+        {/* PRE-PROCEDURE */}
+        <div className="noti-box">
+          <FaClipboardCheck className="noti-icon" />
+          <h3>Pre-Procedure Instructions</h3>
+          <p>Know what you need to do before starting your therapy.</p>
+          <button className="noti-btn">View Details</button>
         </div>
-      ) : (
-        <div className="notifications-list">
-          {notifications.map((n, index) => (
-            <div
-              key={n.id}
-              className={`noti-card ${index % 2 === 0 ? "left" : "right"}`}
-            >
-              <h3>{n.title}</h3>
-              <p style={{ whiteSpace: "pre-line" }}>{n.message}</p>
-              <span className="time">{n.time_ago || "Just now"}</span>
-            </div>
-          ))}
+
+        {/* TODAY APPOINTMENT */}
+        <div className="noti-box">
+          <FaCalendarCheck className="noti-icon" />
+          <h3>Your Appointment Today</h3>
+          <p>Check today’s Panchakarma appointment & timings.</p>
+          <button className="noti-btn">View Appointment</button>
         </div>
-      )}
+
+        {/* POST-PROCEDURE */}
+        <div className="noti-box">
+          <FaHeartbeat className="noti-icon" />
+          <h3>Post-Procedure Care</h3>
+          <p>Important steps to follow after therapy for safety.</p>
+          <button className="noti-btn">View Instructions</button>
+        </div>
+
+        {/* SIDE EFFECT FEEDBACK */}
+        <div className="noti-box">
+          <FaCommentDots className="noti-icon" />
+          <h3>Facing Side Effects?</h3>
+          <p>Let us know how you're feeling using our feedback form.</p>
+          <button className="noti-btn">Give Feedback</button>
+        </div>
+
+      </div>
     </div>
   );
 };
