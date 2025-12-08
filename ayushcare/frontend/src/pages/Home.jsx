@@ -11,16 +11,10 @@ import hero4 from "../assets/hero4.jpg";
 
 import "./Home.css";
 
-
-/**
- * Home page: holds the state for sidebar open/close and passes props down
- */
 export default function Home() {
-  // sidebar visibility state (shared by Navbar & Sidebar)
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  // sample images (replace with real Panchakarma photos later)
-  const heroImages = [ hero1, hero2, hero3, hero4];
+  const heroImages = [hero1, hero2, hero3, hero4];
 
   const centresImages = [
     "https://images.unsplash.com/photo-1543352634-7f0e965e3a57?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=4ad1932f9d6c93f7a3f3db7a2db7b4c3",
@@ -28,42 +22,55 @@ export default function Home() {
     "https://images.unsplash.com/photo-1540199542-3a6a80450f70?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=5d7626a9fef3bc8f6eaf72e7f6f7f5a1"
   ];
 
+  const userName = "Mahi";
+
   return (
-    
     <div className="home-root" style={{ position: "relative" }}>
 
       <main className="container">
-        {/* Hero carousel */}
-        <Carousel images={heroImages} />
-        </main>
 
-        {/* Description */}
-        <section className="description-section">
-          <h2>Discover the Healing Power of Panchakarma</h2>
-          <p className="muted">
-            Panchakarma is an ancient Ayurvedic detoxification therapy designed to remove toxins, balance
-            the doshas, and restore wellbeing. (Edit this paragraph later with your own content.)
-          </p>
-        </section>
+        {/* ⭐ HERO GREETING SECTION ABOVE CAROUSEL ⭐ */}
+        <div className="hero-greeting-fixed">
+          <h1>Hello, {userName} 👋</h1>
+          <h2>Let’s Start Your Panchakarma Therapy</h2>
 
-        {/* Cards */}
-        <section>
-          <h2 className="section-title">Our Wellness Offerings</h2>
-          <CardsSection />
-        </section>
+          <button
+            className="hero-btn"
+            onClick={() => (window.location.href = "/centres")}
+          >
+            Book My Therapy
+          </button>
+        </div>
 
-        {/* Centres carousel */}
-        <section>
-          <h2 className="section-title">Our Centres Across India</h2>
-          <CentresCarousel images={centresImages} />
-        </section>
+        {/* ⭐ CAROUSEL BELOW THE GREETING ⭐ */}
+        <div className="hero-wrapper">
+          <Carousel images={heroImages} />
+        </div>
 
-   
-        
-         {/*new section (edited on :-14th nov midnight 1:08) */}
-        
-            
-          {/* WHY Choose Panchakarma – Unified Cards */}
+      </main>
+
+      {/* Description Section */}
+      <section className="description-section">
+        <h2>Discover the Healing Power of Panchakarma</h2>
+        <p className="muted">
+          Panchakarma is an ancient Ayurvedic detoxification therapy designed to remove toxins,
+          balance the doshas, and restore wellbeing.
+        </p>
+      </section>
+
+      {/* Cards */}
+      <section>
+        <h2 className="section-title">Our Wellness Offerings</h2>
+        <CardsSection />
+      </section>
+
+      {/* Centres Carousel */}
+      <section>
+        <h2 className="section-title">Our Centres Across India</h2>
+        <CentresCarousel images={centresImages} />
+      </section>
+
+      {/* Why Section */}
       <section className="why-section">
         <h2>Why Choose Panchakarma?</h2>
         <p>
@@ -104,32 +111,13 @@ export default function Home() {
           </div>
 
         </div>
-     </section>
+      </section>
 
-
-    {/* Stats Section
-    <section className="stats-section">
-      <div className="stats-box">
-        <h3>5000+</h3>
-        <p>Successful Therapies</p>
-      </div>
-      <div className="stats-box">
-        <h3>50+</h3>
-        <p>Panchakarma Centres</p>
-      </div>
-      <div className="stats-box">
-        <h3>20 Years</h3>
-        <p>Ayurveda Experience</p>
-      </div>
-    </section>
-    </div> */}
-
-   {/* Contact */}
+      {/* Contact */}
       <section className="contact-wrapper">
         <ContactSection />
       </section>
 
-      {/* </main> */}
-     </div>
+    </div>
   );
 }
