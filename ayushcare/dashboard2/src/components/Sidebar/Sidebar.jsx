@@ -1,20 +1,55 @@
 import React from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import "./Sidebar.css";
-import { useMenu } from "../../context/MenuContext";
+import { useAuth } from "../../context/AuthContext";
 import {
   MdDashboard,
   MdPeople,
   MdEvent,
-  MdLocalHospital,
   MdAssignment,
-  MdNotificationsActive,
-  MdSettings,
 } from "react-icons/md";
-import { FaUserMd, FaRegSmile } from "react-icons/fa";
+import { FaUserMd } from "react-icons/fa";
 import SidebarItem from "./SidebarItem";
 
 const Sidebar = () => {
-  const { activeItem, setActiveItem } = useMenu();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { role, name } = useAuth();
+
+  // Doctor menu items
+  const doctorMenuItems = [
+    { id: "dashboard", icon: <MdDashboard />, path: "/doctor", label: "Dashboard" },
+    { id: "appointments", icon: <MdEvent />, path: "/doctor/appointments", label: "Appointments" },
+    { id: "patients", icon: <MdPeople />, path: "/doctor/patients", label: "Patient History" },
+    { id: "therapists", icon: <FaUserMd />, path: "/doctor/therapists", label: "Therapist Details" },
+  ];
+
+  // Therapist menu items
+  const therapistMenuItems = [
+    { id: "dashboard", icon: <MdDashboard />, path: "/therapist", label: "Dashboard" },
+    { id: "schedule", icon: <MdEvent />, path: "/therapist/schedule", label: "Appointments" },
+    { id: "patients", icon: <MdPeople />, path: "/therapist/patients", label: "Patient Details" },
+    { id: "docs", icon: <MdAssignment />, path: "/therapist/docs", label: "Procedure Docs" },
+  ];
+
+  const menuItems = role === "doctor" ? doctorMenuItems : therapistMenuItems;
+
+  const getActiveItem = () => {
+    const path = location.pathname;
+    const item = menuItems.find(item => item.path === path);
+    return item ? item.id : "dashboard";
+  };
+
+  const handleItemClick = (path) => {
+    navigate(path);
+  };
+
+  const getInitials = () => {
+    if (name) {
+      return name.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2);
+    }
+    return role === "doctor" ? "DR" : "TH";
+  };
 
   return (
     <aside className="sidebar-root">
@@ -27,57 +62,21 @@ const Sidebar = () => {
         </div>
 
         <div className="sidebar-items">
-          <SidebarItem
-            icon={<MdDashboard />}
-            active={activeItem === "dashboard"}
-            onClick={() => setActiveItem("dashboard")}
-          />
-          <SidebarItem
-            icon={<FaUserMd />}
-            active={activeItem === "doctor"}
-            onClick={() => setActiveItem("doctor")}
-          />
-          <SidebarItem
-            icon={<MdEvent />}
-            active={activeItem === "appointments"}
-            onClick={() => setActiveItem("appointments")}
-          />
-          <SidebarItem
-            icon={<MdPeople />}
-            active={activeItem === "patients"}
-            onClick={() => setActiveItem("patients")}
-          />
-          <SidebarItem
-            icon={<MdLocalHospital />}
-            active={activeItem === "therapy"}
-            onClick={() => setActiveItem("therapy")}
-          />
-          <SidebarItem
-            icon={<MdAssignment />}
-            active={activeItem === "docs"}
-            onClick={() => setActiveItem("docs")}
-          />
-          <SidebarItem
-            icon={<MdNotificationsActive />}
-            active={activeItem === "notifications"}
-            onClick={() => setActiveItem("notifications")}
-          />
-          <SidebarItem
-            icon={<MdSettings />}
-            active={activeItem === "settings"}
-            onClick={() => setActiveItem("settings")}
-          />
-          <SidebarItem
-            icon={<FaRegSmile />}
-            active={activeItem === "feedback"}
-            onClick={() => setActiveItem("feedback")}
-          />
+          {menuItems.map((item) => (
+            <SidebarItem
+              key={item.id}
+              icon={item.icon}
+              active={getActiveItem() === item.id}
+              onClick={() => handleItemClick(item.path)}
+              label={item.label}
+            />
+          ))}
         </div>
 
         {/* bottom avatar */}
         <div className="sidebar-bottom">
           <div className="sidebar-avatar">
-            <span>M</span>
+            <span>{getInitials()}</span>
           </div>
           <span className="sidebar-more">•••</span>
         </div>

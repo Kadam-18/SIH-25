@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { FaBars, FaHome, FaSearch, FaUserCircle, FaBell, FaChevronDown, FaCog, FaSignOutAlt, FaUser } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useApp } from "../context/AppContext";
 import { t } from "../i18n";
@@ -8,9 +8,24 @@ import "./Navbar.css";
 
 export default function Navbar({ sidebarOpen, setSidebarOpen }) {
   const navigate = useNavigate();
+  const location = useLocation();
   const { user, language, loadUserData } = useApp();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+
+  const getPageName = () => {
+    const path = location.pathname;
+    if (path === "/home" || path === "/") return "Home";
+    if (path === "/schedule") return "Schedule";
+    if (path === "/progress") return "Progress Tracking";
+    if (path === "/billing") return "Billing & Invoices";
+    if (path === "/patienthistory") return "Patient History";
+    if (path === "/centers") return "Panchakarma Centres";
+    if (path === "/feedback") return "Feedback";
+    if (path === "/notifications") return "Notifications";
+    if (path === "/userprofile") return "My Profile";
+    return "Home";
+  };
 
   useEffect(() => {
     loadUserData();
@@ -69,20 +84,13 @@ export default function Navbar({ sidebarOpen, setSidebarOpen }) {
         ) : (
           <div className="home-icon">
             <FaHome size={20} />
-            <span className="home-text">Home</span>
+            <span className="home-text">{getPageName()}</span>
           </div>
         )}
       </div>
 
-      {/* CENTER: search */}
+      {/* CENTER: removed search bar */}
       <div className="navbar-center">
-        <div className="search-wrapper">
-          <FaSearch className="search-icon" />
-          <input
-            className="search-input"
-            placeholder={t("search", language) + " Panchakarma therapies, centres..."}
-          />
-        </div>
       </div>
 
       {/* RIGHT: notification + profile */}

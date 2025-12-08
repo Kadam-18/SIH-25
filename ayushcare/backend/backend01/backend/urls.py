@@ -33,6 +33,9 @@ urlpatterns = [
     
     # Payment API
     path('api/payment/', include('appointments.payment_urls')),
+    
+    # Clinic Management Dashboard API
+    path('api/clinic/', include('clinic.urls')),
 ]
 
 # Serve media files in development

@@ -80,12 +80,30 @@ export default function PanchakarmaCenters() {
 
     useEffect(() => {
     async function loadCenters() {
-      const res = await getCenters(); // call your API
-      if (res && Array.isArray(res)) {
-        setCenters(res);
-        setFilteredCenters(res);
-      } else {
-        console.error("Failed to fetch centers:", res);
+      try {
+        const token = localStorage.getItem("token");
+        const res = await getCenters(token); // call your API
+        // Handle both array and object response
+        let centersData = res;
+        if (res && !Array.isArray(res) && res.data) {
+          centersData = res.data;
+        } else if (res && !Array.isArray(res) && Array.isArray(res.results)) {
+          centersData = res.results;
+        }
+        
+        if (centersData && Array.isArray(centersData)) {
+          // Ensure specialties is an array
+          const formattedCenters = centersData.map(center => ({
+            ...center,
+            specialties: Array.isArray(center.specialties) ? center.specialties : []
+          }));
+          setCenters(formattedCenters);
+          setFilteredCenters(formattedCenters);
+        } else {
+          console.error("Failed to fetch centers - invalid format:", res);
+        }
+      } catch (error) {
+        console.error("Error loading centers:", error);
       }
     }
 

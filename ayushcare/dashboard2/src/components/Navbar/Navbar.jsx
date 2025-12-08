@@ -1,13 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import "./Navbar.css";
-import { FiBell, FiSearch } from "react-icons/fi";
+import { FiBell, FiSearch, FiLogOut } from "react-icons/fi";
 import { useAuth } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
-  const { role, switchRole } = useAuth();
+  const { role, name, logout } = useAuth();
+  const navigate = useNavigate();
+  const [showDropdown, setShowDropdown] = useState(false);
 
-  const handleRoleChange = (e) => {
-    switchRole(e.target.value);
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
+
+  const getInitials = () => {
+    if (name) {
+      return name.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2);
+    }
+    return role === "doctor" ? "DR" : "TH";
   };
 
   return (
@@ -23,27 +34,37 @@ const Navbar = () => {
           <FiSearch className="search-icon" />
           <input
             type="text"
-            placeholder="Search patients, therapies, appointments..."
+            placeholder="Search patient"
           />
         </div>
       </div>
 
       <div className="navbar-right">
-        <select
-          className="role-select"
-          value={role}
-          onChange={handleRoleChange}
-        >
-          <option value="doctor">Doctor</option>
-          <option value="therapist">Therapist</option>
-        </select>
-
         <button className="icon-button">
           <FiBell />
         </button>
 
-        <div className="avatar-circle">
-          <span>M</span>
+        <div className="avatar-dropdown">
+          <div 
+            className="avatar-circle"
+            onClick={() => setShowDropdown(!showDropdown)}
+          >
+            <span>{getInitials()}</span>
+          </div>
+          
+          {showDropdown && (
+            <div className="dropdown-menu">
+              <div className="dropdown-header">
+                <div className="dropdown-name">{name || (role === "doctor" ? "Doctor" : "Therapist")}</div>
+                <div className="dropdown-role">{role === "doctor" ? "Doctor" : "Therapist"}</div>
+              </div>
+              <div className="dropdown-divider"></div>
+              <button className="dropdown-item" onClick={handleLogout}>
+                <FiLogOut />
+                <span>Logout</span>
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </header>

@@ -3,6 +3,7 @@ import Carousel from "../components/Carousel";
 import CardsSection from "../components/CardsSection";
 import CentresCarousel from "../components/CentresCarousel";
 import ContactSection from "../components/ContactSection";
+import { useApp } from "../context/AppContext";
 
 import hero1 from "../assets/hero1.jpg";
 import hero2 from "../assets/hero2.jpg";
@@ -13,6 +14,7 @@ import "./Home.css";
 
 export default function Home() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { user } = useApp();
 
   const heroImages = [hero1, hero2, hero3, hero4];
 
@@ -22,7 +24,7 @@ export default function Home() {
     "https://images.unsplash.com/photo-1540199542-3a6a80450f70?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=5d7626a9fef3bc8f6eaf72e7f6f7f5a1"
   ];
 
-  const userName = "Mahi Sharma";
+  const userName = user?.name || "User";
 
   return (
     <div className="home-root" style={{ position: "relative" }}>

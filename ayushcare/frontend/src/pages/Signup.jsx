@@ -23,14 +23,15 @@ export default function Signup() {
 
   // Send OTP API
   const sendOtp = async () => {
-    if (!email || !username || !password || !role)
-      return alert("Fill all fields first");
+    if (!email || !username || !password) {
+      return alert("Please fill all fields first");
+    }
 
     const res = await apiPost("/api/auth/signup/", {
       email,
       username,
       password,
-      role,
+      role: "patient", // Default role
     });
 
     if (res.success) {
@@ -42,33 +43,17 @@ export default function Signup() {
     }
   };
 
-  // Final Signup (Verify OTP)
-  const handleSignup = async (e) => {
-    e.preventDefault();
-
-    const res = await apiPost("/api/auth/verify-otp/", {
-      email,
-      otp,
-    });
-
-    if (res.success) {
-      alert("Account Created!");
-      navigate("/login");
-    } else {
-      alert(res.message || "Invalid OTP");
-    }
-  };
-
   return (
   <div className="auth-container">
     <div className="signup-box">
       <h2>Create Account</h2>
 
-      <form onSubmit={handleSignup}>
+      <div>
         <input
           type="text"
           placeholder="Full Name"
           required
+          value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
 
@@ -76,6 +61,7 @@ export default function Signup() {
           type="email"
           placeholder="Email Address"
           required
+          value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
 
@@ -83,31 +69,20 @@ export default function Signup() {
           type="password"
           placeholder="Create Password"
           required
+          value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
 
-        <div className="otp-row">
-          <input
-            type="text"
-            placeholder="Enter OTP"
-            required
-            onChange={(e) => setOtp(e.target.value)}
-          />
-
-          <button
-            type="button"
-            className="otp-btn"
-            onClick={sendOtp}
-            disabled={timer > 0}
-          >
-            {timer > 0 ? `Resend in ${timer}s` : "Send OTP"}
-          </button>
-        </div>
-
-        <button type="submit" className="signup-submit">
-          Create Account
+        <button
+          type="button"
+          className="otp-btn"
+          onClick={sendOtp}
+          disabled={timer > 0}
+          style={{ width: "100%", marginTop: "14px" }}
+        >
+          {timer > 0 ? `Resend in ${timer}s` : "Send OTP"}
         </button>
-      </form>
+      </div>
 
       <p className="login-link">
         Already have an account? <a href="/login">Login</a>
