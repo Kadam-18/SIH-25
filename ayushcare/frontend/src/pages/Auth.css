@@ -43,28 +43,35 @@ html, body {
 /* Inputs */
 .auth-box input {
   width: 100%;
-  padding: 10px;
+  padding: 12px 15px;
   margin-bottom: 15px;
-  background: transparent;
-  border: none;
-  border-bottom: 1px solid #00ff66;
-  color: rgb(255, 255, 255);
-  font-size: 15px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid #00ff66;
+  border-radius: 22px;   /* <--- Rounded edges */
+  color: white;
+  font-size: 16px;
   outline: none;
+  transition: 0.3s ease;
 }
+
+.auth-box input:focus {
+  border-color: #00cc55;
+  background: rgba(255, 255, 255, 0.25);
+}
+
 
 /* Buttons */
 .auth-box button {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   background-color: #00ff66;
   border: none;
-  border-radius: 25px;
+  border-radius: 25px;  /* <--- Already rounded */
   color: black;
   font-size: 16px;
   cursor: pointer;
   font-weight: bold;
-  transition: all 0.3s ease;
+  transition: 0.3s ease;
 }
 
 .auth-box button:hover {
@@ -90,4 +97,24 @@ html, body {
 .auth-box input::placeholder {
   color: rgba(255, 255, 255, 0.85);  /* Brighter placeholder */
   font-size: 16px;
+}
+/* =========================forgot area=========================== */
+.forgot-text {
+  margin-top: -10px;
+  margin-bottom: 15px;
+  text-align: right;
+  width: 100%;
+  color: #4e8f52;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 5px 10px;
+  border-radius: 8px;   /* <--- Rounded edges */
+  display: inline-block;
+}
+
+
+.forgot-text:hover {
+  text-decoration: underline;
+  color: #2b6f37;
 }

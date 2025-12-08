@@ -38,15 +38,22 @@ export default function LandingPage() {
 
       {/* Hero Section */}
       <section className="hero-section" ref={homeRef}>
-        <h1 className="landing-welcome">Welcome to AyushCare</h1>
-        <h2 className="landing-title">
-          Experience the Ancient Healing of Panchakarma
-        </h2>
-        <p className="landing-sub">
-          A holistic journey towards balance, detoxification, and natural rejuvenation.
-          <br />Embrace the ancient wisdom of Panchakarma — where healing begins from within.
-        </p>
-      </section>
+  <h1 className="landing-welcome">Welcome to AyushCare</h1>
+
+  <h2 className="landing-title">
+    Experience the Ancient Healing of Panchakarma
+  </h2>
+
+  {/* Book Button INSIDE HERO SECTION */}
+  <button 
+    className="book-btn"
+    onClick={() => navigate("/login")}
+  >
+    Book a Therapy
+  </button>
+</section>
+
+
 
       {/* Gallery */}
       <section className="gallery-section" ref={galleryRef}>

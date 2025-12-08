@@ -82,9 +82,15 @@ export default function Login() {
             placeholder="Password"
             required
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => setPassword(e.target.value)} 
           />
-
+          <p 
+            className="forgot-text"
+            onClick={() => navigate("/forgot-password")}
+          >
+            Forgot Password?
+          </p>
+          
           <button type="submit" disabled={loading}>
             {loading ? "Logging in..." : "Login"}
           </button>

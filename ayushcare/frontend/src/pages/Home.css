@@ -1,11 +1,16 @@
 .section-title {
   text-align: center;
-  font-size: 24px;
-  font-weight: 700;
-  margin: 40px 0 20px;
-  color: #ffffff; /* white text */
-  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.45); /* improved visibility */
+  font-size: 30px;
+  font-weight: 800;
+  margin-bottom: 10px;
+  color: #fdfdfd;
+  text-shadow: 
+      0 2px 4px rgba(0,0,0,0.7),
+      0 0 10px rgba(0,0,0,0.4);
+   margin-top: 30px;
+  margin-bottom: 25px;    
 }
+
 /* newly added */
 .description-section h2 {
   text-align: center;
@@ -327,4 +332,90 @@
   color: #444;
   margin: 0;
 }
+.centres-wrapper {
+  width: 100%;
+  max-width: 1200px; /* optional */
+  margin: 0 auto;
+  position: relative;
+  padding: 30px 0;
+}
+
+.centres-track {
+  display: flex;
+  align-items: center;
+}
+
+.centre-card {
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+  border-radius: 14px;
+}
+
+.carousel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255,255,255,0.9);
+  border: none;
+  font-size: 26px;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.carousel-arrow.prev { left: 12px; }
+.carousel-arrow.next { right: 12px; }
+
+.carousel-arrow:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+/* WRAPPER */
+.centres-wrapper {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-top: 20px;
+  overflow: hidden;
+}
+
+/* TRACK */
+.centres-track {
+  display: flex;
+  gap: 20px;           /* spacing between images */
+  transition: transform 0.5s ease;
+}
+
+/* EACH CARD */
+.centre-card {
+  width: 320px;
+  height: 200px;
+  border-radius: 14px;
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0px 6px 16px rgba(0,0,0,0.25);
+  flex-shrink: 0;
+}
+
+/* ARROWS */
+.carousel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255,255,255,0.8);
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 5;
+}
+
+.carousel-arrow.left { left: 20px; }
+.carousel-arrow.right { right: 20px; }
 
