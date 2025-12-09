@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   FaSearch,
   FaMapMarkerAlt,
@@ -25,6 +26,7 @@ L.Icon.Default.mergeOptions({
 });
 
 export default function PanchakarmaCenters() {
+  const navigate = useNavigate();
   const [searchPincode, setSearchPincode] = useState("");
   const [filteredCenters, setFilteredCenters] = useState([]);
   const [mapVisible, setMapVisible] = useState(true);
@@ -45,12 +47,12 @@ export default function PanchakarmaCenters() {
       return;
     }
 
-    const filtered = centers.filter(center => 
-      center.pincode.startsWith(searchPincode) || 
+    const filtered = centers.filter(center =>
+      center.pincode.startsWith(searchPincode) ||
       center.city.toLowerCase().includes(searchPincode.toLowerCase()) ||
       center.state.toLowerCase().includes(searchPincode.toLowerCase())
     );
-    
+
     setFilteredCenters(filtered);
   };
 
@@ -78,7 +80,7 @@ export default function PanchakarmaCenters() {
   // Get unique states for filter
   const states = ["all", ...new Set(centers.map(center => center.state))];
 
-    useEffect(() => {
+  useEffect(() => {
     async function loadCenters() {
       try {
         const token = localStorage.getItem("token");
@@ -90,7 +92,7 @@ export default function PanchakarmaCenters() {
         } else if (res && !Array.isArray(res) && Array.isArray(res.results)) {
           centersData = res.results;
         }
-        
+
         if (centersData && Array.isArray(centersData)) {
           // Ensure specialties is an array
           const formattedCenters = centersData.map(center => ({
@@ -114,10 +116,10 @@ export default function PanchakarmaCenters() {
   // Handle center selection
   const handleCenterSelect = (center) => {
     setSelectedCenter(center);
-   
+
   };
 
- 
+
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
       handlePincodeSearch();
@@ -138,7 +140,7 @@ export default function PanchakarmaCenters() {
 
       {/* Main Content */}
       <div className="centers-main">
-        
+
         <div className="search-section">
           <div className="search-container">
             <div className="search-box">
@@ -158,7 +160,7 @@ export default function PanchakarmaCenters() {
 
             {/* Quick Filters */}
             <div className="quick-filters">
-              <button 
+              <button
                 className="filter-toggle"
                 onClick={() => setShowFilters(!showFilters)}
               >
@@ -172,19 +174,19 @@ export default function PanchakarmaCenters() {
                   <div className="filter-group">
                     <label>Sort by:</label>
                     <div className="sort-buttons">
-                      <button 
+                      <button
                         className={`sort-btn ${sortBy === "rating" ? "active" : ""}`}
                         onClick={() => handleSortChange("rating")}
                       >
                         Highest Rated
                       </button>
-                      <button 
+                      <button
                         className={`sort-btn ${sortBy === "doctors" ? "active" : ""}`}
                         onClick={() => handleSortChange("doctors")}
                       >
                         Most Doctors
                       </button>
-                      <button 
+                      <button
                         className={`sort-btn ${sortBy === "name" ? "active" : ""}`}
                         onClick={() => handleSortChange("name")}
                       >
@@ -220,8 +222,8 @@ export default function PanchakarmaCenters() {
               <h2>
                 <FaMapMarkerAlt /> Centers Map
               </h2>
-              <button 
-                className="map-toggle" 
+              <button
+                className="map-toggle"
                 onClick={() => setMapVisible(false)}
               >
                 Hide Map
@@ -272,7 +274,7 @@ export default function PanchakarmaCenters() {
         {/* Show Map Button when hidden */}
         {!mapVisible && (
           <div className="show-map-section">
-            <button 
+            <button
               className="show-map-btn"
               onClick={() => setMapVisible(true)}
             >
@@ -285,11 +287,11 @@ export default function PanchakarmaCenters() {
         <section className="popular-centers">
           <h2>🏆 Popular Panchakarma Centers</h2>
           <p className="section-subtitle">Top-rated centers across India</p>
-          
+
           <div className="popular-cards">
             {popularCenters.map(center => (
-              <div 
-                key={center.id} 
+              <div
+                key={center.id}
                 className="popular-card"
                 onClick={() => handleCenterSelect(center)}
               >
@@ -303,16 +305,16 @@ export default function PanchakarmaCenters() {
                     <span>{center.city}, {center.state}</span>
                   </div>
                 </div>
-                
+
                 <h3>{center.name}</h3>
                 <p className="center-address">{center.address}</p>
-                
+
                 <div className="center-specialties">
                   {center.specialties.map((spec, index) => (
                     <span key={index} className="specialty-tag">{spec}</span>
                   ))}
                 </div>
-                
+
                 <div className="center-details">
                   <div className="detail-item">
                     <FaUserMd />
@@ -323,7 +325,7 @@ export default function PanchakarmaCenters() {
                     <span>{center.timing}</span>
                   </div>
                 </div>
-                
+
                 <button className="view-center-btn">View Details</button>
               </div>
             ))}
@@ -362,9 +364,9 @@ export default function PanchakarmaCenters() {
                       <span>{center.rating}</span>
                     </div>
                   </div>
-                  
+
                   <p className="center-address">{center.address}</p>
-                  
+
                   <div className="center-specialties">
                     {center.specialties.slice(0, 3).map((spec, index) => (
                       <span key={index} className="specialty-tag">{spec}</span>
@@ -373,7 +375,7 @@ export default function PanchakarmaCenters() {
                       <span className="specialty-more">+{center.specialties.length - 3} more</span>
                     )}
                   </div>
-                  
+
                   <div className="center-contact">
                     <div className="contact-item">
                       <FaPhone />
@@ -394,10 +396,15 @@ export default function PanchakarmaCenters() {
                       <span>{center.doctors} Ayurvedic Doctors</span>
                     </div>
                   </div>
-                  
+
                   <div className="card-actions">
-                    <button className="action-btn primary">Book Appointment</button>
-                    <button 
+                    <button
+                      className="action-btn primary"
+                      onClick={() => navigate(`/centers/${center.id}`)}
+                    >
+                      Book Appointment
+                    </button>
+                    <button
                       className="action-btn secondary"
                       onClick={() => handleCenterSelect(center)}
                     >
@@ -420,14 +427,14 @@ export default function PanchakarmaCenters() {
                   ×
                 </button>
               </div>
-              
+
               <div className="modal-content">
                 <div className="modal-rating">
                   <FaStar className="star-icon" />
                   <span className="rating-value">{selectedCenter.rating}</span>
                   <span className="rating-text">Excellent</span>
                 </div>
-                
+
                 <div className="modal-location">
                   <FaMapMarkerAlt />
                   <div>
@@ -435,7 +442,7 @@ export default function PanchakarmaCenters() {
                     <p>{selectedCenter.city}, {selectedCenter.state} - {selectedCenter.pincode}</p>
                   </div>
                 </div>
-                
+
                 <div className="modal-specialties">
                   <h4>Specialties</h4>
                   <div className="specialties-list">
@@ -444,7 +451,7 @@ export default function PanchakarmaCenters() {
                     ))}
                   </div>
                 </div>
-                
+
                 <div className="modal-details">
                   <div className="detail-row">
                     <div className="detail-col">
@@ -469,9 +476,14 @@ export default function PanchakarmaCenters() {
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="modal-actions">
-                  <button className="modal-btn primary">Book Now</button>
+                  <button
+                    className="modal-btn primary"
+                    onClick={() => navigate(`/centers/${selectedCenter.id}`)}
+                  >
+                    Book Now
+                  </button>
                   <button className="modal-btn secondary">Save Center</button>
                   <button className="modal-btn outline">Get Directions</button>
                 </div>

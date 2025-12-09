@@ -98,3 +98,4 @@ All data is **real-time** and synchronized with the Django Admin Panel!
 python manage.py migrate
 ```
 
+

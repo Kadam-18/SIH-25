@@ -119,26 +119,43 @@ function renderQuestion(q, idx, setFocus, focusedIndex) {
 
 
 export default function FeedbackPage() {
+  const [activeTab, setActiveTab] = React.useState(0);
   const [focusedIndex, setFocusedIndex] = React.useState(null);
 
   return (
     <div className="feedback-root">
-      <div className="feedback-container">
+      <div className="feedback-wrapper">
+        <h1 className="main-title">Therapy Feedback</h1>
 
-        <h1 className="feedback-title">Panchakarma Therapy Feedback</h1>
-
-        {sessions.map((session, i) => (
-          <div key={i} className="feedback-session">
-            <h2 className="feedback-session-title">{session.title}</h2>
-
-            {/* Render each question with focus highlight */}
-            {session.questions.map((q, idx) =>
-              renderQuestion(q, idx, setFocusedIndex, focusedIndex)
-            )}
+        <div className="feedback-layout">
+          {/* LEFT SIDE - TABS */}
+          <div className="therapy-tabs">
+            {sessions.map((session, index) => (
+              <button
+                key={index}
+                className={`tab-btn ${activeTab === index ? "active" : ""}`}
+                onClick={() => setActiveTab(index)}
+              >
+                {session.title.split(" (")[0]} {/* Show short name */}
+              </button>
+            ))}
           </div>
-        ))}
 
-        <button className="feedback-submit">Submit Feedback</button>
+          {/* RIGHT SIDE - FORM CONTENT */}
+          <div className="feedback-content-card">
+            <h2 className="session-header">{sessions[activeTab].title}</h2>
+
+            <div className="questions-list">
+              {sessions[activeTab].questions.map((q, idx) =>
+                renderQuestion(q, idx, setFocusedIndex, focusedIndex)
+              )}
+            </div>
+
+            <button className="feedback-submit">
+              Submit {sessions[activeTab].title.split(" ")[0]} Feedback
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

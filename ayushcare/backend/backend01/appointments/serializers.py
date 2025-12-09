@@ -75,7 +75,7 @@ from clinic.models import Doctor, Center
 class DoctorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Doctor
-        fields = ["id", "name", "specialty", "phone", "clinic", "timing"]
+        fields = ["id", "name", "specialty", "phone", "center", "timing"]
 
 
 class AppointmentSerializer(serializers.ModelSerializer):

@@ -10,6 +10,8 @@ from clinic.models import Doctor
 from .serializers import AppointmentSerializer, DoctorSerializer
 from notifications.models import Notification
 from notifications.utils import send_push_notification
+from django.core.mail import send_mail
+from django.conf import settings
 
 
 # -----------------------------------
@@ -79,6 +81,25 @@ class AppointmentCreateView(generics.CreateAPIView):
                 send_push_notification(request.user, precaution_title, precaution_message)
             except Exception as e:
                 print(f"Failed to send precaution notification: {e}")
+
+            # Send Email Confirmation
+            try:
+                subject = "Appointment Confirmation - AyushCare"
+                message = (
+                    f"Dear {request.user.username},\n\n"
+                    f"Your appointment has been successfully booked!\n\n"
+                    f"Doctor: Dr. {doctor_name}\n"
+                    f"Date: {appointment.date}\n"
+                    f"Time: {appointment.time}\n"
+                    f"Location: {appointment.location_name or 'Panchakarma Center'}\n\n"
+                    f"Please arrive 15 minutes early.\n\n"
+                    f"Best regards,\nAyushCare Team"
+                )
+                from_email = settings.EMAIL_HOST_USER or "no-reply@ayushcare.app"
+                recipient_list = [request.user.email]
+                send_mail(subject, message, from_email, recipient_list, fail_silently=True)
+            except Exception as e:
+                print(f"Failed to send email: {e}")
             
             headers = self.get_success_headers(serializer.data)
             return Response({

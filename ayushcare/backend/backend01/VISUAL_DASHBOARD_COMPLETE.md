@@ -183,3 +183,4 @@ You can customize:
 
 Just open `http://127.0.0.1:8000/` and see all your clinic metrics in one beautiful page!
 
+

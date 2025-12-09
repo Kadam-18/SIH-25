@@ -2,230 +2,202 @@
 .feedback-root {
   min-height: 100vh;
   padding: 40px;
-  background-image: url("/home-bg.jpg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-
+  background-color: #f0fdf4;
+  /* Light green background */
+  font-family: 'Poppins', sans-serif;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-
-  animation: fadeInBg 0.6s ease-out;
 }
 
-@keyframes fadeInBg {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-
-/* ====== GLASS CONTAINER ====== */
-.feedback-container {
+.feedback-wrapper {
   width: 100%;
-  max-width: 900px;
-
-  background: rgba(200, 255, 200, 0.22);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-
-  border-radius: 22px;
-  padding: 35px;
-  margin-top: 25px;
-
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.18);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-
-  animation: fadeUp 0.7s ease-out;
+  max-width: 1100px;
 }
 
-@keyframes fadeUp {
-  from { transform: translateY(20px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
-}
-
-
-/* ====== MAIN TITLE ====== */
-.feedback-title {
+.main-title {
   text-align: center;
-  font-size: 32px;
-  font-weight: 800;
-  color: #145017;
-  margin-bottom: 25px;
-  letter-spacing: 1px;
-}
-
-
-/* ====== THERAPY SESSION TITLE ====== */
-.feedback-session-title {
-  font-size: 28px;
+  color: #14532d;
+  font-size: 2.5rem;
+  margin-bottom: 40px;
   font-weight: 700;
-  color: #0f3d1a;
-  margin-bottom: 18px;
-  margin-top: 35px;
-  text-align: center;
 }
 
+/* ====== LAYOUT GRID ====== */
+.feedback-layout {
+  display: flex;
+  gap: 30px;
+  align-items: flex-start;
+}
 
-/* ====== QUESTION BLOCK ====== */
+/* ====== LEFT SIDE - TABS ====== */
+.therapy-tabs {
+  flex: 0 0 250px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  background: white;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.tab-btn {
+  padding: 16px 20px;
+  border: none;
+  background: transparent;
+  text-align: left;
+  font-size: 16px;
+  color: #64748b;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.tab-btn:hover {
+  background: #f0fdf4;
+  color: #15803d;
+}
+
+.tab-btn.active {
+  background: #15803d;
+  /* Green-700 */
+  color: white;
+  box-shadow: 0 4px 12px rgba(21, 128, 61, 0.3);
+}
+
+/* ====== RIGHT SIDE - CARD ====== */
+.feedback-content-card {
+  flex: 1;
+  background: white;
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+  animation: slideIn 0.4s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.session-header {
+  font-size: 24px;
+  color: #1e293b;
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+/* ====== QUESTIONS ====== */
 .feedback-question {
-  margin-bottom: 32px;
-  position: relative;
-  padding: 18px 12px;
-  border-radius: 14px;
-  transition: 0.3s ease;
+  margin-bottom: 30px;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  transition: all 0.3s ease;
 }
 
-
-/* ———— QUESTION FOCUS HIGHLIGHT ———— */
 .feedback-question.focused {
-  background: rgba(74, 111, 74, 0.26);
-  box-shadow: 0 0 18px rgba(76, 175, 80, 0.35);
-  transform: scale(1.02);
+  background: #f0fdf4;
+  border-color: #bbf7d0;
 }
 
-
-/* ====== QUESTION TEXT (with numbering) ====== */
 .question-label {
   display: block;
-  font-size: 22px;
-  font-weight: 600;
-  margin-bottom: 12px;
-  color: #1a471d;
-  text-align: center;
-
-  position: relative;
-  padding-bottom: 10px;
+  font-size: 18px;
+  color: #334155;
+  margin-bottom: 15px;
+  font-weight: 500;
 }
 
-
-/* ====== ANIMATED UNDERLINE ====== */
-.question-label::after {
-  content: "";
-  width: 0%;
-  height: 3px;
-  background: #143e17;
-  position: absolute;
-  left: 50%;
-  bottom: 0;
-  transform: translateX(-50%);
-  border-radius: 10px;
-
-  transition: width 0.35s ease;
-  opacity: 0.6;
-}
-
-.feedback-question:hover .question-label::after {
-  width: 60%;
-}
-
-
-/* ====== RATING OPTIONS ====== */
+/* ====== INPUTS - MATCHING THEME ====== */
 .rating-row {
   display: flex;
-  justify-content: center;
-  gap: 18px;
-  margin-top: 12px;
+  gap: 15px;
 }
 
-/* Rating button style */
 .rating-row label {
-  background: rgba(205, 220, 168, 0.65);
-  padding: 10px 16px;
-  border-radius: 12px;
+  background: #f1f5f9;
+  padding: 10px 18px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: 0.25s ease;
-
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  transition: 0.2s;
+  color: #475569;
+  font-weight: 500;
 }
 
-/* Hover animation for rating */
 .rating-row label:hover {
-  transform: scale(1.1);
-  background: #5d7658;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+  background: #e2e8f0;
 }
 
+.rating-row input:checked+label,
+/* Note: simplified selector logic for CSS-only not perfect with nesting, usually handled by checking input status or just style input itself */
 .rating-row input {
-  margin-right: 6px;
+  margin-right: 8px;
+  accent-color: #15803d;
 }
 
-
-/* ====== TEXTAREA ====== */
 .feedback-textarea {
   width: 100%;
   padding: 12px;
-  border-radius: 12px;
-  border: 1px solid #c6dfc6;
-  margin-top: 10px;
-  font-size: 16px;
-  background: rgba(255, 255, 255, 0.75);
-  resize: none;
-  transition: 0.25s ease;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  font-family: inherit;
+  resize: vertical;
 }
 
 .feedback-textarea:focus {
-  background: #ffffff;
-  border-color: #3b6e46;
-  box-shadow: 0 0 8px rgba(85, 181, 106, 0.6);
-  transform: scale(1.02);
+  outline: none;
+  border-color: #15803d;
+  box-shadow: 0 0 0 3px rgba(21, 128, 61, 0.1);
 }
-
 
 /* ====== SUBMIT BUTTON ====== */
 .feedback-submit {
-  width: 100%;
-  padding: 15px;
-  background: #1b5e20;
-  color: #fff;
+  background: #15803d;
+  color: white;
   border: none;
-  border-radius: 14px;
-  font-size: 20px;
+  padding: 16px 32px;
+  border-radius: 10px;
+  font-size: 16px;
   font-weight: 600;
   cursor: pointer;
-  margin-top: 35px;
-
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  transition: 0.3s ease;
+  transition: 0.3s;
+  display: block;
+  width: 100%;
+  margin-top: 20px;
 }
 
 .feedback-submit:hover {
-  background: #145017;
-  transform: scale(1.04);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  background: #166534;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(21, 128, 61, 0.2);
 }
 
-
-/* ====== MOBILE ADJUSTMENTS ====== */
-@media (max-width: 600px) {
-  .feedback-container {
-    padding: 25px;
+/* ====== RESPONSIVE ====== */
+@media (max-width: 768px) {
+  .feedback-layout {
+    flex-direction: column;
   }
 
-  .feedback-title {
-    font-size: 26px;
+  .therapy-tabs {
+    flex-direction: row;
+    overflow-x: auto;
+    width: 100%;
+    box-sizing: border-box;
   }
 
-  .feedback-session-title {
-    font-size: 22px;
+  .tab-btn {
+    white-space: nowrap;
+    width: auto;
   }
-
-  .question-label {
-    font-size: 18px;
-  }
-}
-/* MAIN WHITE CONTAINER */
-.feedback-container {
-  max-width: 900px;
-  margin: auto;
-  background: #d7e4c3;        /* PURE WHITE BACKGROUND */
-  padding: 30px;
-  border-radius: 14px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-}
-.feedback-root {
-  padding: 30px;
-  background-image: url("/home-bg.jpg");
-  background-size: cover;
-  background-position: center;
 }

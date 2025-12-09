@@ -23,7 +23,7 @@ import PaymentSuccess from "./pages/PaymentSuccess.jsx";
 import PaymentFailed from "./pages/PaymentFailed.jsx";
 
 // import Centers from "./pages/Centers";
-// import CenterDetail from "./pages/CenterDetail";
+import CenterDetail from "./pages/CenterDetail";
 
 import Feedback from "./pages/feed.jsx";
 import PanchakarmaCenters from "./pages/PanchakarmaCenters.jsx";
@@ -69,8 +69,7 @@ const App = () => {
             <Route path="/notifications" element={<Notifications />} />
             <Route path="/schedule" element={<Schedulepage />} />
             {/* other sidebar pages later */}
-            {/* <Route path="/centers" element={<Centers/>} />
-            <Route path="/centers/:id" element={<CenterDetail/>} /> */}
+            <Route path="/centers/:id" element={<CenterDetail />} />
             <Route path="/feedback" element={<Feedback />} />
             <Route path="/progress" element={<ProgressTracking />} />
             <Route path="/centers" element={<PanchakarmaCenters />} />

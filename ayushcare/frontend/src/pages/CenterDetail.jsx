@@ -102,42 +102,8 @@ export default function CenterDetail() {
 
       <div className="center-detail-content">
         {/* LEFT SIDE - Map */}
-        <div className="center-detail-left">
-          {center.map_embed_url ? (
-            <div className="map-container">
-              <iframe
-                width="100%"
-                height="400"
-                style={{ border: 0, borderRadius: "12px" }}
-                loading="lazy"
-                allowFullScreen
-                src={center.map_embed_url}
-                title={`Map of ${center.name}`}
-              ></iframe>
-              <a
-                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${center.name}, ${center.address}, ${center.city}, ${center.state}`)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="map-link-btn"
-              >
-                🗺️ Open in Google Maps
-              </a>
-            </div>
-          ) : center.map_image_url ? (
-            <div className="map-container">
-              <img
-                src={center.map_image_url}
-                alt="map"
-                style={{ width: "100%", height: 400, objectFit: "cover", borderRadius: "12px" }}
-                onError={(e) => {
-                  e.target.style.display = "none";
-                  e.target.parentElement.innerHTML = '<p>Map not available</p>';
-                }}
-              />
-            </div>
-          ) : null}
-
-        </div>
+        {/* LEFT SIDE - Map REMOVED as per user request */}
+        {/* <div className="center-detail-left">...</div> */}
 
         {/* RIGHT SIDE - Details & Booking */}
         <div className="center-detail-right">
@@ -160,8 +126,8 @@ export default function CenterDetail() {
             {doctors.length > 0 ? (
               <div className="doctors-list">
                 {doctors.map((d) => (
-                  <div 
-                    key={d.id} 
+                  <div
+                    key={d.id}
                     className={`doctor-card ${selectedDoctorId === d.id ? 'selected' : ''}`}
                     onClick={() => setSelectedDoctorId(d.id)}
                   >
@@ -170,7 +136,7 @@ export default function CenterDetail() {
                       <p className="specialty">{d.specialty || "General Practitioner"}</p>
                       <p className="timing">⏰ {d.timing || "Flexible"}</p>
                     </div>
-                    <button 
+                    <button
                       className={selectedDoctorId === d.id ? 'btn-selected' : 'btn-select'}
                       onClick={(e) => {
                         e.stopPropagation();
@@ -189,7 +155,7 @@ export default function CenterDetail() {
 
           <div className="booking-section">
             <h3>📅 Book Appointment</h3>
-            
+
             {selectedDoctorId ? (
               <div className="selected-doctor-info">
                 <p>Selected: <strong>{doctors.find(d => d.id === selectedDoctorId)?.name}</strong></p>
@@ -222,7 +188,7 @@ export default function CenterDetail() {
                 </select>
               </div>
 
-              <button 
+              <button
                 className="btn-book"
                 onClick={bookAppointment}
                 disabled={!selectedDoctorId || !selectedDate || !selectedSlot}

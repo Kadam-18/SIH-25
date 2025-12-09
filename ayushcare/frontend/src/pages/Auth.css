@@ -1,5 +1,6 @@
 /* ==================== GLOBAL BASE ===================== */
-html, body {
+html,
+body {
   height: 100%;
   width: 100%;
   margin: 0;
@@ -35,7 +36,8 @@ html, body {
 .auth-box h2 {
   font-size: 28px;
   margin-bottom: 20px;
-  color: #225b39;     /* Exact signup color */
+  color: #225b39;
+  /* Exact signup color */
 }
 
 /* ==================== INPUT FIELDS ===================== */

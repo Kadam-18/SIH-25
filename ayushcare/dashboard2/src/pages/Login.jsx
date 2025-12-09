@@ -13,8 +13,26 @@ export default function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setError("");
     setLoading(true);
+    setError("");
+
+    // 🚨 Temporary test mode — No backend call
+    setTimeout(() => {
+      console.log("Skipping backend... Redirecting to dashboard.");
+
+      // Fake credentials for UI testing
+      localStorage.setItem("token", "test-token");
+      localStorage.setItem("role", "doctor"); // Change to "therapist" to test therapist UI
+      localStorage.setItem("name", "Test User");
+      localStorage.setItem("user_id", "1");
+
+      navigate("/doctor"); // Change to "/therapist" to test therapist dashboard
+
+      setLoading(false);
+    }, 800);
+
+    /* 
+    ---------------- ORIGINAL BACKEND LOGIN (COMMENTED OUT) ----------------
 
     try {
       const response = await fetch(`${API_URL}/api/auth/doctor-therapist-login/`, {
@@ -28,14 +46,12 @@ export default function Login() {
       const data = await response.json();
 
       if (data.success) {
-        // Store token and role
         localStorage.setItem("token", data.access);
         localStorage.setItem("refresh", data.refresh);
         localStorage.setItem("role", data.role);
         localStorage.setItem("name", data.name);
         localStorage.setItem("user_id", data.user_id);
 
-        // Navigate based on role
         if (data.role === "doctor") {
           navigate("/doctor");
         } else if (data.role === "therapist") {
@@ -49,6 +65,8 @@ export default function Login() {
     } finally {
       setLoading(false);
     }
+    -------------------------------------------------------------------------
+    */
   };
 
   return (
@@ -99,4 +117,3 @@ export default function Login() {
     </div>
   );
 }
-

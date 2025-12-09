@@ -62,7 +62,7 @@ class TherapistAttendanceAdmin(admin.ModelAdmin):
     list_display = ("therapist", "date", "status", "check_in_time", "check_out_time")
     list_filter = ("status", "date", "therapist__center")
     search_fields = ("therapist__name", "therapist__center__name")
-    date_hierarchy = "date"
+    # date_hierarchy = "date"
     ordering = ["-date", "therapist__name"]
 
 
@@ -120,6 +120,6 @@ class CenterAdmin(admin.ModelAdmin):
     )
     list_filter = ("city", "state", "popular", "rating")
     search_fields = ("name", "address", "city", "phone")
-    date_hierarchy = "created_at"
+    # date_hierarchy = "created_at"
     
     inlines = [DoctorInline, TherapistInline]

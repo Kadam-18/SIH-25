@@ -21,7 +21,7 @@ export default function Login() {
     try {
       // 1) LOGIN
       const res = await apiPost("/api/auth/login/", { email, password });
-      
+
       if (!res || !res.access) {
         setError(res?.message || "Invalid Login Details");
         toast.error(res?.message || "Invalid Login Details");
@@ -82,19 +82,19 @@ export default function Login() {
             placeholder="Password"
             required
             value={password}
-            onChange={(e) => setPassword(e.target.value)} 
+            onChange={(e) => setPassword(e.target.value)}
           />
-          <p 
+          <p
             className="forgot-text"
             onClick={() => navigate("/forgot-password")}
           >
             Forgot Password?
           </p>
-          
+
           <button type="submit" disabled={loading}>
             {loading ? "Logging in..." : "Login"}
           </button>
-          
+
           {error && (
             <div style={{ color: "red", marginTop: "10px", fontSize: "14px" }}>
               {error}

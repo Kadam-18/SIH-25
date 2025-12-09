@@ -3,6 +3,7 @@ from pathlib import Path
 from datetime import timedelta
 from dotenv import load_dotenv
 import base64
+from corsheaders.defaults import default_headers, default_methods
 
 # BASE DIR
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -69,8 +70,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
-    # 'whitenoise.middleware.WhiteNoiseMiddleware',
-    'corsheaders.middleware.CorsMiddleware', 
+    # 'whitenoise.middleware.WhiteNoiseMiddleware', 
     "whitenoise.middleware.WhiteNoiseMiddleware",
 
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -170,8 +170,12 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # CORS
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",  # Vite default port
+    "http://localhost:5173", 
     "http://127.0.0.1:5173",
+    "http://localhost:5174", 
+    "http://127.0.0.1:5174",
+    "http://localhost:5175", 
+    "http://127.0.0.1:5175",
     os.environ.get('FRONTEND_URL', 'https://your-vercel-app.vercel.app'),
 ]
 # Add Vercel frontend URL from environment
@@ -181,3 +185,10 @@ if FRONTEND_URL:
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_ALL_HEADERS = True
 CORS_ALLOW_ALL_METHODS = True
+
+
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    "authorization",
+]
+
+CORS_ALLOW_METHODS = list(default_methods)
