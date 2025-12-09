@@ -5,6 +5,7 @@ from .models import UserSettings
 class SignupSerializer(serializers.Serializer):
     username = serializers.CharField()
     email = serializers.EmailField()
+    phone = serializers.CharField()
     password = serializers.CharField()
     role = serializers.CharField(required=False, default="patient")
 
@@ -15,7 +16,8 @@ class VerifyOTPSerializer(serializers.Serializer):
 
 
 class LoginSerializer(serializers.Serializer):
-    email = serializers.EmailField()
+    # accepts email OR phone OR username in the same field
+    email = serializers.CharField()
     password = serializers.CharField()
 
 

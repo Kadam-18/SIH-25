@@ -17,6 +17,7 @@ class EmailOTP(models.Model):
     temp_username = models.CharField(max_length=150, null=True, blank=True)
     temp_password = models.CharField(max_length=200, null=True, blank=True)
     temp_role = models.CharField(max_length=50, null=True, blank=True)
+    temp_phone = models.CharField(max_length=20, null=True, blank=True)
 
     def generate_otp(self):
         self.otp = str(random.randint(100000, 999999))

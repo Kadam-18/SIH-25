@@ -49,7 +49,7 @@ export default function LandingPage() {
     className="book-btn"
     onClick={() => navigate("/login")}
   >
-    Book a Therapy
+    Book Your Consultation
   </button>
 </section>
 

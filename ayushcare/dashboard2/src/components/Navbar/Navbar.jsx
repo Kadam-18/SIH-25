@@ -1,73 +1,59 @@
-import React, { useState } from "react";
-import "./Navbar.css";
-import { FiBell, FiSearch, FiLogOut } from "react-icons/fi";
-import { useAuth } from "../../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import React from 'react';
+import './Navbar.css';
+import { FaSearch, FaUserCircle } from 'react-icons/fa';
+import NotificationDropdown from '../Notifications/NotificationDropdown';
+
+// ✅ FIXED IMPORT
+import { useAuth } from '../../context/AuthContext';
 
 const Navbar = () => {
-  const { role, name, logout } = useAuth();
-  const navigate = useNavigate();
-  const [showDropdown, setShowDropdown] = useState(false);
+  const { user, isDoctor, isTherapist } = useAuth();
+  
+  const userName = user?.name || (isDoctor ? 'Dr. Sharma' : 'Therapist Verma');
+  const userRole = isDoctor ? 'Senior Ayurveda Doctor' : 'Panchakarma Specialist';
 
-  const handleLogout = () => {
-    logout();
-    navigate("/login");
-  };
+  const currentDate = new Date().toLocaleDateString('en-US', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
 
-  const getInitials = () => {
-    if (name) {
-      return name.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2);
-    }
-    return role === "doctor" ? "DR" : "TH";
-  };
+  const currentTime = new Date().toLocaleTimeString('en-US', {
+    hour: '2-digit',
+    minute: '2-digit'
+  });
 
   return (
-    <header className="navbar-root">
+    <nav className="navbar">
       <div className="navbar-left">
-        <h1 className="navbar-title">
-          AyushCare {role === "doctor" ? "Doctor" : "Therapist"} Dashboard
-        </h1>
-      </div>
-
-      <div className="navbar-center">
-        <div className="navbar-search">
-          <FiSearch className="search-icon" />
-          <input
-            type="text"
-            placeholder="Search patient"
-          />
+        <div className="navbar-welcome">
+          <h1>Welcome back, {isDoctor ? 'Doctor' : 'Therapist'}</h1>
+          <p className="navbar-date">{currentDate} • {currentTime}</p>
         </div>
       </div>
 
       <div className="navbar-right">
-        <button className="icon-button">
-          <FiBell />
-        </button>
+        <div className="navbar-search">
+          <FaSearch className="search-icon" />
+          <input 
+            type="text"
+            placeholder="Search patients, appointments..."
+            className="search-input"
+          />
+        </div>
 
-        <div className="avatar-dropdown">
-          <div 
-            className="avatar-circle"
-            onClick={() => setShowDropdown(!showDropdown)}
-          >
-            <span>{getInitials()}</span>
+        <NotificationDropdown />
+
+        <div className="navbar-profile">
+          <FaUserCircle className="profile-icon" />
+          <div className="profile-info">
+            <span className="profile-name">{userName}</span>
+            <span className="profile-role">{userRole}</span>
           </div>
-          
-          {showDropdown && (
-            <div className="dropdown-menu">
-              <div className="dropdown-header">
-                <div className="dropdown-name">{name || (role === "doctor" ? "Doctor" : "Therapist")}</div>
-                <div className="dropdown-role">{role === "doctor" ? "Doctor" : "Therapist"}</div>
-              </div>
-              <div className="dropdown-divider"></div>
-              <button className="dropdown-item" onClick={handleLogout}>
-                <FiLogOut />
-                <span>Logout</span>
-              </button>
-            </div>
-          )}
         </div>
       </div>
-    </header>
+    </nav>
   );
 };
 

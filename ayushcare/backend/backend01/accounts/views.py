@@ -26,6 +26,7 @@ class SignupView(APIView):
             username = data["username"]
             password = data["password"]
             role = data.get("role", "patient")  # optional
+            phone = data.get("phone")
 
             # Create or update OTP entry
             otp_entry, created = EmailOTP.objects.get_or_create(email=email)
@@ -35,6 +36,7 @@ class SignupView(APIView):
             otp_entry.temp_password = password
             otp_entry.temp_username = username
             otp_entry.temp_role = role
+            otp_entry.temp_phone = phone
             otp_entry.save()
 
             # Send OTP Email
@@ -95,7 +97,7 @@ class VerifyOTPView(APIView):
             )
 
         try:
-            User.objects.create(
+            user = User.objects.create(
                 username=otp_entry.temp_username,
                 email=email,
                 password=make_password(otp_entry.temp_password),
@@ -108,6 +110,14 @@ class VerifyOTPView(APIView):
 
         otp_entry.delete()
 
+        # Attach phone (if provided) to patient profile
+        if hasattr(user, "patient_profile"):
+            if otp_entry.temp_phone:
+                user.patient_profile.phone = otp_entry.temp_phone
+                user.patient_profile.email = user.email
+                user.patient_profile.full_name = otp_entry.temp_username
+                user.patient_profile.save()
+
         return Response(
             {"success": True, "message": "Signup successful"},
             status=200
@@ -118,12 +128,25 @@ class LoginView(APIView):
         serializer = LoginSerializer(data=request.data)
 
         if serializer.is_valid():
-            email = serializer.validated_data["email"]
+            identifier = serializer.validated_data["email"]
             password = serializer.validated_data["password"]
 
-            try:
-                user = User.objects.get(email=email)
-            except User.DoesNotExist:
+            # Lookup by email, username, or phone (patient profile)
+            user = None
+            if "@" in identifier:
+                user = User.objects.filter(email=identifier).first()
+            if user is None:
+                user = User.objects.filter(username=identifier).first()
+            if user is None:
+                try:
+                    from patients.models import PatientProfile
+                    profile = PatientProfile.objects.filter(phone=identifier).select_related("user").first()
+                    if profile:
+                        user = profile.user
+                except Exception:
+                    user = None
+
+            if not user:
                 return Response({"success": False, "message": "User not found"}, status=404)
 
             if not check_password(password, user.password):

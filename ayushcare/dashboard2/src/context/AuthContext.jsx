@@ -1,90 +1,72 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { createContext, useState, useContext } from 'react';
 
+// Create the context
 const AuthContext = createContext();
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
-
+// Create the provider component
 export const AuthProvider = ({ children }) => {
-  const [role, setRole] = useState(null);
-  const [name, setName] = useState("");
-  const [token, setToken] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(() => {
+    // Check if user data exists in localStorage
+    const savedUser = localStorage.getItem('ayushcare_user');
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
 
-  useEffect(() => {
-    // Check if user is logged in
-    const storedToken = localStorage.getItem("token");
-    const storedRole = localStorage.getItem("role");
-    const storedName = localStorage.getItem("name");
-
-    if (storedToken && storedRole) {
-      setToken(storedToken);
-      setRole(storedRole);
-      setName(storedName || "");
-      verifyToken(storedToken);
-    } else {
-      setLoading(false);
-    }
-  }, []);
-
-  const verifyToken = async (tokenToVerify) => {
-    try {
-      const response = await fetch(`${API_URL}/api/auth/user-role/`, {
-        headers: {
-          Authorization: `Bearer ${tokenToVerify}`,
-        },
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        if (data.success) {
-          setRole(data.role);
-          setName(data.name || "");
-        } else {
-          logout();
-        }
-      } else {
-        logout();
-      }
-    } catch (error) {
-      console.error("Token verification failed:", error);
-      logout();
-    } finally {
-      setLoading(false);
-    }
+  // Login function
+  const login = (userData) => {
+    // In a real app, this would come from an API response
+    const userWithRole = {
+      ...userData,
+      role: userData.role || 'doctor', // Default to doctor
+    };
+    setUser(userWithRole);
+    localStorage.setItem('ayushcare_user', JSON.stringify(userWithRole));
   };
 
-  const login = (tokenData, roleData, nameData) => {
-    localStorage.setItem("token", tokenData);
-    localStorage.setItem("role", roleData);
-    localStorage.setItem("name", nameData);
-    setToken(tokenData);
-    setRole(roleData);
-    setName(nameData);
-  };
-
+  // Logout function
   const logout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("refresh");
-    localStorage.removeItem("role");
-    localStorage.removeItem("name");
-    localStorage.removeItem("user_id");
-    setToken(null);
-    setRole(null);
-    setName("");
+    setUser(null);
+    localStorage.removeItem('ayushcare_user');
+  };
+
+  // Update user function
+  const updateUser = (updatedData) => {
+    const updatedUser = { ...user, ...updatedData };
+    setUser(updatedUser);
+    localStorage.setItem('ayushcare_user', JSON.stringify(updatedUser));
+  };
+
+  // Check if user is authenticated
+  const isAuthenticated = !!user;
+
+  // Check specific roles
+  const isDoctor = user?.role === 'doctor';
+  const isTherapist = user?.role === 'therapist';
+
+  const value = {
+    user,
+    login,
+    logout,
+    updateUser,
+    isAuthenticated,
+    isDoctor,
+    isTherapist
   };
 
   return (
-    <AuthContext.Provider value={{ role, name, token, login, logout, loading }}>
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );
 };
 
+// Custom hook to use the auth context
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error("useAuth must be used within AuthProvider");
+    throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
 };
+
+// Optional: Create a separate context for notifications if needed
+export const NotificationContext = createContext();

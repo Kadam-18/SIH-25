@@ -1,7 +1,7 @@
-import React from "react";
-import Sidebar from "../components/Sidebar/Sidebar";
-import Navbar from "../components/Navbar/Navbar";
-import "./DashboardLayout.css";
+import React from 'react';
+import Navbar from '../components/Navbar/Navbar';
+import Sidebar from '../components/Sidebar/Sidebar';
+import './DashboardLayout.css';
 
 const DashboardLayout = ({ children }) => {
   return (
@@ -9,7 +9,9 @@ const DashboardLayout = ({ children }) => {
       <Sidebar />
       <div className="layout-main">
         <Navbar />
-        <main className="layout-content">{children}</main>
+        <div className="layout-content">
+          {children}
+        </div>
       </div>
     </div>
   );
