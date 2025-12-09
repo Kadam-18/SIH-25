@@ -68,39 +68,41 @@ export default function Login() {
         <h2>Welcome Back</h2>
         <p>Login to continue your journey</p>
 
-        <form onSubmit={handleSubmit}>
-          <input
-            type="email"
-            placeholder="Email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
+     <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          placeholder="Email / Phone No."
+          required
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
 
-          <input
-            type="password"
-            placeholder="Password"
-            required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)} 
-          />
-          <p 
-            className="forgot-text"
-            onClick={() => navigate("/forgot-password")}
-          >
-            Forgot Password?
-          </p>
-          
-          <button type="submit" disabled={loading}>
-            {loading ? "Logging in..." : "Login"}
-          </button>
-          
-          {error && (
-            <div style={{ color: "red", marginTop: "10px", fontSize: "14px" }}>
-              {error}
-            </div>
-          )}
-        </form>
+        <input
+          type="password"
+          placeholder="Password"
+          required
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        
+        <p 
+          className="forgot-text"
+          onClick={() => navigate("/forgot-password")}
+        >
+          Forgot Password?
+        </p>
+        
+        <button type="submit" disabled={loading}>
+          {loading ? "Logging in..." : "Login"}
+        </button>
+
+        {error && (
+          <div style={{ color: "red", marginTop: "10px", fontSize: "14px" }}>
+            {error}
+          </div>
+        )}
+      </form>
+
 
         <p style={{ marginTop: "20px" }}>
           Don’t have an account? <a href="/signup">Sign up</a>

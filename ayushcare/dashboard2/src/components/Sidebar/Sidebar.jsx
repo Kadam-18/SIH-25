@@ -1,88 +1,101 @@
-import React from "react";
-import "./Sidebar.css";
-import { useMenu } from "../../context/MenuContext";
+import React from 'react';
+import './Sidebar.css';
 import {
-  MdDashboard,
-  MdPeople,
-  MdEvent,
-  MdLocalHospital,
-  MdAssignment,
-  MdNotificationsActive,
-  MdSettings,
-} from "react-icons/md";
-import { FaUserMd, FaRegSmile } from "react-icons/fa";
-import SidebarItem from "./SidebarItem";
+  FaHome,
+  FaCalendarAlt,
+  FaUserInjured,
+  FaSignOutAlt,
+  FaCog,
+  FaCalendarCheck,
+  FaUserFriends,
+  FaFileMedical,
+  FaChartBar // ADD THIS ICON
+} from 'react-icons/fa';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 
 const Sidebar = () => {
-  const { activeItem, setActiveItem } = useMenu();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { user, logout, isDoctor } = useAuth();
+  const currentPath = location.pathname;
+
+  // Define icons based on user role
+  const menuItems = isDoctor ? [
+    { path: '/doctor', icon: FaHome, label: 'Dashboard' },
+    { path: '/doctor/appointments', icon: FaCalendarAlt, label: 'Appointments' },
+    { path: '/doctor/patients', icon: FaUserInjured, label: 'Patients' },
+    { path: '/doctor/tracker', icon: FaChartBar, label: 'Tracker' }, // ADD THIS LINE
+  ] : [
+    { path: '/therapist', icon: FaHome, label: 'Dashboard' },
+    { path: '/therapist/schedule', icon: FaCalendarCheck, label: 'Schedule' },
+    { path: '/therapist/patients', icon: FaUserFriends, label: 'Patients' },
+    { path: '/therapist/docs', icon: FaFileMedical, label: 'Procedures' },
+  ];
+
+  const bottomItems = [
+    { path: '/settings', icon: FaCog, label: 'Settings' },
+  ];
+
+  const handleNavigation = (path) => {
+    navigate(path);
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate('/doctor');
+  };
+
+  const userInitial = isDoctor ? 'D' : 'T';
 
   return (
-    <aside className="sidebar-root">
+    <div className="sidebar-root">
       <div className="sidebar-inner">
-        {/* top dots */}
         <div className="sidebar-dots">
-          <span className="dot dot-red" />
-          <span className="dot dot-yellow" />
-          <span className="dot dot-green" />
+          <div className="dot dot-red"></div>
+          <div className="dot dot-yellow"></div>
+          <div className="dot dot-green"></div>
         </div>
 
         <div className="sidebar-items">
-          <SidebarItem
-            icon={<MdDashboard />}
-            active={activeItem === "dashboard"}
-            onClick={() => setActiveItem("dashboard")}
-          />
-          <SidebarItem
-            icon={<FaUserMd />}
-            active={activeItem === "doctor"}
-            onClick={() => setActiveItem("doctor")}
-          />
-          <SidebarItem
-            icon={<MdEvent />}
-            active={activeItem === "appointments"}
-            onClick={() => setActiveItem("appointments")}
-          />
-          <SidebarItem
-            icon={<MdPeople />}
-            active={activeItem === "patients"}
-            onClick={() => setActiveItem("patients")}
-          />
-          <SidebarItem
-            icon={<MdLocalHospital />}
-            active={activeItem === "therapy"}
-            onClick={() => setActiveItem("therapy")}
-          />
-          <SidebarItem
-            icon={<MdAssignment />}
-            active={activeItem === "docs"}
-            onClick={() => setActiveItem("docs")}
-          />
-          <SidebarItem
-            icon={<MdNotificationsActive />}
-            active={activeItem === "notifications"}
-            onClick={() => setActiveItem("notifications")}
-          />
-          <SidebarItem
-            icon={<MdSettings />}
-            active={activeItem === "settings"}
-            onClick={() => setActiveItem("settings")}
-          />
-          <SidebarItem
-            icon={<FaRegSmile />}
-            active={activeItem === "feedback"}
-            onClick={() => setActiveItem("feedback")}
-          />
+          {menuItems.map((item) => (
+            <button
+              key={item.path}
+              className={`sidebar-item ${currentPath === item.path ? 'active' : ''}`}
+              onClick={() => handleNavigation(item.path)}
+              title={item.label}
+            >
+              <item.icon />
+            </button>
+          ))}
         </div>
 
-        {/* bottom avatar */}
         <div className="sidebar-bottom">
-          <div className="sidebar-avatar">
-            <span>M</span>
+          {bottomItems.map((item) => (
+            <button
+              key={item.path}
+              className={`sidebar-item ${currentPath.includes(item.path) ? 'active' : ''}`}
+              onClick={() => handleNavigation(item.path)}
+              title={item.label}
+            >
+              <item.icon />
+            </button>
+          ))}
+          
+          <button
+            className="sidebar-item"
+            onClick={handleLogout}
+            title="Logout"
+          >
+            <FaSignOutAlt />
+          </button>
+          
+          <div className="sidebar-avatar" title={`${isDoctor ? 'Doctor' : 'Therapist'} Profile`}>
+            {userInitial}
           </div>
-          <span className="sidebar-more">•••</span>
         </div>
       </div>
-    </aside>
+    </div>
   );
 };
 

@@ -7,6 +7,7 @@ import DashboardLayout from "./layouts/DashboardLayout";
 import DoctorDashboard from "./pages/doctor/DoctorDashboard";
 import Appointments from "./pages/doctor/Appointments";
 import Patients from "./pages/doctor/Patients";
+import Tracker from "./pages/doctor/Tracker"; // ADD THIS IMPORT
 
 import TherapistDashboard from "./pages/therapist/TherapistDashboard";
 import TherapySchedule from "./pages/therapist/TherapySchedule";
@@ -46,6 +47,14 @@ function App() {
                 </DashboardLayout>
               }
             />
+            <Route
+              path="/doctor/tracker"
+              element={
+                <DashboardLayout>
+                  <Tracker />
+                </DashboardLayout>
+              }
+            />
 
             {/* Therapist routes */}
             <Route
@@ -82,6 +91,7 @@ function App() {
             />
 
             {/* Default */}
+            <Route path="/" element={<Navigate to="/doctor" replace />} />
             <Route path="*" element={<Navigate to="/doctor" replace />} />
           </Routes>
         </Router>

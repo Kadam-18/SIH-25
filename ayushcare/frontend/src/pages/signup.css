@@ -101,3 +101,39 @@ form input:focus {
   margin-top: 18px;
   font-size: 14px;
 }
+.otp-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.popup-content {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  text-align: center;
+  width: 300px;
+}
+
+.popup-content button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  background: #1c6b41;
+  color: white;
+  font-weight: bold;
+}
+
+.close-btn {
+  background: #999 !important;
+}
